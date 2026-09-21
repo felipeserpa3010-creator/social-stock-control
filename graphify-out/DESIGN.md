@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-09-21T16:59:51.291858+00:00
+Generated: 2026-09-21T17:07:16.248087+00:00
 
 ## Tokens
 - --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif (src/styles.css)
@@ -172,6 +172,11 @@ Generated: 2026-09-21T16:59:51.291858+00:00
 - tooltip
 
 ## Project components
+- src/components/app-shell.tsx
+- src/components/auth-layout.tsx
+- src/components/movement-form.tsx
+- src/components/pickers.tsx
+- src/components/ui-kit.tsx
 - src/components/ui/accordion.tsx
 - src/components/ui/alert-dialog.tsx
 - src/components/ui/alert.tsx
