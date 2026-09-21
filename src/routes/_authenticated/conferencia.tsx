@@ -97,7 +97,7 @@ function CheckPage() {
         toast.error(`Quantidade inválida para ${p.nome}.`);
         return;
       }
-      items.push({ product_id: p.id, quantity: qty });
+      items.push({ product_id: p.id, quantidade_conferida: qty });
     }
     if (items.length === 0) {
       toast.error("Informe ao menos um produto conferido.");
