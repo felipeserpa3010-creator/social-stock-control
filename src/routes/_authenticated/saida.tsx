@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_authenticated/saida")({
       { title: "Saída de materiais — Controle de Inventário" },
       {
         name: "description",
-        content: "Registre as dispensas econsumos que reduzem o estoque da unidade.",
+        content: "Registre as dispensas e consumos que reduzem o estoque da unidade.",
       },
       { property: "og:title", content: "Saída de materiais — Controle de Inventário" },
       {
