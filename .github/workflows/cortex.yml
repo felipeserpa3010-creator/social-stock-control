@@ -1,0 +1,90 @@
+name: Lovasiri Cortex
+
+on:
+  push:
+    paths-ignore:
+      - "graphify-out/**"
+      - ".lovasiri/**"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [cortex_wake]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lovasiri-cortex-${{ github.repository }}-${{ github.event.client_payload.ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  map-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.client_payload.ref || github.ref_name }}
+
+      - name: Build code and design context
+        shell: python
+        run: |
+          from pathlib import Path
+          import datetime, json, re
+
+          root = Path('.')
+          out = root / 'graphify-out'
+          out.mkdir(exist_ok=True)
+          ignored = {'.git', 'node_modules', 'dist', 'build', 'coverage', '.next', '.turbo', 'graphify-out'}
+          extensions = {'.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.json', '.html', '.md', '.sql'}
+          files = []
+          edges = []
+          import_pattern = re.compile(r'''(?:from\s+|import\s*\(|require\s*\()\s*['"]([^'"]+)''')
+
+          for path in root.rglob('*'):
+              if not path.is_file() or any(part in ignored for part in path.parts) or path.suffix.lower() not in extensions:
+                  continue
+              relative = path.as_posix().removeprefix('./')
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except (UnicodeDecodeError, OSError):
+                  continue
+              files.append({'path': relative, 'bytes': len(text.encode('utf-8'))})
+              for target in import_pattern.findall(text):
+                  edges.append({'source': relative, 'target': target})
+
+          generated_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+          graph = {'generated_at': generated_at, 'files': files, 'dependencies': edges}
+          (out / 'graph.json').write_text(json.dumps(graph, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          (out / 'GRAPH_REPORT.md').write_text(
+              '# Code graph report\n\n'
+              f'- Generated: {generated_at}\n'
+              f'- Files mapped: {len(files)}\n'
+              f'- Dependency links: {len(edges)}\n',
+              encoding='utf-8',
+          )
+
+          style_files = [root / 'src/styles.css', root / 'src/index.css']
+          tokens = []
+          for style_file in style_files:
+              if not style_file.exists():
+                  continue
+              text = style_file.read_text(encoding='utf-8', errors='ignore')
+              for name, value in re.findall(r'(--[\w-]+)\s*:\s*([^;]+);', text):
+                  tokens.append((name, value.strip(), style_file.as_posix()))
+          ui = sorted(p.stem for p in (root / 'src/components/ui').glob('*.tsx')) if (root / 'src/components/ui').exists() else []
+          components = sorted(p.relative_to(root).as_posix() for p in (root / 'src/components').rglob('*.tsx')) if (root / 'src/components').exists() else []
+          design = ['# Design system', '', f'Generated: {generated_at}', '', '## Tokens']
+          design += [f'- {name}: {value} ({source})' for name, value, source in tokens] or ['- No CSS custom properties found.']
+          design += ['', '## UI components'] + ([f'- {name}' for name in ui] or ['- No shadcn/ui components found.'])
+          design += ['', '## Project components'] + ([f'- {name}' for name in components] or ['- No project components found.'])
+          (out / 'DESIGN.md').write_text('\n'.join(design) + '\n', encoding='utf-8')
+
+      - name: Commit generated context
+        run: |
+          mkdir -p .lovasiri
+          python -c "import datetime,json,pathlib; pathlib.Path('.lovasiri/sync.json').write_text(json.dumps({'updated_at': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'source': 'lovasiri-cortex'}) + chr(10), encoding='utf-8')"
+          git config user.name "Lovasiri"
+          git config user.email "actions@users.noreply.github.com"
+          git add graphify-out .lovasiri/sync.json
+          git commit -m "Atualizado por Lovasiri" || exit 0
+          git push origin HEAD:${{ github.event.client_payload.ref || github.ref_name }}
