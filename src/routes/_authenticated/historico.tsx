@@ -38,7 +38,7 @@ export const Route = createFileRoute("/_authenticated/historico")({
 function HistoryPage() {
   const { unitId, unit } = useUnit();
   const { data: products = [] } = useQuery(productsOptions(true));
-  const [tipo, setTipo] = useState("");
+  const [tipo, setTipo] = useState<"" | MovementType>("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [productId, setProductId] = useState("");
