@@ -15,9 +15,12 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as SetupRouteImport } from './routes/setup'
+import { Route as AuthenticatedConferenciaRouteImport } from './routes/_authenticated/conferencia'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEntradaRouteImport } from './routes/_authenticated/entrada'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
+import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
+import { Route as AuthenticatedMediasRouteImport } from './routes/_authenticated/medias'
 import { Route as AuthenticatedSaidaRouteImport } from './routes/_authenticated/saida'
 
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +52,12 @@ const SetupRoute = SetupRouteImport.update({
   path: '/setup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedConferenciaRoute =
+  AuthenticatedConferenciaRouteImport.update({
+    id: '/conferencia',
+    path: '/conferencia',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -64,6 +73,16 @@ const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
   path: '/estoque',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHistoricoRoute = AuthenticatedHistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMediasRoute = AuthenticatedMediasRouteImport.update({
+  id: '/medias',
+  path: '/medias',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSaidaRoute = AuthenticatedSaidaRouteImport.update({
   id: '/saida',
   path: '/saida',
@@ -76,9 +95,12 @@ export interface FileRoutesByFullPath {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/setup': typeof SetupRoute
+  '/conferencia': typeof AuthenticatedConferenciaRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
+  '/medias': typeof AuthenticatedMediasRoute
   '/saida': typeof AuthenticatedSaidaRoute
 }
 export interface FileRoutesByTo {
@@ -87,9 +109,12 @@ export interface FileRoutesByTo {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/setup': typeof SetupRoute
+  '/conferencia': typeof AuthenticatedConferenciaRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
+  '/historico': typeof AuthenticatedHistoricoRoute
+  '/medias': typeof AuthenticatedMediasRoute
   '/saida': typeof AuthenticatedSaidaRoute
 }
 export interface FileRoutesById {
@@ -100,9 +125,12 @@ export interface FileRoutesById {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/setup': typeof SetupRoute
+  '/_authenticated/conferencia': typeof AuthenticatedConferenciaRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/entrada': typeof AuthenticatedEntradaRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
+  '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
+  '/_authenticated/medias': typeof AuthenticatedMediasRoute
   '/_authenticated/saida': typeof AuthenticatedSaidaRoute
 }
 export interface FileRouteTypes {
@@ -113,9 +141,12 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/redefinir-senha'
     | '/setup'
+    | '/conferencia'
     | '/dashboard'
     | '/entrada'
     | '/estoque'
+    | '/historico'
+    | '/medias'
     | '/saida'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -124,9 +155,12 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/redefinir-senha'
     | '/setup'
+    | '/conferencia'
     | '/dashboard'
     | '/entrada'
     | '/estoque'
+    | '/historico'
+    | '/medias'
     | '/saida'
   id:
     | '__root__'
@@ -136,9 +170,12 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/redefinir-senha'
     | '/setup'
+    | '/_authenticated/conferencia'
     | '/_authenticated/dashboard'
     | '/_authenticated/entrada'
     | '/_authenticated/estoque'
+    | '/_authenticated/historico'
+    | '/_authenticated/medias'
     | '/_authenticated/saida'
   fileRoutesById: FileRoutesById
 }
@@ -195,6 +232,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SetupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/conferencia': {
+      id: '/_authenticated/conferencia'
+      path: '/conferencia'
+      fullPath: '/conferencia'
+      preLoaderRoute: typeof AuthenticatedConferenciaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -216,6 +260,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEstoqueRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/historico': {
+      id: '/_authenticated/historico'
+      path: '/historico'
+      fullPath: '/historico'
+      preLoaderRoute: typeof AuthenticatedHistoricoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/medias': {
+      id: '/_authenticated/medias'
+      path: '/medias'
+      fullPath: '/medias'
+      preLoaderRoute: typeof AuthenticatedMediasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/saida': {
       id: '/_authenticated/saida'
       path: '/saida'
@@ -227,16 +285,22 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedConferenciaRoute: typeof AuthenticatedConferenciaRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEntradaRoute: typeof AuthenticatedEntradaRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
+  AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
+  AuthenticatedMediasRoute: typeof AuthenticatedMediasRoute
   AuthenticatedSaidaRoute: typeof AuthenticatedSaidaRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedConferenciaRoute: AuthenticatedConferenciaRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEntradaRoute: AuthenticatedEntradaRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
+  AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
+  AuthenticatedMediasRoute: AuthenticatedMediasRoute,
   AuthenticatedSaidaRoute: AuthenticatedSaidaRoute,
 }
 
