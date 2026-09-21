@@ -141,21 +141,14 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  // Mantém a navegação coerente quando a sessão é encerrada em outra aba.
+  // Ao encerrar a sessão (aqui ou em outra aba), descarta os dados em cache.
   useEffect(() => {
-    const { data } = (
-      queryClient as unknown as { __authListener?: boolean }
-    ).__authListener
-      ? { data: null }
-      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ({} as any);
-    void data;
-    void pathname;
-    void router;
-  }, [queryClient, router, pathname]);
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") queryClient.clear();
+    });
+    return () => data.subscription.unsubscribe();
+  }, [queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>
