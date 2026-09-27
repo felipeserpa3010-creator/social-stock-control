@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T11:59:13.969232+00:00",
+  "generated_at": "2026-09-27T11:59:36.777791+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -107,7 +107,7 @@
     },
     {
       "path": "src/lib/pdf.ts",
-      "bytes": 5420
+      "bytes": 5502
     },
     {
       "path": "src/lib/lovable-error-reporting.ts",
@@ -407,7 +407,7 @@
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
-      "bytes": 4235
+      "bytes": 5473
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
@@ -1994,6 +1994,10 @@
     {
       "source": "src/routes/_authenticated/relatorios.tsx",
       "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/components/ui/input"
     },
     {
       "source": "src/routes/_authenticated/relatorios.tsx",
