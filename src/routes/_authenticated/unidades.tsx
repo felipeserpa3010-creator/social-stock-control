@@ -22,12 +22,12 @@ import {
 export const Route = createFileRoute("/_authenticated/unidades")({
   head: () => ({
     meta: [
-      { title: "Unidades — Controle de Inventário" },
+      { title: "Unidades — Controle de Estoque" },
       {
         name: "description",
         content: "Cadastro das unidades e dispensas controladas pela Assistência Social.",
       },
-      { property: "og:title", content: "Unidades — Controle de Inventário" },
+      { property: "og:title", content: "Unidades — Controle de Estoque" },
       {
         property: "og:description",
         content: "Gerencie as unidades atendidas pelo controle de inventário.",
