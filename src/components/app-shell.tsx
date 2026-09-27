@@ -230,7 +230,7 @@ function UnitSwitcher() {
 function Shell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const { isAdmin } = useAuth();
+  const { isAdmin, isViewer } = useAuth();
 
   return (
     <div className="min-h-screen bg-background md:flex">
