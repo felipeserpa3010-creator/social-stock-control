@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T03:42:57.183750+00:00",
+  "generated_at": "2026-09-27T03:50:03.101178+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -107,7 +107,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 7269
+      "bytes": 7873
     },
     {
       "path": "src/lib/format.ts",
@@ -131,7 +131,7 @@
     },
     {
       "path": "src/routes/setup.tsx",
-      "bytes": 6445
+      "bytes": 7448
     },
     {
       "path": "src/routes/redefinir-senha.tsx",
@@ -770,6 +770,10 @@
     {
       "source": "src/lib/admin.functions.ts",
       "target": "@/integrations/supabase/auth-middleware"
+    },
+    {
+      "source": "src/lib/admin.functions.ts",
+      "target": "@/integrations/supabase/client.server"
     },
     {
       "source": "src/lib/admin.functions.ts",
