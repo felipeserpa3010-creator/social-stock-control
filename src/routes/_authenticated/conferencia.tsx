@@ -33,7 +33,13 @@ export const Route = createFileRoute("/_authenticated/conferencia")({
       },
     ],
   }),
-  beforeLoad: async () => {\n    const { data } = await supabase.auth.getUser();\n    if (!data.user) throw redirect({ to: "/auth" });\n    const { data: isViewer } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "visualizador" });\n    if (isViewer === true) throw redirect({ to: "/dashboard" });\n  },\n  component: CheckPage,
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: isViewer } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "visualizador" });
+    if (isViewer === true) throw redirect({ to: "/dashboard" });
+  },
+  component: CheckPage,
 });
 
 function CheckPage() {
