@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { useUnit } from "@/hooks/useUnit";
+import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { movementsOptions, productsOptions } from "@/lib/queries";
 import { formatDate, formatQty, todayISO } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton, TypeBadge } from "@/components/ui-kit";
@@ -64,8 +64,9 @@ function HistoryPage() {
   }, [movements, term]);
 
   const exportCsv = () => {
-    const header = ["Data", "Tipo", "Produto", "Quantidade", "Responsavel", "Observacao"];
+    const header = [...(unitId === ALL_UNITS ? ["Unidade"] : []), "Data", "Tipo", "Produto", "Quantidade", "Responsavel", "Observacao"];
     const lines = rows.map((m) => [
+      ...(unitId === ALL_UNITS ? [m.units?.nome ?? ""] : []),
       formatDate(m.data),
       m.tipo,
       m.products?.nome ?? "",
@@ -168,6 +169,7 @@ function HistoryPage() {
               <Table className="min-w-[820px]">
                 <TableHeader>
                   <TableRow>
+                    {unitId === ALL_UNITS && <TableHead>Unidade</TableHead>}
                     <TableHead>Data</TableHead>
                     <TableHead>Produto</TableHead>
                     <TableHead className="text-right">Quantidade</TableHead>
@@ -179,6 +181,7 @@ function HistoryPage() {
                 <TableBody>
                   {rows.slice(0, visible).map((m) => (
                     <TableRow key={m.id}>
+                      {unitId === ALL_UNITS && <TableCell className="font-medium">{m.units?.nome ?? "—"}</TableCell>}
                       <TableCell className="whitespace-nowrap tabular-nums">{formatDate(m.data)}</TableCell>
                       <TableCell className="font-medium">{m.products?.nome ?? "—"}</TableCell>
                       <TableCell className="text-right font-semibold tabular-nums">
