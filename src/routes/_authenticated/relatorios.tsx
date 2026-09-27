@@ -76,7 +76,7 @@ function ReportsPage() {
         rows,
         assinatura: true,
       });
-      doc.save(reportFileName("Estoque", unit?.nome ?? "Unidade", today));
+      doc.save(reportFileName("Estoque", unit?.nome ?? "Todas-as-unidades", today));
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Não foi possível gerar o PDF.");
     } finally {
