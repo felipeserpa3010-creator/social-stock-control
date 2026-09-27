@@ -60,6 +60,39 @@ function authErrorPt(msg?: string | null): string {
   return msg || "Não foi possível criar o usuário.";
 }
 
+/** Público: cadastra um usuário como pendente de autorização do CEO. */
+export const registerUser = createServerFn({ method: "POST" })
+  .inputValidator((d: { nome: string; email: string; senha: string }) => {
+    if (!d?.nome?.trim()) throw new Error("Informe o nome completo.");
+    if (!d?.email?.trim()) throw new Error("Informe o e-mail.");
+    if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
+    return { nome: d.nome.trim(), email: d.email.trim().toLowerCase(), senha: d.senha };
+  })
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.senha,
+      email_confirm: true,
+      user_metadata: { nome: data.nome },
+    });
+    if (error || !created.user) return { ok: false as const, error: authErrorPt(error?.message) };
+
+    const userId = created.user.id;
+    const { error: pError } = await supabaseAdmin.from("profiles").insert({
+      user_id: userId,
+      nome: data.nome,
+      email: data.email,
+      unit_id: null,
+      ativo: false,
+    });
+    if (pError) {
+      await supabaseAdmin.auth.admin.deleteUser(userId);
+      throw new Error(pError.message);
+    }
+    return { ok: true as const, error: null };
+  });
+
 /** Público apenas enquanto não existir administrador. Cria o Administrador Principal. */
 export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
   .inputValidator((d: BootstrapInput) => {
