@@ -1,3 +1,4 @@
+import type { MovementType, MovementFilter } from "@/lib/queries";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -46,7 +47,14 @@ function HistoryPage() {
   const [visible, setVisible] = useState(80);
 
   const { data: movements = [], isPending } = useQuery(
-    movementsOptions({ unitId, tipo: tipo || undefined, from: from || undefined, to: to || undefined, productId: productId || undefined, limit: 2000 }),
+    movementsOptions({
+      unitId,
+      limit: 2000,
+      ...(tipo ? { tipo } : {}),
+      ...(from ? { from } : {}),
+      ...(to ? { to } : {}),
+      ...(productId ? { productId } : {}),
+    } satisfies MovementFilter),
   );
 
   const rows = useMemo(() => {
@@ -99,7 +107,7 @@ function HistoryPage() {
             <select
               id="f-tipo"
               value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
+              onChange={(e) => setTipo(e.target.value as "" | MovementType)}
               className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
             >
               <option value="">Todos</option>

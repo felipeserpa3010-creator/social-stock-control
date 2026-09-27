@@ -111,7 +111,7 @@ function CheckListItem({
         titulo: "Relatório de conferência de estoque",
         instituicao: settings?.nome_instituicao ?? "Assistência Social",
         secretaria: settings?.nome_secretaria ?? "",
-        logoUrl: settings?.logo_url,
+        logoUrl: settings?.logo_url ?? null,
         unidade: unitName || check.units?.nome || "Unidade",
         dataConferencia: check.data_conferencia,
         rows,

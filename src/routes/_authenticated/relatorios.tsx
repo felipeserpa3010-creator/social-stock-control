@@ -1,0 +1,85 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { FileDown } from "lucide-react";
+import { toast } from "sonner";
+import { useUnit } from "@/hooks/useUnit";
+import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
+import { computeMediaMap, lastMonths } from "@/lib/media";
+import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
+import { PageHeader, Panel } from "@/components/ui-kit";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+
+export const Route = createFileRoute("/_authenticated/relatorios")({
+  head: () => ({
+    meta: [
+      { title: "Relatórios — Controle de Inventário" },
+      { name: "description", content: "Gere relatórios PDF do estoque aproximado da unidade para impressão." },
+      { property: "og:title", content: "Relatórios — Controle de Inventário" },
+      { property: "og:description", content: "Relatórios PDF A4 de estoque com média de consumo opcional." },
+    ],
+  }),
+  component: ReportsPage,
+});
+
+function ReportsPage() {
+  const { unitId, unit } = useUnit();
+  const { data: stock = [] } = useQuery(stockOptions(unitId));
+  const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 5000 }));
+  const { data: settings } = useQuery(settingsOptions());
+  const [withMedia, setWithMedia] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const series = useMemo(() => lastMonths(12), []);
+  const media = useMemo(() => computeMediaMap(movements, series), [movements, series]);
+
+  const generate = async () => {
+    setLoading(true);
+    try {
+      const rows: InventoryRow[] = stock
+        .map((s) => ({
+          categoria: s.product.categories?.nome ?? "—",
+          produto: s.product.nome,
+          medida: s.product.unidade_medida,
+          estoque: s.quantity,
+          media: media.get(s.product.id)?.media ?? null,
+        }))
+        .sort((a, b) => a.categoria.localeCompare(b.categoria, "pt-BR") || a.produto.localeCompare(b.produto, "pt-BR"));
+      const today = new Date().toISOString().slice(0, 10);
+      const doc = await buildInventoryPdf({
+        titulo: "Relatório de estoque aproximado",
+        instituicao: settings?.nome_instituicao ?? "Assistência Social",
+        secretaria: settings?.nome_secretaria ?? "",
+        logoUrl: settings?.logo_url ?? null,
+        unidade: unit?.nome ?? "Unidade",
+        dataConferencia: today,
+        incluirMedia: withMedia,
+        rows,
+        assinatura: true,
+      });
+      doc.save(reportFileName("Estoque", unit?.nome ?? "Unidade", today));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Não foi possível gerar o PDF.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <PageHeader title="Relatórios" description="Gere o PDF do estoque atual da unidade para impressão e arquivamento." />
+      <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} produtos com saldo registrado.`}>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <Checkbox id="with-media" checked={withMedia} onCheckedChange={(v) => setWithMedia(v === true)} />
+            <Label htmlFor="with-media">Incluir média de consumo mensal</Label>
+          </div>
+          <Button onClick={generate} disabled={loading || !unitId}>
+            <FileDown className="size-4" /> {loading ? "Gerando..." : "Gerar PDF"}
+          </Button>
+        </div>
+      </Panel>
+    </>
+  );
+}

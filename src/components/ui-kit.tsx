@@ -146,7 +146,9 @@ export function SearchInput({
   onChange,
   placeholder = "Buscar...",
   className,
+  id,
 }: {
+  id?: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
@@ -156,6 +158,7 @@ export function SearchInput({
     <div className={cn("relative", className)}>
       <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
+        id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

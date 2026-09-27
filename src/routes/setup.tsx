@@ -61,7 +61,7 @@ function SetupPage() {
     // Read directly from the form so browser autofill is recognized even when
     // React state has not received an onChange event.
     const formData = new FormData(e.currentTarget);
-    const nomeForm = String(formData.get("nome") ?? "").trim().split(/\s+/)[0];
+    const nomeForm = String(formData.get("nome") ?? "").trim().split(/\s+/)[0] ?? "";
     const unitIdForm = String(formData.get("unit_id") ?? "").trim();
     const emailForm = String(formData.get("email") ?? "").trim().toLowerCase();
     const senhaForm = String(formData.get("senha") ?? "");
@@ -96,7 +96,7 @@ function SetupPage() {
 
     setSubmitting(true);
     try {
-      await bootstrapFirstAdmin({ nome: nomeForm, email: emailForm, senha: senhaForm, unit_id: unitIdForm });
+      await bootstrapFirstAdmin({ data: { nome: nomeForm, email: emailForm, senha: senhaForm, unit_id: unitIdForm } });
       const { error } = await supabase.auth.signInWithPassword({
         email: emailForm,
         password: senhaForm,

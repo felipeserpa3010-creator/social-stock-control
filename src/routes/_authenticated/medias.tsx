@@ -43,8 +43,9 @@ function MediaPage() {
   const [months, setMonths] = useState(12);
   const [term, setTerm] = useState("");
 
-  const series = lastMonths(months);
+  const series = useMemo(() => lastMonths(months), [months]);
   const media = useMemo(() => computeMediaMap(movements, series), [movements, series]);
+  const saidas = useMemo(() => sumSaidas(movements, series), [movements, series]);
   const stockMap = useMemo(() => {
     const map = new Map<string, number>();
     stock.forEach((s) => map.set(s.product.id, Number(s.quantity)));
@@ -60,10 +61,10 @@ function MediaPage() {
     return list.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
   }, [products, term]);
 
-  const withMedia = rows.filter((p) => media[p.id]?.media !== null);
-  const insufficient = rows.filter((p) => media[p.id]?.media === null);
+  const withMedia = rows.filter((p) => media.get(p.id)?.media !== null);
+  const insufficient = rows.filter((p) => media.get(p.id)?.media === null);
   const risky = rows.filter((p) => {
-    const m = media[p.id]?.media;
+    const m = media.get(p.id)?.media;
     const current = stockMap.get(p.id) ?? 0;
     return m ? current > 0 && current / m <= 1 : false;
   });
@@ -80,12 +81,12 @@ function MediaPage() {
             onClick={() => {
               const header = ["Produto", "Categoria", "Total de saidas", "Meses", "Media mensal"];
               const lines = rows.map((p) => {
-                const m = media[p.id];
+                const m = media.get(p.id);
                 return [
                   p.nome,
                   p.categories?.nome ?? "",
-                  String(sumSaidas(movements, p.id, series)),
-                  m && m.media !== null ? String(m.months) : "",
+                  String((saidas.get(p.id) ?? 0)),
+                  m && m.media !== null ? String(m.meses) : "",
                   m && m.media !== null ? String(m.media) : "Dados insuficientes",
                 ];
               });
@@ -168,7 +169,7 @@ function MediaPage() {
               </TableHeader>
               <TableBody>
                 {rows.map((p) => {
-                  const m = media[p.id];
+                  const m = media.get(p.id);
                   const current = stockMap.get(p.id) ?? 0;
                   const duration = m?.media ? current / m.media : null;
                   return (
@@ -180,10 +181,10 @@ function MediaPage() {
                         </p>
                       </TableCell>
                       <TableCell className="text-right tabular-nums">
-                        {formatQty(sumSaidas(movements, p.id, series))}
+                        {formatQty((saidas.get(p.id) ?? 0))}
                       </TableCell>
                       <TableCell className="text-right tabular-nums text-muted-foreground">
-                        {m?.media !== null && m ? m.months : "—"}
+                        {m?.media !== null && m ? m.meses : "—"}
                       </TableCell>
                       <TableCell className="text-right font-bold tabular-nums">
                         {m?.media !== null && m ? (
