@@ -56,8 +56,13 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
     if (!d?.nome?.trim()) throw new Error("Informe o primeiro nome.");
     if (!d?.email?.trim()) throw new Error("Informe o e-mail.");
     if (!d?.unit_id?.trim()) throw new Error("Selecione a unidade onde trabalha.");
-    if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
-    return { nome: d.nome.trim().split(/\s+/)[0], email: d.email.trim().toLowerCase(), senha: d.senha, unit_id: d.unit_id.trim() };
+      if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
+    return {
+      nome: d.nome.trim().split(/\s+/)[0],
+      email: d.email.trim().toLowerCase(),
+      senha: d.senha,
+      unit_id: d.unit_id.trim(),
+    };
   })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
