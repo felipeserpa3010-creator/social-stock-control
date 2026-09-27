@@ -96,7 +96,7 @@ function SetupPage() {
 
     setSubmitting(true);
     try {
-      await bootstrapFirstAdmin({ nome: nomeForm, email: emailForm, senha: senhaForm, unit_id: unitIdForm });
+      await bootstrapFirstAdmin({ data: { nome: nomeForm, email: emailForm, senha: senhaForm, unit_id: unitIdForm } });
       const { error } = await supabase.auth.signInWithPassword({
         email: emailForm,
         password: senhaForm,
