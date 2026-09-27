@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T11:57:12.577738+00:00",
+  "generated_at": "2026-09-27T11:57:30.004707+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -68,6 +68,10 @@
     {
       "path": "supabase/migrations/20260927020000_semads_visualizador.sql",
       "bytes": 2143
+    },
+    {
+      "path": "supabase/migrations/20260927021000_lock_semads_read_only.sql",
+      "bytes": 1543
     },
     {
       "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
@@ -187,7 +191,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 15700
+      "bytes": 15771
     },
     {
       "path": "src/integrations/supabase/client.ts",
