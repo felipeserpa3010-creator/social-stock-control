@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T03:50:03.101178+00:00",
+  "generated_at": "2026-09-27T03:54:04.184103+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -107,7 +107,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 7873
+      "bytes": 8019
     },
     {
       "path": "src/lib/format.ts",
@@ -395,7 +395,7 @@
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 12011
+      "bytes": 12376
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
@@ -1938,6 +1938,10 @@
     {
       "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/usuarios.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/usuarios.tsx",
