@@ -50,6 +50,16 @@ export const getSetupUnits = createServerFn({ method: "GET" }).handler(async () 
   return data ?? [];
 });
 
+function authErrorPt(msg?: string | null): string {
+  const m = (msg ?? "").toLowerCase();
+  if (m.includes("weak") || m.includes("easy to guess") || m.includes("pwned"))
+    return "Esta senha é muito comum e já apareceu em vazamentos. Escolha outra senha, mais difícil de adivinhar.";
+  if (m.includes("already") && (m.includes("registered") || m.includes("exists")))
+    return "Já existe um usuário com este e-mail.";
+  if (m.includes("invalid") && m.includes("email")) return "E-mail inválido.";
+  return msg || "Não foi possível criar o usuário.";
+}
+
 /** Público apenas enquanto não existir administrador. Cria o Administrador Principal. */
 export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
   .inputValidator((d: BootstrapInput) => {
@@ -82,7 +92,7 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
       email_confirm: true,
       user_metadata: { nome: data.nome },
     });
-    if (error || !created.user) throw new Error(error?.message ?? "Não foi possível criar o usuário.");
+    if (error || !created.user) throw new Error(authErrorPt(error?.message));
 
     const userId = created.user.id;
     const { error: pError } = await supabaseAdmin
@@ -141,7 +151,7 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       email_confirm: true,
       user_metadata: { nome: data.nome },
     });
-    if (error || !created.user) throw new Error(error?.message ?? "Não foi possível criar o usuário.");
+    if (error || !created.user) throw new Error(authErrorPt(error?.message));
     const userId = created.user.id;
 
     const { error: pError } = await supabaseAdmin.from("profiles").insert({
