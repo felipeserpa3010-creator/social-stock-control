@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T03:25:47.403356+00:00",
+  "generated_at": "2026-09-27T03:30:53.089931+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -71,7 +71,7 @@
     },
     {
       "path": "src/components/auth-layout.tsx",
-      "bytes": 4380
+      "bytes": 4372
     },
     {
       "path": "src/components/pickers.tsx",
@@ -127,7 +127,7 @@
     },
     {
       "path": "src/routes/auth.tsx",
-      "bytes": 4036
+      "bytes": 4028
     },
     {
       "path": "src/routes/setup.tsx",
@@ -139,7 +139,7 @@
     },
     {
       "path": "src/routes/__root.tsx",
-      "bytes": 5423
+      "bytes": 5415
     },
     {
       "path": "src/routes/README.md",
