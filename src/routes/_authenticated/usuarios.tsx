@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { KeyRound, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { unitsOptions, setUserActive, usersOptions, type AppRole } from "@/lib/queries";
 import { adminCreateUser, adminResetPassword, adminSetRole } from "@/lib/admin.functions";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
@@ -24,18 +25,24 @@ import {
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({
     meta: [
-      { title: "Usuários — Controle de Inventário" },
+      { title: "Usuários — Controle de Estoque" },
       {
         name: "description",
-        content: "Cadastro e perfis de acesso dos usuários do controle de inventário.",
+        content: "Cadastro e perfis de acesso dos usuários do controle de estoque.",
       },
-      { property: "og:title", content: "Usuários — Controle de Inventário" },
+      { property: "og:title", content: "Usuários — Controle de Estoque" },
       {
         property: "og:description",
         content: "Gerencie quem acessa o sistema e a qual unidade cada responsável pertence.",
       },
     ],
   }),
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" });
+    if (isAdmin !== true) throw redirect({ to: "/dashboard" });
+  },
   component: UsersPage,
 });
 
