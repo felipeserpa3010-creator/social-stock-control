@@ -214,6 +214,6 @@ export const adminResetPassword = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.auth.admin.updateUserById(data.user_id, {
       password: data.senha,
     });
-    if (error) throw new Error(error.message);
+    if (error) throw new Error(authErrorPt(error.message));
     return { ok: true };
   });
