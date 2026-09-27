@@ -19,7 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useUnit, UnitProvider } from "@/hooks/useUnit";
+import { ALL_UNITS, useUnit, UnitProvider } from "@/hooks/useUnit";
 import { settingsOptions } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,7 @@ type NavItem = {
   label: string;
   icon: typeof Boxes;
   adminOnly?: boolean;
+  writeOnly?: boolean;
 };
 
 const NAV: { group: string; items: NavItem[] }[] = [
@@ -42,9 +43,9 @@ const NAV: { group: string; items: NavItem[] }[] = [
     items: [
       { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
       { to: "/estoque", label: "Estoque", icon: Boxes },
-      { to: "/entrada", label: "Entrada", icon: PackagePlus },
-      { to: "/saida", label: "Saída", icon: PackageMinus },
-      { to: "/conferencia", label: "Conferência", icon: ClipboardCheck },
+      { to: "/entrada", label: "Entrada", icon: PackagePlus, writeOnly: true },
+      { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
+      { to: "/conferencia", label: "Conferência", icon: ClipboardCheck, writeOnly: true },
     ],
   },
   {
@@ -59,7 +60,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
   {
     group: "Administração",
     items: [
-      { to: "/produtos", label: "Produtos e categorias", icon: Warehouse },
+      { to: "/produtos", label: "Produtos e categorias", icon: Warehouse, adminOnly: true },
       { to: "/unidades", label: "Unidades", icon: Boxes, adminOnly: true },
       { to: "/usuarios", label: "Usuários", icon: ShieldCheck, adminOnly: true },
       { to: "/configuracoes", label: "Configurações", icon: Settings, adminOnly: true },
@@ -68,13 +69,13 @@ const NAV: { group: string; items: NavItem[] }[] = [
 ];
 
 function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isViewer } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <nav className="flex flex-col gap-5">
       {NAV.map((section) => {
-        const items = section.items.filter((i) => !i.adminOnly || isAdmin);
+        const items = section.items.filter((i) => (!i.adminOnly || isAdmin) && (!i.writeOnly || !isViewer));
         if (!items.length) return null;
         return (
           <div key={section.group}>
@@ -176,7 +177,7 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
               {profile?.nome ?? "Usuário"}
             </span>
             <span className="block truncate text-[11px] text-sidebar-foreground/60">
-              {role === "admin" ? "Administrador Principal" : "Responsável pela unidade"}
+              {role === "admin" ? "Administrador Principal" : role === "visualizador" ? "Visualizador — SEMADS" : "Responsável pela unidade"}
             </span>
           </span>
         )}
@@ -196,6 +197,7 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
 
 function UnitSwitcher() {
   const { units, unitId, setUnitId, locked } = useUnit();
+  const { isViewer } = useAuth();
   if (!units.length) return null;
   return (
     <div className="flex items-center gap-2">
@@ -204,7 +206,7 @@ function UnitSwitcher() {
       </label>
       {locked ? (
         <Badge variant="secondary" className="max-w-[220px] truncate">
-          {units.find((u) => u.id === unitId)?.nome ?? "—"}
+          {unitId === ALL_UNITS ? "Todas as unidades" : units.find((u) => u.id === unitId)?.nome ?? "—"}
         </Badge>
       ) : (
         <select
@@ -213,6 +215,7 @@ function UnitSwitcher() {
           onChange={(e) => setUnitId(e.target.value)}
           className="h-8 max-w-[240px] truncate rounded-md border border-input bg-background px-2 text-sm font-medium outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
+          {isViewer && <option value={ALL_UNITS}>Todas as unidades</option>}
           {units.map((u) => (
             <option key={u.id} value={u.id}>
               {u.nome}
@@ -291,6 +294,7 @@ function Shell({ children }: { children: ReactNode }) {
               Administrador
             </Badge>
           )}
+          {isViewer && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Somente leitura</Badge>}
         </header>
         <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-6 sm:px-6 lg:px-8">
           {children}
