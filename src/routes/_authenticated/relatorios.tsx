@@ -9,6 +9,7 @@ import { computeMediaMap, lastMonths } from "@/lib/media";
 import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
 import { PageHeader, Panel } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
@@ -28,6 +29,11 @@ function ReportsPage() {
   const { unitId, unit } = useUnit();
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 5000 }));
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const { data: periodMovements = [] } = useQuery(
+    movementsOptions({ unitId, limit: 5000, ...(from ? { from } : {}), ...(to ? { to } : {}) }),
+  );
   const { data: settings } = useQuery(settingsOptions());
   const [withMedia, setWithMedia] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -80,7 +86,7 @@ function ReportsPage() {
   return (
     <>
       <PageHeader title="Relatórios" description={unitId === ALL_UNITS ? "Gere um PDF consolidado com o estoque de todas as unidades." : "Gere o PDF do estoque atual da unidade para impressão e arquivamento."} />
-      <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} produtos com saldo registrado.`}>
+      <Panel title="Relatório de consumo por período" description="Selecione as datas para apurar as saídas registradas e gerar um PDF.">\n        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">\n          <div className="grid gap-3 sm:grid-cols-2">\n            <div><label className="mb-1 block text-[11px] text-muted-foreground" htmlFor="rel-from">De</label><Input id="rel-from" type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></div>\n            <div><label className="mb-1 block text-[11px] text-muted-foreground" htmlFor="rel-to">Até</label><Input id="rel-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} /></div>\n          </div>\n          <Button variant="outline" onClick={generateConsumption} disabled={loading || !unitId || !periodMovements.length}>\n            <FileDown className="size-4" /> Gerar PDF de consumo\n          </Button>\n        </div>\n      </Panel>\n\n      <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} produtos com saldo registrado.`}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <Checkbox id="with-media" checked={withMedia} onCheckedChange={(v) => setWithMedia(v === true)} />
