@@ -43,7 +43,7 @@ function MediaPage() {
   const [months, setMonths] = useState(12);
   const [term, setTerm] = useState("");
 
-  const series = lastMonths(months);
+  const series = useMemo(() => lastMonths(months), [months]);
   const media = useMemo(() => computeMediaMap(movements, series), [movements, series]);
   const saidas = useMemo(() => sumSaidas(movements, series), [movements, series]);
   const stockMap = useMemo(() => {
