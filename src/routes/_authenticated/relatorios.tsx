@@ -16,9 +16,9 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/_authenticated/relatorios")({
   head: () => ({
     meta: [
-      { title: "Relatórios — Controle de Inventário" },
+      { title: "Relatórios — Controle de Estoque" },
       { name: "description", content: "Gere relatórios PDF do estoque aproximado da unidade para impressão." },
-      { property: "og:title", content: "Relatórios — Controle de Inventário" },
+      { property: "og:title", content: "Relatórios — Controle de Estoque" },
       { property: "og:description", content: "Relatórios PDF A4 de estoque com média de consumo opcional." },
     ],
   }),
