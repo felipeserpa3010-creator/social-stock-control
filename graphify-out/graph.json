@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T04:15:22.964990+00:00",
+  "generated_at": "2026-09-27T04:17:53.486904+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -111,7 +111,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 8725
+      "bytes": 9246
     },
     {
       "path": "src/lib/format.ts",
