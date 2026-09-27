@@ -107,7 +107,7 @@ function HistoryPage() {
             <select
               id="f-tipo"
               value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
+              onChange={(e) => setTipo(e.target.value as "" | MovementType)}
               className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
             >
               <option value="">Todos</option>
