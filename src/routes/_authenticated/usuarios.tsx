@@ -176,7 +176,7 @@ function UsersPage() {
                       <TableCell className="text-muted-foreground">{u.email}</TableCell>
                       <TableCell>
                         <Badge variant={u.role === "admin" ? "default" : "secondary"}>
-                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : "Responsável"}
+                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : u.role === "responsavel" ? "Responsável" : "Pendente"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{unit?.nome ?? "—"}</TableCell>
