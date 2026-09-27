@@ -71,13 +71,13 @@ function UsersPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await adminCreateUser({
+      await adminCreateUser({ data: {
         nome: form.nome,
         email: form.email,
         senha: form.senha,
         role: form.role,
         unit_id: form.role === "responsavel" ? form.unit_id || null : null,
-      });
+      } });
       toast.success("Usuário criado.");
       setOpen(false);
       setForm({ nome: "", email: "", senha: "", role: "responsavel", unit_id: "" });
@@ -91,7 +91,7 @@ function UsersPage() {
 
   const changeRole = async (userId: string, role: AppRole) => {
     try {
-      await adminSetRole({ user_id: userId, role });
+      await adminSetRole({ data: { user_id: userId, role } });
       toast.success("Perfil atualizado.");
       refresh();
     } catch (err) {
@@ -102,7 +102,7 @@ function UsersPage() {
   const doReset = async () => {
     if (!reset) return;
     try {
-      await adminResetPassword({ user_id: reset.id, senha: newPass });
+      await adminResetPassword({ data: { user_id: reset.id, senha: newPass } });
       toast.success(`Nova senha definida para ${reset.nome}.`);
       setReset(null);
       setNewPass("");
