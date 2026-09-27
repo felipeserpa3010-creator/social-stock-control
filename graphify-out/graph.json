@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T11:58:01.747539+00:00",
+  "generated_at": "2026-09-27T11:58:17.710131+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -391,7 +391,7 @@
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
-      "bytes": 7037
+      "bytes": 7258
     },
     {
       "path": "src/routes/_authenticated/historico.tsx",
@@ -439,7 +439,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 7892
+      "bytes": 8159
     },
     {
       "path": "src/routes/_authenticated/produtos.tsx",
@@ -2302,6 +2302,10 @@
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/dashboard.tsx",
+      "target": "@/hooks/useAuth"
     },
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
