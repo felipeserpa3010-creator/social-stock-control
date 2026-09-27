@@ -1,0 +1,3 @@
+-- Usuários podem solicitar cadastro, mas o acesso começa bloqueado.
+-- O CEO/Admin libera o acesso alterando profiles.ativo para true.
+-- A coluna ativo já existe no cadastro de perfis e passa a representar autorização de acesso.
