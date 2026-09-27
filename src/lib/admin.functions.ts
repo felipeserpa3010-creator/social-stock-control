@@ -271,3 +271,24 @@ export const adminResetPassword = createServerFn({ method: "POST" })
     if (error) return { ok: false as const, error: authErrorPt(error.message) };
     return { ok: true as const, error: null };
   });
+
+/** Somente administrador: libera ou bloqueia o acesso de um usuário. */
+export const adminSetAccess = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { user_id: string; ativo: boolean }) => {
+    if (!d?.user_id) throw new Error("Usuário inválido.");
+    return d;
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase as any, context.userId);
+    if (data.user_id === context.userId && !data.ativo) {
+      throw new Error("O Administrador Principal não pode bloquear o próprio acesso.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ ativo: data.ativo })
+      .eq("user_id", data.user_id);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
