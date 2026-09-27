@@ -71,13 +71,17 @@ function UsersPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await adminCreateUser({ data: {
+      const result = await adminCreateUser({ data: {
         nome: form.nome,
         email: form.email,
         senha: form.senha,
         role: form.role,
         unit_id: form.role === "responsavel" ? form.unit_id || null : null,
       } });
+      if (!result.ok) {
+        toast.error(result.error);
+        return;
+      }
       toast.success("Usuário criado.");
       setOpen(false);
       setForm({ nome: "", email: "", senha: "", role: "responsavel", unit_id: "" });
@@ -102,7 +106,11 @@ function UsersPage() {
   const doReset = async () => {
     if (!reset) return;
     try {
-      await adminResetPassword({ data: { user_id: reset.id, senha: newPass } });
+      const result = await adminResetPassword({ data: { user_id: reset.id, senha: newPass } });
+      if (!result.ok) {
+        toast.error(result.error);
+        return;
+      }
       toast.success(`Nova senha definida para ${reset.nome}.`);
       setReset(null);
       setNewPass("");
