@@ -19,12 +19,12 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/_authenticated/conferencias")({
   head: () => ({
     meta: [
-      { title: "Histórico de conferências — Controle de Inventário" },
+      { title: "Histórico de conferências — Controle de Estoque" },
       {
         name: "description",
         content: "Conferências de estoque realizadas na unidade, com diferenças e relatório em PDF.",
       },
-      { property: "og:title", content: "Histórico de conferências — Controle de Inventário" },
+      { property: "og:title", content: "Histórico de conferências — Controle de Estoque" },
       {
         property: "og:description",
         content: "Conferências registradas na dispensa, com itens conferidos e PDF para assinatura.",
