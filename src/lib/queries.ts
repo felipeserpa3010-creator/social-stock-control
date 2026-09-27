@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ALL_UNITS } from "@/hooks/useUnit";
+
 import type { Database } from "@/integrations/supabase/types";
 
 export type Unit = Database["public"]["Tables"]["units"]["Row"];
@@ -50,6 +50,8 @@ async function currentUserId() {
   if (!id) throw new Error("Sessão expirada. Entre novamente.");
   return id;
 }
+
+const ALL_UNITS_SCOPE = "__all__";
 
 /* ------------------------------------------------------------------ *
  * Leituras
@@ -105,7 +107,7 @@ export function stockOptions(unitId: string | null) {
       let query = supabase
         .from("stock")
         .select("product_id, unit_id, quantidade, updated_at, products(*, categories(nome)), units(nome, sigla)");
-      if (unitId !== ALL_UNITS) query = query.eq("unit_id", unitId as string);
+      if (unitId !== ALL_UNITS_SCOPE) query = query.eq("unit_id", unitId as string);
       const { data, error } = await query;
       if (error) throw message(error);
       const rows = (data ?? []) as unknown as Array<{
@@ -148,7 +150,7 @@ export function movementsOptions(filter: MovementFilter) {
         .select("*, products(*), units(nome)")
         .order("data", { ascending: false })
         .order("created_at", { ascending: false });
-      if (filter.unitId !== ALL_UNITS) query = query.eq("unit_id", filter.unitId as string);
+      if (filter.unitId !== ALL_UNITS_SCOPE) query = query.eq("unit_id", filter.unitId as string);
       query = query.limit(filter.limit ?? 300);
       if (filter.tipo && filter.tipo !== "todos") query = query.eq("tipo", filter.tipo);
       if (filter.from) query = query.gte("data", filter.from);
