@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T04:19:36.766904+00:00",
+  "generated_at": "2026-09-27T11:56:04.427261+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -64,6 +64,10 @@
     {
       "path": "supabase/migrations/20260927010000_add_gabinete_semads_unit.sql",
       "bytes": 182
+    },
+    {
+      "path": "supabase/migrations/20260927020000_semads_visualizador.sql",
+      "bytes": 2143
     },
     {
       "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
@@ -159,7 +163,7 @@
     },
     {
       "path": "src/hooks/useAuth.tsx",
-      "bytes": 2751
+      "bytes": 2864
     },
     {
       "path": "src/hooks/use-mobile.tsx",
@@ -183,7 +187,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 15595
+      "bytes": 15700
     },
     {
       "path": "src/integrations/supabase/client.ts",
