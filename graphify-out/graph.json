@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T23:10:27.619297+00:00",
+  "generated_at": "2026-09-27T23:11:15.562320+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -131,7 +131,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 12505
+      "bytes": 13796
     },
     {
       "path": "src/lib/format.ts",
@@ -151,7 +151,7 @@
     },
     {
       "path": "src/routes/auth.tsx",
-      "bytes": 4028
+      "bytes": 4734
     },
     {
       "path": "src/routes/setup.tsx",
@@ -199,7 +199,7 @@
     },
     {
       "path": "src/integrations/supabase/auth-middleware.ts",
-      "bytes": 3234
+      "bytes": 3532
     },
     {
       "path": "src/integrations/supabase/previewAuthStorage.ts",
@@ -427,7 +427,7 @@
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 12727
+      "bytes": 13642
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
@@ -447,7 +447,7 @@
     },
     {
       "path": "src/routes/_authenticated/route.tsx",
-      "bytes": 464
+      "bytes": 722
     },
     {
       "path": "src/routes/_authenticated/medias.tsx",
@@ -814,6 +814,10 @@
     {
       "source": "src/lib/admin.functions.ts",
       "target": "@/integrations/supabase/auth-middleware"
+    },
+    {
+      "source": "src/lib/admin.functions.ts",
+      "target": "@/integrations/supabase/client.server"
     },
     {
       "source": "src/lib/admin.functions.ts",
