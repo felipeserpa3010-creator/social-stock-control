@@ -20,12 +20,12 @@ import {
 export const Route = createFileRoute("/_authenticated/medias")({
   head: () => ({
     meta: [
-      { title: "Média de consumo — Controle de Inventário" },
+      { title: "Média de consumo — Controle de Estoque" },
       {
         name: "description",
         content: "Média mensal de consumo calculada a partir das saídas registradas na unidade.",
       },
-      { property: "og:title", content: "Média de consumo — Controle de Inventário" },
+      { property: "og:title", content: "Média de consumo — Controle de Estoque" },
       {
         property: "og:description",
         content: "Média mensal de consumo por produto e duração estimada do estoque atual.",
