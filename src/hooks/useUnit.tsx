@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { unitsOptions, type Unit } from "@/lib/queries";
 
 const STORAGE_KEY = "inventario:unit";
+export const ALL_UNITS = "__all__";
 
 type UnitState = {
   units: Unit[];
@@ -19,6 +20,7 @@ const UnitContext = createContext<UnitState | undefined>(undefined);
 export function UnitProvider({ children }: { children: ReactNode }) {
   const { profile, role } = useAuth();
   const locked = role === "responsavel";
+  const viewer = role === "visualizador";
   const { data: units = [], isLoading } = useQuery(unitsOptions(false));
   const [stored, setStored] = useState<string | null>(null);
 
@@ -31,6 +33,11 @@ export function UnitProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const unitId = useMemo(() => {
+    if (viewer) {
+      if (stored === ALL_UNITS) return ALL_UNITS;
+      if (stored && units.some((u) => u.id === stored)) return stored;
+      return ALL_UNITS;
+    }
     if (locked && profile?.unit_id) return profile.unit_id;
     if (stored && units.some((u) => u.id === stored)) return stored;
     return units[0]?.id ?? null;
@@ -55,7 +62,7 @@ export function UnitProvider({ children }: { children: ReactNode }) {
       locked,
       setUnitId,
     }),
-    [units, unitId, isLoading, locked],
+    [units, unitId, isLoading, locked, viewer],
   );
 
   return <UnitContext.Provider value={value}>{children}</UnitContext.Provider>;
