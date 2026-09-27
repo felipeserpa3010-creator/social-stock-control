@@ -12,10 +12,10 @@ import { AuthLayout } from "@/components/auth-layout";
 export const Route = createFileRoute("/setup")({
   head: () => ({
     meta: [
-      { title: "Configuração inicial — Controle de Inventário" },
+      { title: "Configuração inicial — Controle de Estoque" },
       {
         name: "description",
-        content: "Cadastro único do Administrador Principal do controle de inventário.",
+        content: "Cadastro único do Administrador Principal do controle de estoque.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -52,18 +52,45 @@ function SetupPage() {
     };
   }, []);
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (senha !== confirmar) {
+
+    // Read directly from the form so browser autofill is recognized even when
+    // React state has not received an onChange event.
+    const formData = new FormData(e.currentTarget);
+    const nomeForm = String(formData.get("nome") ?? "").trim();
+    const emailForm = String(formData.get("email") ?? "").trim().toLowerCase();
+    const senhaForm = String(formData.get("senha") ?? "");
+    const confirmarForm = String(formData.get("confirmar") ?? "");
+
+    setNome(nomeForm);
+    setEmail(emailForm);
+    setSenha(senhaForm);
+    setConfirmar(confirmarForm);
+
+    if (!nomeForm) {
+      toast.error("Informe o nome completo.");
+      return;
+    }
+    if (!emailForm) {
+      toast.error("Informe o e-mail de acesso.");
+      return;
+    }
+    if (senhaForm.length < 8) {
+      toast.error("A senha deve ter ao menos 8 caracteres.");
+      return;
+    }
+    if (senhaForm !== confirmarForm) {
       toast.error("As senhas não conferem.");
       return;
     }
+
     setSubmitting(true);
     try {
-      await bootstrapFirstAdmin({ nome, email, senha });
+      await bootstrapFirstAdmin({ nome: nomeForm, email: emailForm, senha: senhaForm });
       const { error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: senha,
+        email: emailForm,
+        password: senhaForm,
       });
       if (error) throw error;
       toast.success("Administrador Principal criado com sucesso.");
@@ -119,6 +146,7 @@ function SetupPage() {
           <Field label="Nome completo" htmlFor="nome" required>
             <Input
               id="nome"
+              name="nome"
               required
               value={nome}
               onChange={(e) => setNome(e.target.value)}
@@ -128,6 +156,7 @@ function SetupPage() {
           <Field label="E-mail de acesso" htmlFor="email" required>
             <Input
               id="email"
+              name="email"
               type="email"
               autoComplete="username"
               required
@@ -139,6 +168,7 @@ function SetupPage() {
           <Field label="Senha" htmlFor="senha" required hint="Mínimo de 8 caracteres.">
             <Input
               id="senha"
+              name="senha"
               type="password"
               autoComplete="new-password"
               required
@@ -150,6 +180,7 @@ function SetupPage() {
           <Field label="Confirmar senha" htmlFor="confirmar" required>
             <Input
               id="confirmar"
+              name="confirmar"
               type="password"
               autoComplete="new-password"
               required
