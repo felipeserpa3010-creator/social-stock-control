@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { useUnit } from "@/hooks/useUnit";
+import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { stockOptions } from "@/lib/queries";
 import { formatDate, formatQty, stockStatus } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, StatusPill, TableSkeleton } from "@/components/ui-kit";
@@ -139,6 +139,7 @@ function StockPage() {
             <Table className="min-w-[680px]">
               <TableHeader>
                 <TableRow>
+                  {unitId === ALL_UNITS && <TableHead>Unidade</TableHead>}
                   <TableHead>Produto</TableHead>
                   <TableHead>Categoria</TableHead>
                   <TableHead className="text-right">Estoque</TableHead>
@@ -149,7 +150,8 @@ function StockPage() {
               </TableHeader>
               <TableBody>
                 {rows.map((r) => (
-                  <TableRow key={r.product.id}>
+                  <TableRow key={`${r.unit_id}-${r.product.id}`}>
+                    {unitId === ALL_UNITS && <TableCell className="font-medium">{r.unit?.nome ?? "—"}</TableCell>}
                     <TableCell className="font-medium">{r.product.nome}</TableCell>
                     <TableCell className="text-muted-foreground">
                       {r.product.categories?.nome ?? "—"}
