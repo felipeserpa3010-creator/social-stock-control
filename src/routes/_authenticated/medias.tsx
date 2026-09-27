@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
-import { useUnit } from "@/hooks/useUnit";
+import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { movementsOptions, productsOptions, stockOptions } from "@/lib/queries";
 import { computeMediaMap, lastMonths, sumSaidas } from "@/lib/media";
 import { formatQty, stockStatus } from "@/lib/format";
@@ -48,7 +48,7 @@ function MediaPage() {
   const saidas = useMemo(() => sumSaidas(movements, series), [movements, series]);
   const stockMap = useMemo(() => {
     const map = new Map<string, number>();
-    stock.forEach((s) => map.set(s.product.id, Number(s.quantity)));
+    stock.forEach((s) => map.set(s.product.id, (map.get(s.product.id) ?? 0) + Number(s.quantity)));
     return map;
   }, [stock]);
 
@@ -73,7 +73,7 @@ function MediaPage() {
     <>
       <PageHeader
         title="Média de consumo mensal"
-        description="Calculada automaticamente pelas saídas registradas: total do período dividido pelos meses acompanhados."
+        description={unitId === ALL_UNITS ? "Visão consolidada de todas as unidades. As saídas são somadas por produto." : "Calculada automaticamente pelas saídas registradas: total do período dividido pelos meses acompanhados."}
         actions={
           <Button
             variant="outline"
