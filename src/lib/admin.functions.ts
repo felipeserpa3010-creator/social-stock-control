@@ -253,6 +253,24 @@ export const adminSetRole = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+/** Somente administrador: atribui a unidade de um usuário. */
+export const adminSetUnit = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { user_id: string; unit_id: string | null }) => {
+    if (!d?.user_id) throw new Error("Usuário inválido.");
+    return d;
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase as any, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ unit_id: data.unit_id })
+      .eq("user_id", data.user_id);
+    if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
 /** Somente administrador: redefine a senha de um usuário. */
 export const adminResetPassword = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
