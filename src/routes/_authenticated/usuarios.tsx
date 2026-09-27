@@ -5,8 +5,8 @@ import { KeyRound, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { unitsOptions, setUserActive, usersOptions, type AppRole } from "@/lib/queries";
-import { adminCreateUser, adminResetPassword, adminSetRole } from "@/lib/admin.functions";
+import { unitsOptions, usersOptions, type AppRole } from "@/lib/queries";
+import { adminCreateUser, adminResetPassword, adminSetAccess, adminSetRole, adminSetUnit } from "@/lib/admin.functions";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -121,8 +121,8 @@ function UsersPage() {
 
   const toggleActive = async (userId: string, ativo: boolean) => {
     try {
-      await setUserActive(userId, ativo);
-      toast.success(ativo ? "Usuário reativado." : "Usuário desativado.");
+      await adminSetAccess({ data: { user_id: userId, ativo } });
+      toast.success(ativo ? "Acesso liberado." : "Acesso bloqueado.");
       refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível atualizar.");
@@ -182,7 +182,7 @@ function UsersPage() {
                       <TableCell className="text-muted-foreground">{unit?.nome ?? "—"}</TableCell>
                       <TableCell>
                         <Badge variant={u.ativo ? "secondary" : "outline"}>
-                          {u.ativo ? "Ativo" : "Desativado"}
+                          {u.ativo ? "Liberado" : u.role ? "Desativado" : "Aguardando liberação"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
@@ -197,6 +197,16 @@ function UsersPage() {
                             <option value="admin">Administrador</option>
                             <option value="responsavel">Responsável</option>
                           </select>
+                          <select
+                            value={u.unit_id ?? ""}
+                            disabled={me || u.role === "admin"}
+                            aria-label={`Unidade de ${u.nome}`}
+                            onChange={(e) => void adminSetUnit({ data: { user_id: u.user_id, unit_id: e.target.value || null } }).then(refresh).catch((err) => toast.error(err instanceof Error ? err.message : "Não foi possível alterar a unidade."))}
+                            className="h-8 rounded-md border border-input bg-background px-1.5 text-xs disabled:opacity-50"
+                          >
+                            <option value="">Sem unidade</option>
+                            {units.map((unit) => <option key={unit.id} value={unit.id}>{unit.sigla ?? unit.nome}</option>)}
+                          </select>
                           <Button variant="ghost" size="sm" onClick={() => setReset({ id: u.user_id, nome: u.nome })}>
                             <KeyRound /> Senha
                           </Button>
@@ -206,7 +216,7 @@ function UsersPage() {
                               size="sm"
                               onClick={() => toggleActive(u.user_id, !u.ativo)}
                             >
-                              {u.ativo ? "Desativar" : "Ativar"}
+                              {u.ativo ? "Bloquear" : "Liberar"}
                             </Button>
                           )}
                         </div>
