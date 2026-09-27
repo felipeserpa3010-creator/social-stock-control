@@ -14,8 +14,9 @@ type CreateUserInput = {
 export const getSystemStatus = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { count, error } = await supabaseAdmin
-    .from("profiles")
-    .select("id", { count: "exact", head: true });
+    .from("user_roles")
+    .select("user_id", { count: "exact", head: true })
+    .eq("role", "admin");
   if (error) throw new Error(error.message);
   return { hasAdmin: (count ?? 0) > 0 };
 });
@@ -32,8 +33,9 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { count, error: countError } = await supabaseAdmin
-      .from("profiles")
-      .select("id", { count: "exact", head: true });
+      .from("user_roles")
+      .select("user_id", { count: "exact", head: true })
+      .eq("role", "admin");
     if (countError) throw new Error(countError.message);
     if ((count ?? 0) > 0) {
       throw new Error("O sistema já possui um administrador. O cadastro público está bloqueado.");
