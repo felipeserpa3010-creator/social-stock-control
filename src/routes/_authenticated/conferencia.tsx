@@ -21,12 +21,12 @@ import { EmptyState, Field, PageHeader, Panel } from "@/components/ui-kit";
 export const Route = createFileRoute("/_authenticated/conferencia")({
   head: () => ({
     meta: [
-      { title: "Conferência de estoque — Controle de Inventário" },
+      { title: "Conferência de estoque — Controle de Estoque" },
       {
         name: "description",
         content: "Conferência física dos produtos da dispensa, com registro de diferenças.",
       },
-      { property: "og:title", content: "Conferência de estoque — Controle de Inventário" },
+      { property: "og:title", content: "Conferência de estoque — Controle de Estoque" },
       {
         property: "og:description",
         content: "Conferência física dos produtos com registro de diferenças e ajustes.",
