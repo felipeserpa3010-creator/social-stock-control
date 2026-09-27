@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { ALL_UNITS } from "@/hooks/useUnit";
 import type { Database } from "@/integrations/supabase/types";
 
 export type Unit = Database["public"]["Tables"]["units"]["Row"];
@@ -101,15 +102,18 @@ export function stockOptions(unitId: string | null) {
     enabled: Boolean(unitId),
     queryKey: ["stock", unitId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("stock")
-        .select("product_id, unit_id, quantidade, updated_at, products(*, categories(nome)), units(nome, sigla)")
-        .eq("unit_id", unitId as string);
+        .select("product_id, unit_id, quantidade, updated_at, products(*, categories(nome)), units(nome, sigla)");
+      if (unitId !== ALL_UNITS) query = query.eq("unit_id", unitId as string);
+      const { data, error } = await query;
       if (error) throw message(error);
       const rows = (data ?? []) as unknown as Array<{
         product_id: string;
+        unit_id: string;
         quantidade: number;
         updated_at: string | null;
+        units: { nome: string; sigla: string | null } | null;
         products: ProductWithCategory | null;
       }>;
       return rows
@@ -143,9 +147,9 @@ export function movementsOptions(filter: MovementFilter) {
         .from("stock_movements")
         .select("*, products(*), units(nome)")
         .order("data", { ascending: false })
-        .order("created_at", { ascending: false })
-        .eq("unit_id", filter.unitId as string)
-        .limit(filter.limit ?? 300);
+        .order("created_at", { ascending: false });
+      if (filter.unitId !== ALL_UNITS) query = query.eq("unit_id", filter.unitId as string);
+      query = query.limit(filter.limit ?? 300);
       if (filter.tipo && filter.tipo !== "todos") query = query.eq("tipo", filter.tipo);
       if (filter.from) query = query.gte("data", filter.from);
       if (filter.to) query = query.lte("data", filter.to);
@@ -165,10 +169,10 @@ export function checksOptions(unitId: string | null) {
       const { data, error } = await supabase
         .from("stock_checks")
         .select("*, units(nome), profiles(nome)")
-        .eq("unit_id", unitId as string)
         .order("data_conferencia", { ascending: false })
-        .order("created_at", { ascending: false })
-        .limit(120);
+        .order("created_at", { ascending: false });
+      if (unitId !== ALL_UNITS) query = query.eq("unit_id", unitId as string);
+      query = query.limit(120);
       if (error) throw message(error);
       return (data ?? []) as unknown as CheckRow[];
     },
