@@ -20,6 +20,7 @@ export type ReportOptions = {
   incluirMedia?: boolean;
   rows: InventoryRow[];
   assinatura?: boolean;
+  modo?: "estoque" | "consumo";
   colunasExtras?: { header: string; key: keyof InventoryRow }[];
 };
 
@@ -90,7 +91,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     doc.text(`Data da última conferência: ${dataConf}`, pageW - margin, 42, { align: "right" });
   };
 
-  const head = ["Categoria", "Produto", "Unidade de medida", "Estoque aproximado"];
+  const head = ["Categoria", "Produto", "Unidade de medida", opts.modo === "consumo" ? "Consumo no período" : "Estoque aproximado"];
   if (opts.incluirMedia) head.push("Média de consumo mensal");
 
   const body = opts.rows.map((r) => {
