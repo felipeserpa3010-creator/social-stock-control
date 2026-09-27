@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T23:07:05.752493+00:00",
+  "generated_at": "2026-09-27T23:10:15.182502+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -72,6 +72,10 @@
     {
       "path": "supabase/migrations/20260927020000_semads_visualizador.sql",
       "bytes": 215
+    },
+    {
+      "path": "supabase/migrations/20260927023000_user_registration_authorization.sql",
+      "bytes": 236
     },
     {
       "path": "supabase/migrations/20260927022000_add_conselho_tutelar_unit.sql",
@@ -172,6 +176,10 @@
     {
       "path": "src/routes/recuperar-senha.tsx",
       "bytes": 2942
+    },
+    {
+      "path": "src/routes/cadastro.tsx",
+      "bytes": 3417
     },
     {
       "path": "src/hooks/useAuth.tsx",
@@ -1057,6 +1065,42 @@
     },
     {
       "source": "src/routes/recuperar-senha.tsx",
+      "target": "@/components/auth-layout"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/lib/admin.functions"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
       "target": "@/components/auth-layout"
     },
     {
