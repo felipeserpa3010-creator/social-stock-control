@@ -83,10 +83,67 @@ function ReportsPage() {
     }
   };
 
+  const generateConsumption = async () => {
+    setLoading(true);
+    try {
+      const totals = new Map<string, InventoryRow>();
+      periodMovements
+        .filter((m) => m.tipo === "saida")
+        .forEach((m) => {
+          const product = m.products;
+          if (!product) return;
+          const current = totals.get(product.id);
+          if (current) current.estoque += Number(m.quantidade);
+          else {
+            totals.set(product.id, {
+              categoria: "—",
+              produto: product.nome,
+              medida: product.unidade_medida,
+              estoque: Number(m.quantidade),
+            });
+          }
+        });
+
+      const rows = Array.from(totals.values()).sort((a, b) =>
+        a.produto.localeCompare(b.produto, "pt-BR"),
+      );
+      const today = new Date().toISOString().slice(0, 10);
+      const doc = await buildInventoryPdf({
+        titulo: "Relatório de consumo por período",
+        instituicao: settings?.nome_instituicao ?? "Assistência Social",
+        secretaria: settings?.nome_secretaria ?? "",
+        logoUrl: settings?.logo_url ?? null,
+        unidade: unit?.nome ?? (unitId === ALL_UNITS ? "Todas as unidades" : "Unidade"),
+        dataConferencia: to || today,
+        incluirMedia: false,
+        modo: "consumo",
+        rows,
+        assinatura: false,
+      });
+      doc.save(reportFileName("Consumo", unit?.nome ?? "Todas-as-unidades", to || today));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Não foi possível gerar o relatório de consumo.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <PageHeader title="Relatórios" description={unitId === ALL_UNITS ? "Gere um PDF consolidado com o estoque de todas as unidades." : "Gere o PDF do estoque atual da unidade para impressão e arquivamento."} />
-      <Panel title="Relatório de consumo por período" description="Selecione as datas para apurar as saídas registradas e gerar um PDF.">\n        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">\n          <div className="grid gap-3 sm:grid-cols-2">\n            <div><label className="mb-1 block text-[11px] text-muted-foreground" htmlFor="rel-from">De</label><Input id="rel-from" type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></div>\n            <div><label className="mb-1 block text-[11px] text-muted-foreground" htmlFor="rel-to">Até</label><Input id="rel-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} /></div>\n          </div>\n          <Button variant="outline" onClick={generateConsumption} disabled={loading || !unitId || !periodMovements.length}>\n            <FileDown className="size-4" /> Gerar PDF de consumo\n          </Button>\n        </div>\n      </Panel>\n\n      <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} produtos com saldo registrado.`}>
+      <Panel title="Relatório de consumo por período" description="Selecione as datas para apurar as saídas registradas e gerar um PDF.">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div><label className="mb-1 block text-[11px] text-muted-foreground" htmlFor="rel-from">De</label><Input id="rel-from" type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></div>
+            <div><label className="mb-1 block text-[11px] text-muted-foreground" htmlFor="rel-to">Até</label><Input id="rel-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} /></div>
+          </div>
+          <Button variant="outline" onClick={generateConsumption} disabled={loading || !unitId || !periodMovements.length}>
+            <FileDown className="size-4" /> Gerar PDF de consumo
+          </Button>
+        </div>
+      </Panel>
+
+      <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} registros de estoque${unitId === ALL_UNITS ? " — todas as unidades" : ""}.`}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <Checkbox id="with-media" checked={withMedia} onCheckedChange={(v) => setWithMedia(v === true)} />
