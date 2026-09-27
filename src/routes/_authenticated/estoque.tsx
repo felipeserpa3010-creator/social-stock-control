@@ -19,12 +19,12 @@ import {
 export const Route = createFileRoute("/_authenticated/estoque")({
   head: () => ({
     meta: [
-      { title: "Estoque — Controle de Inventário" },
+      { title: "Estoque — Controle de Estoque" },
       {
         name: "description",
         content: "Estoque aproximado de cada produto da unidade, com alertas de mínimo e zerado.",
       },
-      { property: "og:title", content: "Estoque — Controle de Inventário" },
+      { property: "og:title", content: "Estoque — Controle de Estoque" },
       {
         property: "og:description",
         content: "Estoque aproximado por produto, com situação e data da última atualização.",
