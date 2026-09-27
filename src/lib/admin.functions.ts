@@ -58,7 +58,13 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
     const { error: rError } = await supabaseAdmin
       .from("user_roles")
       .insert({ user_id: userId, role: "admin" });
-    if (rError) throw new Error(rError.message);
+    if (rError) {
+      // Roll back everything if the role could not be created, so a failed
+      // first registration does not leave the system blocked by a partial user.
+      await supabaseAdmin.from("profiles").delete().eq("user_id", userId);
+      await supabaseAdmin.auth.admin.deleteUser(userId);
+      throw new Error(rError.message);
+    }
 
     return { ok: true };
   });
