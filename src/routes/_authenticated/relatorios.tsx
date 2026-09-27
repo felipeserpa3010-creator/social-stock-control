@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileDown } from "lucide-react";
 import { toast } from "sonner";
-import { useUnit } from "@/hooks/useUnit";
+import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
 import { computeMediaMap, lastMonths } from "@/lib/media";
 import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
@@ -37,22 +37,33 @@ function ReportsPage() {
   const generate = async () => {
     setLoading(true);
     try {
-      const rows: InventoryRow[] = stock
-        .map((s) => ({
-          categoria: s.product.categories?.nome ?? "—",
-          produto: s.product.nome,
-          medida: s.product.unidade_medida,
-          estoque: s.quantity,
-          media: media.get(s.product.id)?.media ?? null,
-        }))
-        .sort((a, b) => a.categoria.localeCompare(b.categoria, "pt-BR") || a.produto.localeCompare(b.produto, "pt-BR"));
+      const byProduct = new Map<string, InventoryRow>();
+      stock.forEach((s) => {
+        const current = byProduct.get(s.product.id);
+        if (current) {
+          current.estoque += s.quantity;
+        } else {
+          byProduct.set(s.product.id, {
+            categoria: s.product.categories?.nome ?? "—",
+            produto: s.product.nome,
+            medida: s.product.unidade_medida,
+            estoque: s.quantity,
+            media: media.get(s.product.id)?.media ?? null,
+          });
+        }
+      });
+      const rows: InventoryRow[] = Array.from(byProduct.values()).sort(
+        (a, b) =>
+          a.categoria.localeCompare(b.categoria, "pt-BR") ||
+          a.produto.localeCompare(b.produto, "pt-BR"),
+      );
       const today = new Date().toISOString().slice(0, 10);
       const doc = await buildInventoryPdf({
         titulo: "Relatório de estoque aproximado",
         instituicao: settings?.nome_instituicao ?? "Assistência Social",
         secretaria: settings?.nome_secretaria ?? "",
         logoUrl: settings?.logo_url ?? null,
-        unidade: unit?.nome ?? "Unidade",
+        unidade: unit?.nome ?? (unitId === ALL_UNITS ? "Todas as unidades" : "Unidade"),
         dataConferencia: today,
         incluirMedia: withMedia,
         rows,
@@ -68,7 +79,7 @@ function ReportsPage() {
 
   return (
     <>
-      <PageHeader title="Relatórios" description="Gere o PDF do estoque atual da unidade para impressão e arquivamento." />
+      <PageHeader title="Relatórios" description={unitId === ALL_UNITS ? "Gere um PDF consolidado com o estoque de todas as unidades." : "Gere o PDF do estoque atual da unidade para impressão e arquivamento."} />
       <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} produtos com saldo registrado.`}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
