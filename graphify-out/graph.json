@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-27T04:17:53.486904+00:00",
+  "generated_at": "2026-09-27T04:19:36.766904+00:00",
   "files": [
     {
       "path": "AGENTS.md",
-      "bytes": 480
+      "bytes": 630
     },
     {
       "path": "tsconfig.json",
@@ -111,7 +111,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 9246
+      "bytes": 9403
     },
     {
       "path": "src/lib/format.ts",
@@ -135,7 +135,7 @@
     },
     {
       "path": "src/routes/setup.tsx",
-      "bytes": 7464
+      "bytes": 7577
     },
     {
       "path": "src/routes/redefinir-senha.tsx",
@@ -403,7 +403,7 @@
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 12406
+      "bytes": 12602
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
