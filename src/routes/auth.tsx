@@ -13,12 +13,12 @@ import { AuthLayout } from "@/components/auth-layout";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — Controle de Inventário" },
+      { title: "Entrar — Controle de Estoque" },
       {
         name: "description",
         content: "Acesso restrito ao controle de estoque das dispensas da Assistência Social.",
       },
-      { property: "og:title", content: "Entrar — Controle de Inventário" },
+      { property: "og:title", content: "Entrar — Controle de Estoque" },
       {
         property: "og:description",
         content: "Acesso restrito aos usuários cadastrados do sistema.",
