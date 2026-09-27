@@ -66,6 +66,14 @@ function AuthPage() {
       );
       return;
     }
+    const { data: profile } = await supabase.from("profiles").select("ativo").eq("user_id", data.user?.id ?? "").maybeSingle();
+    const { data: role } = await supabase.from("user_roles").select("role").eq("user_id", data.user?.id ?? "").maybeSingle();
+    setSubmitting(false);
+    if (!profile?.ativo || !role?.role) {
+      await supabase.auth.signOut();
+      toast.info("Cadastro recebido. Aguarde o CEO liberar seu acesso.");
+      return;
+    }
     navigate({ to: "/dashboard", replace: true });
   };
 
@@ -83,7 +91,7 @@ function AuthPage() {
           </p>
         ) : (
           <p>
-            Esqueceu a senha?{" "}
+            Ainda não tem cadastro?{" "}\n            <Link to="/cadastro" className="font-semibold text-primary underline-offset-4 hover:underline">Cadastrar acesso</Link>\n            <span className="mx-2">•</span>\n            Esqueceu a senha?{" "}
             <Link
               to="/recuperar-senha"
               className="font-semibold text-primary underline-offset-4 hover:underline"
