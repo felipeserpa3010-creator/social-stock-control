@@ -18,6 +18,8 @@ export type StockEntry = {
   product: ProductWithCategory;
   quantity: number;
   updated_at: string | null;
+  unit_id: string;
+  unit: { nome: string; sigla: string | null } | null;
 };
 export type MovementRow = Movement & {
   products: Product | null;
@@ -101,7 +103,7 @@ export function stockOptions(unitId: string | null) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stock")
-        .select("product_id, quantidade, updated_at, products(*, categories(nome))")
+        .select("product_id, unit_id, quantidade, updated_at, products(*, categories(nome)), units(nome, sigla)")
         .eq("unit_id", unitId as string);
       if (error) throw message(error);
       const rows = (data ?? []) as unknown as Array<{
@@ -116,6 +118,8 @@ export function stockOptions(unitId: string | null) {
           product: r.products as ProductWithCategory,
           quantity: Number(r.quantidade),
           updated_at: r.updated_at,
+          unit_id: r.unit_id,
+          unit: r.units,
         }));
     },
   });
