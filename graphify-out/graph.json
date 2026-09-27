@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T12:05:39.807002+00:00",
+  "generated_at": "2026-09-27T23:07:05.752493+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -72,6 +72,10 @@
     {
       "path": "supabase/migrations/20260927020000_semads_visualizador.sql",
       "bytes": 215
+    },
+    {
+      "path": "supabase/migrations/20260927022000_add_conselho_tutelar_unit.sql",
+      "bytes": 244
     },
     {
       "path": "supabase/migrations/20260927021000_lock_semads_read_only.sql",
