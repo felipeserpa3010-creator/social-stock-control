@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Return typed failure results for expected authentication rejections so forms can show feedback without triggering the global runtime error screen.

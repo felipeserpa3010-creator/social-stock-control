@@ -92,7 +92,9 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
       email_confirm: true,
       user_metadata: { nome: data.nome },
     });
-    if (error || !created.user) throw new Error(authErrorPt(error?.message));
+    if (error || !created.user) {
+      return { ok: false as const, error: authErrorPt(error?.message) };
+    }
 
     const userId = created.user.id;
     const { error: pError } = await supabaseAdmin
@@ -113,7 +115,7 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
       throw new Error(rError.message);
     }
 
-    return { ok: true };
+    return { ok: true as const, error: null };
   });
 
 async function assertAdmin(supabase: {
@@ -151,7 +153,9 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       email_confirm: true,
       user_metadata: { nome: data.nome },
     });
-    if (error || !created.user) throw new Error(authErrorPt(error?.message));
+    if (error || !created.user) {
+      return { ok: false as const, error: authErrorPt(error?.message) };
+    }
     const userId = created.user.id;
 
     const { error: pError } = await supabaseAdmin.from("profiles").insert({
@@ -173,7 +177,7 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       await supabaseAdmin.auth.admin.deleteUser(userId);
       throw new Error(rError.message);
     }
-    return { ok: true };
+    return { ok: true as const, error: null };
   });
 
 /** Somente administrador: altera o perfil (papel) de um usuário. */
@@ -214,6 +218,6 @@ export const adminResetPassword = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.auth.admin.updateUserById(data.user_id, {
       password: data.senha,
     });
-    if (error) throw new Error(authErrorPt(error.message));
-    return { ok: true };
+    if (error) return { ok: false as const, error: authErrorPt(error.message) };
+    return { ok: true as const, error: null };
   });
