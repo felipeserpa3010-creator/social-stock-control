@@ -7,7 +7,7 @@ type CreateUserInput = {
   email: string;
   senha: string;
   unit_id: string | null;
-  role: "admin" | "responsavel";
+  role: "admin" | "responsavel" | "visualizador";
 };
 
 /** Público: informa se o sistema já possui um administrador cadastrado. */
@@ -132,8 +132,9 @@ export const adminCreateUser = createServerFn({ method: "POST" })
     if (!d?.nome?.trim()) throw new Error("Informe o nome.");
     if (!d?.email?.trim()) throw new Error("Informe o e-mail.");
     if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
-    if (d.role !== "admin" && d.role !== "responsavel") throw new Error("Perfil inválido.");
-    if (d.role === "responsavel" && !d.unit_id) throw new Error("Selecione a unidade do responsável.");
+    if (d.role !== "admin" && d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
+    if (d.role !== "admin" && !d.unit_id) throw new Error("Selecione a unidade.");
+    if (d.role === "visualizador" && !d.unit_id) throw new Error("O Visualizador deve ser vinculado ao Gabinete SEMADS.");
     return {
       nome: d.nome.trim(),
       email: d.email.trim().toLowerCase(),
@@ -146,6 +147,22 @@ export const adminCreateUser = createServerFn({ method: "POST" })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await assertAdmin(context.supabase as any, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    if (data.unit_id) {
+      const { data: unit, error: unitError } = await supabaseAdmin
+        .from("units")
+        .select("nome")
+        .eq("id", data.unit_id)
+        .maybeSingle();
+      if (unitError) throw new Error(unitError.message);
+      const isSemads = unit?.nome?.toLowerCase() === "gabinete semads";
+      if (isSemads && data.role !== "visualizador") {
+        throw new Error("Usuários do Gabinete SEMADS devem ser cadastrados como Visualizador.");
+      }
+      if (!isSemads && data.role === "visualizador") {
+        throw new Error("O perfil Visualizador é exclusivo do Gabinete SEMADS.");
+      }
+    }
 
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
@@ -183,9 +200,9 @@ export const adminCreateUser = createServerFn({ method: "POST" })
 /** Somente administrador: altera o perfil (papel) de um usuário. */
 export const adminSetRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { user_id: string; role: "admin" | "responsavel" }) => {
+  .inputValidator((d: { user_id: string; role: "admin" | "responsavel" | "visualizador" }) => {
     if (!d?.user_id) throw new Error("Usuário inválido.");
-    if (d.role !== "admin" && d.role !== "responsavel") throw new Error("Perfil inválido.");
+    if (d.role !== "admin" && d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
     return d;
   })
   .handler(async ({ data, context }) => {
