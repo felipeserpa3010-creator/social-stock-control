@@ -1,3 +1,4 @@
+import type { MovementType, MovementFilter } from "@/lib/queries";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -46,7 +47,14 @@ function HistoryPage() {
   const [visible, setVisible] = useState(80);
 
   const { data: movements = [], isPending } = useQuery(
-    movementsOptions({ unitId, tipo: tipo || undefined, from: from || undefined, to: to || undefined, productId: productId || undefined, limit: 2000 }),
+    movementsOptions({
+      unitId,
+      limit: 2000,
+      ...(tipo ? { tipo } : {}),
+      ...(from ? { from } : {}),
+      ...(to ? { to } : {}),
+      ...(productId ? { productId } : {}),
+    } satisfies MovementFilter),
   );
 
   const rows = useMemo(() => {
