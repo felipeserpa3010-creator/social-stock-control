@@ -24,7 +24,28 @@ export const getSystemStatus = createServerFn({ method: "GET" }).handler(async (
 /** Público: lista as unidades ativas disponíveis para o primeiro cadastro. */
 export const getSetupUnits = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin.from("units").select("id, nome, sigla").eq("ativo", true).order("nome");
+
+  // Garante que o Gabinete SEMADS esteja disponível no painel de cadastro,
+  // mesmo que a migração de dados ainda não tenha sido aplicada no banco.
+  const { data: existingUnit, error: existingError } = await supabaseAdmin
+    .from("units")
+    .select("id")
+    .ilike("nome", "Gabinete SEMADS")
+    .maybeSingle();
+  if (existingError) throw new Error(existingError.message);
+
+  if (!existingUnit) {
+    const { error: insertError } = await supabaseAdmin
+      .from("units")
+      .insert({ nome: "Gabinete SEMADS", sigla: "SEMADS", ativo: true, demo: false });
+    if (insertError) throw new Error(insertError.message);
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from("units")
+    .select("id, nome, sigla")
+    .eq("ativo", true)
+    .order("nome");
   if (error) throw new Error(error.message);
   return data ?? [];
 });
