@@ -303,6 +303,16 @@ export const adminSetAccess = createServerFn({ method: "POST" })
       throw new Error("O Administrador Principal não pode bloquear o próprio acesso.");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (data.ativo) {
+      const [{ data: profile }, { data: role }] = await Promise.all([
+        supabaseAdmin.from("profiles").select("unit_id").eq("user_id", data.user_id).maybeSingle(),
+        supabaseAdmin.from("user_roles").select("role").eq("user_id", data.user_id).maybeSingle(),
+      ]);
+      if (!role?.role) throw new Error("Defina o perfil do usuário antes de liberar o acesso.");
+      if (role.role !== "admin" && !profile?.unit_id) {
+        throw new Error("Defina a unidade do usuário antes de liberar o acesso.");
+      }
+    }
     const { error } = await supabaseAdmin
       .from("profiles")
       .update({ ativo: data.ativo })
