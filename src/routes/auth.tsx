@@ -91,7 +91,12 @@ function AuthPage() {
           </p>
         ) : (
           <p>
-            Ainda não tem cadastro?{" "}\n            <Link to="/cadastro" className="font-semibold text-primary underline-offset-4 hover:underline">Cadastrar acesso</Link>\n            <span className="mx-2">•</span>\n            Esqueceu a senha?{" "}
+            Ainda não tem cadastro?{" "}
+            <Link to="/cadastro" className="font-semibold text-primary underline-offset-4 hover:underline">
+              Cadastrar acesso
+            </Link>
+            <span className="mx-2">•</span>
+            Esqueceu a senha?{" "}
             <Link
               to="/recuperar-senha"
               className="font-semibold text-primary underline-offset-4 hover:underline"
