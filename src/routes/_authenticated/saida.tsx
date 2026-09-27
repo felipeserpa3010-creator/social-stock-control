@@ -6,12 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/saida")({
   head: () => ({
     meta: [
-      { title: "Saída de materiais — Controle de Inventário" },
+      { title: "Saída de materiais — Controle de Estoque" },
       {
         name: "description",
         content: "Registre as dispensas e consumos que reduzem o estoque da unidade.",
       },
-      { property: "og:title", content: "Saída de materiais — Controle de Inventário" },
+      { property: "og:title", content: "Saída de materiais — Controle de Estoque" },
       {
         property: "og:description",
         content: "Registro de dispensas e consumos no estoque da unidade.",
