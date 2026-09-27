@@ -17,12 +17,12 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Painel — Controle de Inventário" },
+      { title: "Painel — Controle de Estoque" },
       {
         name: "description",
         content: "Situação do estoque, alertas e movimentos recentes da unidade selecionada.",
       },
-      { property: "og:title", content: "Painel — Controle de Inventário" },
+      { property: "og:title", content: "Painel — Controle de Estoque" },
       {
         property: "og:description",
         content: "Situação do estoque, alertas e movimentos recentes da unidade.",
