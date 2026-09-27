@@ -29,7 +29,7 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const { session, loading } = useAuth();
+  const { session, profile, role, loading } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -47,8 +47,8 @@ function AuthPage() {
   }, []);
 
   useEffect(() => {
-    if (!loading && session) navigate({ to: "/dashboard", replace: true });
-  }, [loading, session, navigate]);
+    if (!loading && session && profile?.ativo && role) navigate({ to: "/dashboard", replace: true });
+  }, [loading, session, profile, role, navigate]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
