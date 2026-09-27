@@ -49,7 +49,7 @@ export function AuthLayout({
 
         <div className="relative max-w-md">
           <h2 className="text-3xl font-extrabold leading-tight tracking-tight">
-            Controle de Inventário das dispensas
+            Controle de Estoque das dispensas
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-sidebar-foreground/70">
             Registre entradas e saídas, confira o estoque aproximado de cada unidade, acompanhe a
@@ -89,7 +89,7 @@ export function AuthLayout({
                 {institution}
               </span>
               <span className="block text-[11px] leading-tight text-muted-foreground">
-                Controle de Inventário
+                Controle de Estoque
               </span>
             </span>
           </div>
