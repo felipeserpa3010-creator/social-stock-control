@@ -176,7 +176,7 @@ function UsersPage() {
                       <TableCell className="text-muted-foreground">{u.email}</TableCell>
                       <TableCell>
                         <Badge variant={u.role === "admin" ? "default" : "secondary"}>
-                          {u.role === "admin" ? "Administrador" : "Responsável"}
+                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : "Responsável"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">{unit?.nome ?? "—"}</TableCell>
@@ -258,6 +258,7 @@ function UsersPage() {
                   className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
                 >
                   <option value="responsavel">Responsável de unidade</option>
+                  <option value="visualizador">Visualizador — SEMADS</option>
                   <option value="admin">Administrador</option>
                 </select>
               </Field>
