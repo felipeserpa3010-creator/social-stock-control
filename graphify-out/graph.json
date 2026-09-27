@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T04:11:11.915974+00:00",
+  "generated_at": "2026-09-27T04:15:22.964990+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -39,7 +39,7 @@
     },
     {
       "path": "src/routeTree.gen.ts",
-      "bytes": 14939
+      "bytes": 16843
     },
     {
       "path": "src/styles.css",
@@ -87,7 +87,7 @@
     },
     {
       "path": "src/components/ui-kit.tsx",
-      "bytes": 6592
+      "bytes": 6629
     },
     {
       "path": "src/lib/error-page.ts",
@@ -111,7 +111,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 8708
+      "bytes": 8725
     },
     {
       "path": "src/lib/format.ts",
@@ -135,7 +135,7 @@
     },
     {
       "path": "src/routes/setup.tsx",
-      "bytes": 7448
+      "bytes": 7464
     },
     {
       "path": "src/routes/redefinir-senha.tsx",
@@ -387,7 +387,7 @@
     },
     {
       "path": "src/routes/_authenticated/historico.tsx",
-      "bytes": 8232
+      "bytes": 8394
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
@@ -395,11 +395,19 @@
     },
     {
       "path": "src/routes/_authenticated/conferencias.tsx",
-      "bytes": 7478
+      "bytes": 7486
+    },
+    {
+      "path": "src/routes/_authenticated/relatorios.tsx",
+      "bytes": 3766
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 12376
+      "bytes": 12406
+    },
+    {
+      "path": "src/routes/_authenticated/configuracoes.tsx",
+      "bytes": 4113
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
@@ -415,11 +423,11 @@
     },
     {
       "path": "src/routes/_authenticated/route.tsx",
-      "bytes": 523
+      "bytes": 464
     },
     {
       "path": "src/routes/_authenticated/medias.tsx",
-      "bytes": 9282
+      "bytes": 9386
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
@@ -497,6 +505,10 @@
     },
     {
       "source": "src/routeTree.gen.ts",
+      "target": "./routes/_authenticated/configuracoes"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
       "target": "./routes/_authenticated/dashboard"
     },
     {
@@ -518,6 +530,10 @@
     {
       "source": "src/routeTree.gen.ts",
       "target": "./routes/_authenticated/produtos"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
+      "target": "./routes/_authenticated/relatorios"
     },
     {
       "source": "src/routeTree.gen.ts",
@@ -1821,6 +1837,10 @@
     },
     {
       "source": "src/routes/_authenticated/historico.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/historico.tsx",
       "target": "@tanstack/react-router"
     },
     {
@@ -1920,6 +1940,58 @@
       "target": "@/components/ui/button"
     },
     {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/lib/media"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/lib/pdf"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/components/ui/checkbox"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/components/ui/label"
+    },
+    {
       "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@tanstack/react-router"
     },
@@ -1982,6 +2054,46 @@
     {
       "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/components/ui/table"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/lib/logo"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/components/ui/input"
     },
     {
       "source": "src/routes/_authenticated/conferencia.tsx",
