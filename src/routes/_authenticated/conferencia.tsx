@@ -1,10 +1,11 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ClipboardCheck, Loader2, Wand2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnit } from "@/hooks/useUnit";
+import { supabase } from "@/integrations/supabase/client";
 import {
   createStockCheck,
   productsOptions,
@@ -32,7 +33,7 @@ export const Route = createFileRoute("/_authenticated/conferencia")({
       },
     ],
   }),
-  component: CheckPage,
+  beforeLoad: async () => {\n    const { data } = await supabase.auth.getUser();\n    if (!data.user) throw redirect({ to: "/auth" });\n    const { data: isViewer } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "visualizador" });\n    if (isViewer === true) throw redirect({ to: "/dashboard" });\n  },\n  component: CheckPage,
 });
 
 function CheckPage() {
