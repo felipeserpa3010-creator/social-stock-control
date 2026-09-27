@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T11:57:42.571396+00:00",
+  "generated_at": "2026-09-27T11:58:01.747539+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -399,7 +399,7 @@
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
-      "bytes": 1305
+      "bytes": 1358
     },
     {
       "path": "src/routes/_authenticated/conferencias.tsx",
@@ -419,11 +419,11 @@
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
-      "bytes": 10369
+      "bytes": 10363
     },
     {
       "path": "src/routes/_authenticated/entrada.tsx",
-      "bytes": 1329
+      "bytes": 1382
     },
     {
       "path": "src/routes/_authenticated/unidades.tsx",
@@ -1904,6 +1904,10 @@
       "target": "@/components/ui-kit"
     },
     {
+      "source": "src/routes/_authenticated/saida.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
       "source": "src/routes/_authenticated/conferencias.tsx",
       "target": "@tanstack/react-router"
     },
@@ -2170,6 +2174,10 @@
     {
       "source": "src/routes/_authenticated/entrada.tsx",
       "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/entrada.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/unidades.tsx",
