@@ -17,12 +17,14 @@ import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as AuthenticatedConferenciaRouteImport } from './routes/_authenticated/conferencia'
 import { Route as AuthenticatedConferenciasRouteImport } from './routes/_authenticated/conferencias'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEntradaRouteImport } from './routes/_authenticated/entrada'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
 import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedMediasRouteImport } from './routes/_authenticated/medias'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
+import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
 import { Route as AuthenticatedSaidaRouteImport } from './routes/_authenticated/saida'
 import { Route as AuthenticatedUnidadesRouteImport } from './routes/_authenticated/unidades'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
@@ -68,6 +70,12 @@ const AuthenticatedConferenciasRoute =
     path: '/conferencias',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -98,6 +106,11 @@ const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   path: '/produtos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSaidaRoute = AuthenticatedSaidaRouteImport.update({
   id: '/saida',
   path: '/saida',
@@ -122,12 +135,14 @@ export interface FileRoutesByFullPath {
   '/setup': typeof SetupRoute
   '/conferencia': typeof AuthenticatedConferenciaRoute
   '/conferencias': typeof AuthenticatedConferenciasRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/saida': typeof AuthenticatedSaidaRoute
   '/unidades': typeof AuthenticatedUnidadesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
@@ -140,12 +155,14 @@ export interface FileRoutesByTo {
   '/setup': typeof SetupRoute
   '/conferencia': typeof AuthenticatedConferenciaRoute
   '/conferencias': typeof AuthenticatedConferenciasRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/saida': typeof AuthenticatedSaidaRoute
   '/unidades': typeof AuthenticatedUnidadesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
@@ -160,12 +177,14 @@ export interface FileRoutesById {
   '/setup': typeof SetupRoute
   '/_authenticated/conferencia': typeof AuthenticatedConferenciaRoute
   '/_authenticated/conferencias': typeof AuthenticatedConferenciasRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/entrada': typeof AuthenticatedEntradaRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
   '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/medias': typeof AuthenticatedMediasRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
+  '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
   '/_authenticated/saida': typeof AuthenticatedSaidaRoute
   '/_authenticated/unidades': typeof AuthenticatedUnidadesRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
@@ -180,12 +199,14 @@ export interface FileRouteTypes {
     | '/setup'
     | '/conferencia'
     | '/conferencias'
+    | '/configuracoes'
     | '/dashboard'
     | '/entrada'
     | '/estoque'
     | '/historico'
     | '/medias'
     | '/produtos'
+    | '/relatorios'
     | '/saida'
     | '/unidades'
     | '/usuarios'
@@ -198,12 +219,14 @@ export interface FileRouteTypes {
     | '/setup'
     | '/conferencia'
     | '/conferencias'
+    | '/configuracoes'
     | '/dashboard'
     | '/entrada'
     | '/estoque'
     | '/historico'
     | '/medias'
     | '/produtos'
+    | '/relatorios'
     | '/saida'
     | '/unidades'
     | '/usuarios'
@@ -217,12 +240,14 @@ export interface FileRouteTypes {
     | '/setup'
     | '/_authenticated/conferencia'
     | '/_authenticated/conferencias'
+    | '/_authenticated/configuracoes'
     | '/_authenticated/dashboard'
     | '/_authenticated/entrada'
     | '/_authenticated/estoque'
     | '/_authenticated/historico'
     | '/_authenticated/medias'
     | '/_authenticated/produtos'
+    | '/_authenticated/relatorios'
     | '/_authenticated/saida'
     | '/_authenticated/unidades'
     | '/_authenticated/usuarios'
@@ -295,6 +320,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConferenciasRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -337,6 +369,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProdutosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/relatorios': {
+      id: '/_authenticated/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof AuthenticatedRelatoriosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/saida': {
       id: '/_authenticated/saida'
       path: '/saida'
@@ -364,12 +403,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedConferenciaRoute: typeof AuthenticatedConferenciaRoute
   AuthenticatedConferenciasRoute: typeof AuthenticatedConferenciasRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEntradaRoute: typeof AuthenticatedEntradaRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
   AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedMediasRoute: typeof AuthenticatedMediasRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
+  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
   AuthenticatedSaidaRoute: typeof AuthenticatedSaidaRoute
   AuthenticatedUnidadesRoute: typeof AuthenticatedUnidadesRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
@@ -378,12 +419,14 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedConferenciaRoute: AuthenticatedConferenciaRoute,
   AuthenticatedConferenciasRoute: AuthenticatedConferenciasRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEntradaRoute: AuthenticatedEntradaRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
   AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedMediasRoute: AuthenticatedMediasRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
+  AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
   AuthenticatedSaidaRoute: AuthenticatedSaidaRoute,
   AuthenticatedUnidadesRoute: AuthenticatedUnidadesRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
