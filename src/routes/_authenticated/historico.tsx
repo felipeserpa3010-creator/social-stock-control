@@ -21,12 +21,12 @@ import {
 export const Route = createFileRoute("/_authenticated/historico")({
   head: () => ({
     meta: [
-      { title: "Histórico de movimentações — Controle de Inventário" },
+      { title: "Histórico de movimentações — Controle de Estoque" },
       {
         name: "description",
         content: "Histórico completo de entradas, saídas e ajustes de estoque da unidade.",
       },
-      { property: "og:title", content: "Histórico de movimentações — Controle de Inventário" },
+      { property: "og:title", content: "Histórico de movimentações — Controle de Estoque" },
       {
         property: "og:description",
         content: "Entradas, saídas e ajustes registrados na dispensa, com filtros por período.",
