@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-type BootstrapInput = { nome: string; email: string; senha: string };
+type BootstrapInput = { nome: string; email: string; senha: string; unit_id: string };
 type CreateUserInput = {
   nome: string;
   email: string;
@@ -21,13 +21,22 @@ export const getSystemStatus = createServerFn({ method: "GET" }).handler(async (
   return { hasAdmin: (count ?? 0) > 0 };
 });
 
-/** Público apenas enquanto não existir NENHUM usuário. Cria o Administrador Principal. */
+/** Público: lista as unidades ativas disponíveis para o primeiro cadastro. */
+export const getSetupUnits = createServerFn({ method: "GET" }).handler(async () => {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data, error } = await supabaseAdmin.from("units").select("id, nome, sigla").eq("ativo", true).order("nome");
+  if (error) throw new Error(error.message);
+  return data ?? [];
+});
+
+/** Público apenas enquanto não existir administrador. Cria o Administrador Principal. */
 export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
   .inputValidator((d: BootstrapInput) => {
-    if (!d?.nome?.trim()) throw new Error("Informe o nome completo.");
+    if (!d?.nome?.trim()) throw new Error("Informe o primeiro nome.");
     if (!d?.email?.trim()) throw new Error("Informe o e-mail.");
+    if (!d?.unit_id?.trim()) throw new Error("Selecione a unidade onde trabalha.");
     if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
-    return { nome: d.nome.trim(), email: d.email.trim().toLowerCase(), senha: d.senha };
+    return { nome: d.nome.trim().split(/\s+/)[0], email: d.email.trim().toLowerCase(), senha: d.senha, unit_id: d.unit_id.trim() };
   })
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -52,7 +61,7 @@ export const bootstrapFirstAdmin = createServerFn({ method: "POST" })
     const userId = created.user.id;
     const { error: pError } = await supabaseAdmin
       .from("profiles")
-      .insert({ user_id: userId, nome: data.nome, email: data.email, ativo: true });
+      .insert({ user_id: userId, nome: data.nome, email: data.email, unit_id: data.unit_id, ativo: true });
     if (pError) {
       await supabaseAdmin.auth.admin.deleteUser(userId);
       throw new Error(pError.message);
