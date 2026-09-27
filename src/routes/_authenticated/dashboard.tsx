@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Boxes, ClipboardCheck, PackageMinus, PackagePlus, TrendingUp } from "lucide-react";
-import { useUnit } from "@/hooks/useUnit";
+import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
+import { useAuth } from "@/hooks/useAuth";
 import {
   checksOptions,
   movementsOptions,
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function DashboardPage() {
   const { unitId, unit } = useUnit();
+  const { isViewer } = useAuth();
   const { data: products = [] } = useQuery(productsOptions(false));
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 400 }));
@@ -58,11 +60,13 @@ function DashboardPage() {
   return (
     <>
       <PageHeader
-        title="Painel da unidade"
+        title={unitId === ALL_UNITS ? "Painel geral" : "Painel da unidade"}
         description={
           unit
             ? `Resumo de ${unit.nome}${unit.sigla ? ` (${unit.sigla})` : ""}.`
-            : "Cadastre uma unidade para começar."
+            : isViewer
+              ? "Visão consolidada de todas as unidades do estoque."
+              : "Cadastre uma unidade para começar."
         }
         actions={
           <>
@@ -123,7 +127,7 @@ function DashboardPage() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{s.product.nome}</p>
                     <p className="text-[11px] text-muted-foreground">
-                      {s.product.categories?.nome ?? "Sem categoria"} · mínimo{" "}
+                      {s.unit?.nome ? `${s.unit.nome} · ` : ""}{s.product.categories?.nome ?? "Sem categoria"} · mínimo{" "}
                       {formatQty(s.product.estoque_minimo)} {s.product.unidade_medida}
                     </p>
                   </div>
