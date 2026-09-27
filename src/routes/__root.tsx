@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Controle de Inventário — Assistência Social" },
+      { title: "Controle de Estoque — Assistência Social" },
       {
         name: "description",
         content:
@@ -88,7 +88,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "author", content: "Assistência Social" },
       { name: "theme-color", content: "#1f4e42" },
-      { property: "og:title", content: "Controle de Inventário — Assistência Social" },
+      { property: "og:title", content: "Controle de Estoque — Assistência Social" },
       {
         property: "og:description",
         content:
