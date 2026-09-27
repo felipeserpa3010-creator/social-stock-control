@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { MovementForm } from "@/components/movement-form";
 import { PageHeader } from "@/components/ui-kit";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/saida")({
   head: () => ({
@@ -17,7 +18,13 @@ export const Route = createFileRoute("/_authenticated/saida")({
       },
     ],
   }),
-  beforeLoad: async () => {\n    const { data } = await supabase.auth.getUser();\n    if (!data.user) throw redirect({ to: "/auth" });\n    const { data: isViewer } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "visualizador" });\n    if (isViewer === true) throw redirect({ to: "/dashboard" });\n  },\n  component: SaidaPage,
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: isViewer } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "visualizador" });
+    if (isViewer === true) throw redirect({ to: "/dashboard" });
+  },
+  component: SaidaPage,
 });
 
 function SaidaPage() {
