@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { MovementForm } from "@/components/movement-form";
 import { PageHeader } from "@/components/ui-kit";
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/entrada")({
       },
     ],
   }),
-  component: EntradaPage,
+  beforeLoad: async () => {\n    const { data } = await supabase.auth.getUser();\n    if (!data.user) throw redirect({ to: "/auth" });\n    const { data: isViewer } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "visualizador" });\n    if (isViewer === true) throw redirect({ to: "/dashboard" });\n  },\n  component: EntradaPage,
 });
 
 function EntradaPage() {
