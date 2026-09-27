@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T11:57:30.004707+00:00",
+  "generated_at": "2026-09-27T11:57:42.571396+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -399,7 +399,7 @@
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
-      "bytes": 972
+      "bytes": 1305
     },
     {
       "path": "src/routes/_authenticated/conferencias.tsx",
@@ -419,11 +419,11 @@
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
-      "bytes": 9977
+      "bytes": 10369
     },
     {
       "path": "src/routes/_authenticated/entrada.tsx",
-      "bytes": 996
+      "bytes": 1329
     },
     {
       "path": "src/routes/_authenticated/unidades.tsx",
@@ -2130,6 +2130,10 @@
     {
       "source": "src/routes/_authenticated/conferencia.tsx",
       "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/conferencia.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/conferencia.tsx",
