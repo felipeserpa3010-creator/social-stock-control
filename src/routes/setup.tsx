@@ -28,6 +28,8 @@ function SetupPage() {
   const [checking, setChecking] = useState(true);
   const [blocked, setBlocked] = useState(false);
   const [nome, setNome] = useState("");
+  const [unitId, setUnitId] = useState("");
+  const [units, setUnits] = useState<Array<{ id: string; nome: string; sigla: string | null }>>([]);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmar, setConfirmar] = useState("");
@@ -37,10 +39,11 @@ function SetupPage() {
     let active = true;
     void (async () => {
       try {
-        const { getSystemStatus } = await import("@/lib/admin.functions");
-        const status = await getSystemStatus();
+        const { getSystemStatus, getSetupUnits } = await import("@/lib/admin.functions");
+        const [status, availableUnits] = await Promise.all([getSystemStatus(), getSetupUnits()]);
         if (!active) return;
         setBlocked(status.hasAdmin);
+        setUnits(availableUnits);
       } catch {
         if (active) setBlocked(false);
       } finally {
@@ -58,18 +61,24 @@ function SetupPage() {
     // Read directly from the form so browser autofill is recognized even when
     // React state has not received an onChange event.
     const formData = new FormData(e.currentTarget);
-    const nomeForm = String(formData.get("nome") ?? "").trim();
+    const nomeForm = String(formData.get("nome") ?? "").trim().split(/\s+/)[0];
+    const unitIdForm = String(formData.get("unit_id") ?? "").trim();
     const emailForm = String(formData.get("email") ?? "").trim().toLowerCase();
     const senhaForm = String(formData.get("senha") ?? "");
     const confirmarForm = String(formData.get("confirmar") ?? "");
 
     setNome(nomeForm);
+    setUnitId(unitIdForm);
     setEmail(emailForm);
     setSenha(senhaForm);
     setConfirmar(confirmarForm);
 
     if (!nomeForm) {
-      toast.error("Informe o nome completo.");
+      toast.error("Informe o primeiro nome.");
+      return;
+    }
+    if (!unitIdForm) {
+      toast.error("Selecione a unidade onde trabalha.");
       return;
     }
     if (!emailForm) {
@@ -87,7 +96,7 @@ function SetupPage() {
 
     setSubmitting(true);
     try {
-      await bootstrapFirstAdmin({ nome: nomeForm, email: emailForm, senha: senhaForm });
+      await bootstrapFirstAdmin({ nome: nomeForm, email: emailForm, senha: senhaForm, unit_id: unitIdForm });
       const { error } = await supabase.auth.signInWithPassword({
         email: emailForm,
         password: senhaForm,
@@ -143,15 +152,21 @@ function SetupPage() {
     >
       <Panel>
         <form onSubmit={submit} className="space-y-4">
-          <Field label="Nome completo" htmlFor="nome" required>
+          <Field label="Primeiro nome" htmlFor="nome" required>
             <Input
               id="nome"
               name="nome"
               required
               value={nome}
               onChange={(e) => setNome(e.target.value)}
-              placeholder="Ex.: Maria Aparecida Souza"
+              placeholder="Ex.: Maria"
             />
+          </Field>
+          <Field label="Unidade onde trabalha" htmlFor="unit_id" required>
+            <select id="unit_id" name="unit_id" required value={unitId} onChange={(e) => setUnitId(e.target.value)} className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm md:text-sm">
+              <option value="">Selecione a unidade</option>
+              {units.map((unit) => <option key={unit.id} value={unit.id}>{unit.nome}{unit.sigla ? ` (${unit.sigla})` : ""}</option>)}
+            </select>
           </Field>
           <Field label="E-mail de acesso" htmlFor="email" required>
             <Input
