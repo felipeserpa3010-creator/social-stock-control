@@ -168,13 +168,13 @@ export function checksOptions(unitId: string | null) {
     enabled: Boolean(unitId),
     queryKey: ["checks", unitId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("stock_checks")
         .select("*, units(nome), profiles(nome)")
         .order("data_conferencia", { ascending: false })
         .order("created_at", { ascending: false });
-      if (unitId !== ALL_UNITS) query = query.eq("unit_id", unitId as string);
-      query = query.limit(120);
+      if (unitId !== ALL_UNITS_SCOPE) query = query.eq("unit_id", unitId as string);
+      const { data, error } = await query.limit(120);
       if (error) throw message(error);
       return (data ?? []) as unknown as CheckRow[];
     },

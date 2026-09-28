@@ -399,7 +399,6 @@ export type Database = {
     Functions: {
       can_access_unit: { Args: { _unit_id: string }; Returns: boolean }
       can_write_unit: { Args: { _unit_id: string }; Returns: boolean }
-      is_viewer: { Args: Record<PropertyKey, never>; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -408,6 +407,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
+      is_viewer: { Args: never; Returns: boolean }
       my_unit: { Args: never; Returns: string }
     }
     Enums: {
