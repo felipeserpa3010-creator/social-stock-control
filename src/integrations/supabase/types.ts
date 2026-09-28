@@ -398,8 +398,6 @@ export type Database = {
     }
     Functions: {
       can_access_unit: { Args: { _unit_id: string }; Returns: boolean }
-      can_write_unit: { Args: { _unit_id: string }; Returns: boolean }
-      is_viewer: { Args: Record<PropertyKey, never>; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -411,7 +409,7 @@ export type Database = {
       my_unit: { Args: never; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "responsavel" | "visualizador"
+      app_role: "admin" | "responsavel"
       movement_type: "entrada" | "saida" | "conferencia" | "ajuste"
     }
     CompositeTypes: {
@@ -540,7 +538,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "responsavel", "visualizador"],
+      app_role: ["admin", "responsavel"],
       movement_type: ["entrada", "saida", "conferencia", "ajuste"],
     },
   },
