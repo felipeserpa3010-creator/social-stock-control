@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T23:11:34.546565+00:00",
+  "generated_at": "2026-09-28T16:08:48.612603+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -72,6 +72,10 @@
     {
       "path": "supabase/migrations/20260927020000_semads_visualizador.sql",
       "bytes": 215
+    },
+    {
+      "path": "supabase/migrations/20260928010000_operational_permissions.sql",
+      "bytes": 1824
     },
     {
       "path": "supabase/migrations/20260927023000_user_registration_authorization.sql",
@@ -435,11 +439,11 @@
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
-      "bytes": 10355
+      "bytes": 10346
     },
     {
       "path": "src/routes/_authenticated/entrada.tsx",
-      "bytes": 1374
+      "bytes": 1365
     },
     {
       "path": "src/routes/_authenticated/unidades.tsx",
