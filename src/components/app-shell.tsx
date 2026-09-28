@@ -123,26 +123,23 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
 }
 
 function Brand({ compact }: { compact?: boolean }) {
-  const { data: settings } = useQuery(settingsOptions());
-  const institution = settings?.nome_instituicao?.trim() || "Assistência Social";
   return (
-    <div className={cn("flex items-center gap-2.5 px-4 py-4", compact && "justify-center px-0")}>
-      <span className="grid size-9 shrink-0 place-items-center rounded-md bg-sidebar-primary/15 ring-1 ring-sidebar-primary/30">
-        {settings?.logo_url ? (
-          <img src={settings.logo_url} alt="" className="size-7 rounded object-contain" />
-        ) : (
-          <Boxes className="size-[18px] text-sidebar-primary" />
-        )}
-      </span>
-      {!compact && (
-        <span className="min-w-0">
-          <span className="block truncate text-[13px] font-bold leading-tight text-sidebar-foreground">
-            {institution}
-          </span>
-          <span className="block truncate text-[11px] leading-tight text-sidebar-foreground/60">
-            Controle de Inventário
-          </span>
+    <div className={cn("flex items-center px-4 py-3", compact && "justify-center px-0")}>
+      {compact ? (
+        <span className="grid size-9 place-items-center rounded-md bg-sidebar-primary/10 ring-1 ring-sidebar-primary/25">
+          <img src="/semads-logo.svg" alt="SEMADS" className="size-7 object-contain" />
         </span>
+      ) : (
+        <div className="min-w-0">
+          <img
+            src="/semads-logo.svg"
+            alt="SEMADS"
+            className="h-auto w-[185px] max-w-full object-contain"
+          />
+          <span className="mt-0.5 block text-[11px] leading-tight text-sidebar-foreground/60">
+            Controle de Estoque
+          </span>
+        </div>
       )}
     </div>
   );
