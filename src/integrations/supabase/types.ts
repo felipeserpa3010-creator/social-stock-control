@@ -406,6 +406,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_active_user: { Args: never; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       is_viewer: { Args: never; Returns: boolean }
       my_unit: { Args: never; Returns: string }
