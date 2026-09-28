@@ -398,6 +398,7 @@ export type Database = {
     }
     Functions: {
       can_access_unit: { Args: { _unit_id: string }; Returns: boolean }
+      can_write_unit: { Args: { _unit_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
