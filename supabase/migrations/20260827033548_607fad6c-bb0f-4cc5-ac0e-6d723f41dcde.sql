@@ -288,7 +288,7 @@ CREATE POLICY settings_update ON public.settings FOR UPDATE TO authenticated USI
 
 -- SEED
 INSERT INTO public.settings (nome_instituicao, nome_secretaria) VALUES
-  ('Prefeitura Municipal', 'Secretaria Municipal de Assistência Social');
+  ('Depósito SEMADS', 'Secretaria Municipal de Assistência Social');
 
 INSERT INTO public.categories (nome, demo) VALUES
   ('Alimentos', true),('Produtos de limpeza', true),('Verduras e hortaliças', true),
