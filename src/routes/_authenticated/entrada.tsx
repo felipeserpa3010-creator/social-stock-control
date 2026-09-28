@@ -21,8 +21,8 @@ export const Route = createFileRoute("/_authenticated/entrada")({
   beforeLoad: async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) throw redirect({ to: "/auth" });
-    const { data: isViewer } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "visualizador" });
-    if (isViewer === true) throw redirect({ to: "/dashboard" });
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" });
+    if (isAdmin !== true) throw redirect({ to: "/dashboard" });
   },
   component: EntradaPage,
 });
