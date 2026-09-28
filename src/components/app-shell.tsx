@@ -43,9 +43,9 @@ const NAV: { group: string; items: NavItem[] }[] = [
     items: [
       { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
       { to: "/estoque", label: "Estoque", icon: Boxes },
-      { to: "/entrada", label: "Entrada", icon: PackagePlus, writeOnly: true },
+      { to: "/entrada", label: "Entrada", icon: PackagePlus, adminOnly: true },
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
-      { to: "/conferencia", label: "Conferência", icon: ClipboardCheck, writeOnly: true },
+      { to: "/conferencia", label: "Conferência", icon: ClipboardCheck, adminOnly: true },
     ],
   },
   {
