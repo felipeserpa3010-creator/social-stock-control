@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28T16:17:13.986828+00:00",
+  "generated_at": "2026-09-28T16:51:38.449842+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -80,6 +80,10 @@
     {
       "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
       "bytes": 853
+    },
+    {
+      "path": "supabase/migrations/20260928165059_927e0640-a403-4074-a38c-45a576cf67b5.sql",
+      "bytes": 860
     },
     {
       "path": "src/components/movement-form.tsx",
@@ -199,7 +203,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 15750
+      "bytes": 15806
     },
     {
       "path": "src/integrations/supabase/client.ts",
