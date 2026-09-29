@@ -92,7 +92,7 @@ function StockPage() {
         title="Estoque da unidade"
         description={
           unit
-            ? `Estoque aproximado de ${unit.nome}. Ajustes são feitos por conferência.`
+            ? `Estoque aproximado de ${unit.nome}.`
             : "Nenhuma unidade disponível."
         }
         actions={
@@ -131,7 +131,7 @@ function StockPage() {
           <div className="p-4">
             <EmptyState
               title="Nenhum produto nesta lista"
-              description="Ajuste a busca ou o filtro. Produtos aparecem na ficha de estoque após a primeira movimentação ou conferência."
+              description="Ajuste a busca ou o filtro. Produtos aparecem na ficha de estoque após a primeira movimentação."
             />
           </div>
         ) : (
