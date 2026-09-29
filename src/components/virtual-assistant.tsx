@@ -27,7 +27,9 @@ function findFood(question: string) {
 
 function parseTargetGrams(question: string) {
   const q = normalize(question);
-  const match = q.match(/(?:para|de|em|ate|atingir|chegar a)\s+(\d+(?:[.,]\d+)?)\s*(kg|quilo|quilos|g|grama|gramas)/);
+  const match =
+    q.match(/(?:para|de|em|ate|atingir|chegar a)\s+(\d+(?:[.,]\d+)?)\s*(kg|quilo|quilos|g|grama|gramas)/) ??
+    q.match(/(\d+(?:[.,]\d+)?)\s*(kg|quilo|quilos|g|grama|gramas)/);
   if (!match) return 1000;
   const value = Number(match[1].replace(",", "."));
   return match[2].startsWith("kg") || match[2].startsWith("quilo") ? value * 1000 : value;
