@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { VirtualAssistant } from "@/components/virtual-assistant";
 
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" | "/conferencia" | "/medias" |
@@ -219,6 +220,7 @@ function Shell({ children }: { children: ReactNode }) {
           {isViewer && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Somente leitura</Badge>}
         </header>
         <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <VirtualAssistant />
       </div>
     </div>
   );
