@@ -12,10 +12,7 @@ const QUICK = [
 ];
 
 function normalize(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+  return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 function findFood(question: string) {
@@ -49,14 +46,12 @@ function parseExplicitQuantity(question: string) {
 
 function weightAnswer(question: string) {
   const food = findFood(question);
-  if (!food) {
-    return "Posso calcular a quantidade usando a base de referências cadastrada. Informe o alimento, por exemplo: “quantas bananas dão 1 kg?” ou “10 laranjas pesam quanto?”";
-  }
+  if (!food) return "Posso calcular a quantidade usando a base de referências cadastrada. Informe o alimento, por exemplo: “quantas bananas dão 1 kg?” ou “10 laranjas pesam quanto?”";
 
   const explicitQuantity = parseExplicitQuantity(question);
   if (explicitQuantity !== null) {
     const totalKg = (explicitQuantity * food.weightG) / 1000;
-    return `Referência para ${food.name}: 1 ${food.unitLabel} ≈ ${food.weightG} g.\n\n${explicitQuantity} unidade(s) ≈ ${totalKg.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} kg.\n\n${ASSISTANT_SOURCES.food} É uma estimativa de referência; o tamanho real do alimento pode variar.`;
+    return `Referência para ${food.name}: 1 ${food.unitLabel} ≈ ${food.weightG} g.\n\n${explicitQuantity} unidade(s) ≈ ${totalKg.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} kg.\n\nFonte dos dados: ${ASSISTANT_SOURCES.food}\n\n⚠️ Importante: esses valores são apenas médias de referência e não representam um cálculo exato. O peso pode variar conforme tamanho, variedade e estado do alimento.`;
   }
 
   const targetG = parseTargetGrams(question);
@@ -64,7 +59,7 @@ function weightAnswer(question: string) {
   const rounded = Math.round(quantity);
   const targetLabel = targetG >= 1000 ? `${(targetG / 1000).toLocaleString("pt-BR", { maximumFractionDigits: 2 })} kg` : `${targetG.toLocaleString("pt-BR")} g`;
 
-  return `Para ${targetLabel} de ${food.name}, a referência é aproximadamente ${quantity.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} ${food.unitLabel}s — cerca de ${rounded} unidade(s) quando for necessário trabalhar com unidades inteiras.\n\nReferência: 1 ${food.unitLabel} ≈ ${food.weightG} g (${food.preparation}).\n\n${ASSISTANT_SOURCES.food} O peso real varia conforme o tamanho do alimento; para compras locais, uma pesagem de amostra pode deixar a estimativa ainda mais precisa.`;
+  return `Para ${targetLabel} de ${food.name}, a referência é aproximadamente ${quantity.toLocaleString("pt-BR", { maximumFractionDigits: 1 })} ${food.unitLabel}s — cerca de ${rounded} unidade(s) quando for necessário trabalhar com unidades inteiras.\n\nReferência: 1 ${food.unitLabel} ≈ ${food.weightG} g (${food.preparation}).\n\nFonte dos dados: ${ASSISTANT_SOURCES.food}\n\n⚠️ Importante: esses valores são apenas médias de referência e não representam um cálculo exato. O peso pode variar conforme tamanho, variedade e estado do alimento.`;
 }
 
 function conservationAnswer(question: string) {
@@ -82,37 +77,9 @@ function systemAnswer(question: string) {
 
 function answer(question: string) {
   const q = normalize(question);
-
-  const asksWeight =
-    q.includes("peso") ||
-    q.includes("kg") ||
-    q.includes("quilo") ||
-    q.includes("quantas") ||
-    q.includes("quantidade") ||
-    Boolean(findFood(question) && (q.includes("unidade") || q.match(/\b\d+\b/)));
-
-  const asksConservation =
-    q.includes("conservar") ||
-    q.includes("conservacao") ||
-    q.includes("guardar") ||
-    q.includes("armazenar") ||
-    q.includes("geladeira") ||
-    q.includes("freezer") ||
-    q.includes("descongelar") ||
-    q.includes("higienizar") ||
-    q.includes("lavar");
-
-  const asksSystem =
-    q.includes("sistema") ||
-    q.includes("painel") ||
-    q.includes("estoque") ||
-    q.includes("entrada") ||
-    q.includes("saida") ||
-    q.includes("relatorio") ||
-    q.includes("produto") ||
-    q.includes("unidade") ||
-    q.includes("usuario") ||
-    q.includes("configuracao");
+  const asksWeight = q.includes("peso") || q.includes("kg") || q.includes("quilo") || q.includes("quantas") || q.includes("quantidade") || Boolean(findFood(question) && (q.includes("unidade") || q.match(/\b\d+\b/)));
+  const asksConservation = q.includes("conservar") || q.includes("conservacao") || q.includes("guardar") || q.includes("armazenar") || q.includes("geladeira") || q.includes("freezer") || q.includes("descongelar") || q.includes("higienizar") || q.includes("lavar");
+  const asksSystem = q.includes("sistema") || q.includes("painel") || q.includes("estoque") || q.includes("entrada") || q.includes("saida") || q.includes("relatorio") || q.includes("produto") || q.includes("unidade") || q.includes("usuario") || q.includes("configuracao");
 
   if (asksWeight && findFood(question)) return weightAnswer(question);
   if (asksConservation) return conservationAnswer(question);
@@ -126,10 +93,7 @@ export function VirtualAssistant() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
-    {
-      from: "bot",
-      text: "Olá! Sou o Assistente Virtual. Posso informar pesos médios por quantidade, orientar sobre conservação dos alimentos e ensinar como usar as funções do sistema.",
-    },
+    { from: "bot", text: "Olá! Sou o Assistente Virtual. Posso informar pesos médios por quantidade, orientar sobre conservação dos alimentos e ensinar como usar as funções do sistema." },
   ]);
 
   const suggestions = useMemo(() => QUICK.filter((item) => !messages.some((m) => m.text === item)), [messages]);
