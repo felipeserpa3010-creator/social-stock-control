@@ -32,7 +32,7 @@ export function AuthLayout({
         <Link to="/auth" className="relative flex items-center gap-2.5">
           <span className="grid size-10 place-items-center rounded-md bg-sidebar-primary/15 ring-1 ring-sidebar-primary/30">
             {settings?.logo_url ? (
-              <img src={settings.logo_url} alt="" className="size-8 rounded object-contain" />
+              <img src={settings.logo_url || "/semads-logo-original.png"} alt="SEMADS" className="max-h-20 w-auto object-contain" />
             ) : (
               <Boxes className="size-5 text-sidebar-primary" />
             )}
@@ -79,7 +79,7 @@ export function AuthLayout({
           <div className="mb-6 flex items-center gap-2.5 lg:hidden">
             <span className="grid size-9 place-items-center rounded-md bg-primary/10 ring-1 ring-primary/20">
               {settings?.logo_url ? (
-                <img src={settings.logo_url} alt="" className="size-7 rounded object-contain" />
+                <img src={settings.logo_url || "/semads-logo-original.png"} alt="SEMADS" className="size-10 object-contain" />
               ) : (
                 <Boxes className="size-[18px] text-primary" />
               )}
