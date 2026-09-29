@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T02:21:58.585249+00:00",
+  "generated_at": "2026-09-29T02:22:12.687795+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -87,7 +87,7 @@
     },
     {
       "path": "src/components/virtual-assistant.tsx",
-      "bytes": 5301
+      "bytes": 8646
     },
     {
       "path": "src/components/movement-form.tsx",
@@ -634,6 +634,10 @@
     {
       "source": "src/components/virtual-assistant.tsx",
       "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/virtual-assistant.tsx",
+      "target": "@/lib/assistant-data"
     },
     {
       "source": "src/components/movement-form.tsx",
