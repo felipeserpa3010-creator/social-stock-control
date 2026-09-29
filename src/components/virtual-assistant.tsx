@@ -35,8 +35,14 @@ function parseTargetGrams(question: string) {
 
 function parseExplicitQuantity(question: string) {
   const q = normalize(question);
-  const match = q.match(/(?:^|\s)(\d+(?:[.,]\d+)?)\s*(?:unidades?|unid\.?|un\.?)/);
-  return match ? Number(match[1].replace(",", ".")) : null;
+  const food = findFood(question);
+  if (!food) return null;
+  const foodPosition = q.indexOf(normalize(food.aliases[0]));
+  if (foodPosition < 0) return null;
+  const beforeFood = q.slice(0, foodPosition);
+  const match = beforeFood.match(/(\d+(?:[.,]\d+)?)\s*(?:unidades?|unid\.?|un\.?)?\s*$/);
+  if (!match) return null;
+  return Number(match[1].replace(",", "."));
 }
 
 function weightAnswer(question: string) {
