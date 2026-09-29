@@ -4,9 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   Boxes,
   ChevronLeft,
-  ClipboardCheck,
   FileDown,
-  History,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -52,7 +50,6 @@ const NAV: { group: string; items: NavItem[] }[] = [
     items: [
       { to: "/medias", label: "Média de consumo", icon: TrendingUp },
       { to: "/relatorios", label: "Relatórios PDF", icon: FileDown },
-      { to: "/historico", label: "Histórico", icon: History },
     ],
   },
   {
@@ -77,12 +74,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
         if (!items.length) return null;
         return (
           <div key={section.group}>
-            <p
-              className={cn(
-                "px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/55",
-                collapsed && "text-center",
-              )}
-            >
+            <p className={cn("px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/55", collapsed && "text-center")}>
               {collapsed ? section.group.slice(0, 3) : section.group}
             </p>
             <ul className="space-y-0.5">
@@ -103,9 +95,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
                           : "text-sidebar-foreground/75 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
                       )}
                     >
-                      {active && (
-                        <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r bg-sidebar-primary" />
-                      )}
+                      {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r bg-sidebar-primary" />}
                       <Icon className="size-[18px] shrink-0" />
                       {!collapsed && <span className="truncate">{item.label}</span>}
                     </Link>
@@ -129,14 +119,8 @@ function Brand({ compact }: { compact?: boolean }) {
         </span>
       ) : (
         <div className="min-w-0">
-          <img
-            src="/IMG-20260917-WA0055.jpg"
-            alt="SEMADS"
-            className="h-auto w-[185px] max-w-full object-contain"
-          />
-          <span className="mt-0.5 block text-[11px] leading-tight text-sidebar-foreground/60">
-            Controle de Estoque
-          </span>
+          <img src="/IMG-20260917-WA0055.jpg" alt="SEMADS" className="h-auto w-[185px] max-w-full object-contain" />
+          <span className="mt-0.5 block text-[11px] leading-tight text-sidebar-foreground/60">Controle de Estoque</span>
         </div>
       )}
     </div>
@@ -159,30 +143,17 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
     <div className={cn("border-t border-sidebar-border/70 p-3", collapsed && "px-2")}>
       <div className={cn("flex items-center gap-2", collapsed && "justify-center")}>
         <span className="grid size-8 shrink-0 place-items-center rounded-full bg-sidebar-primary/20 text-xs font-bold text-sidebar-primary">
-          {(profile?.nome ?? "?")
-            .split(" ")
-            .filter(Boolean)
-            .slice(0, 2)
-            .map((p) => p[0]?.toUpperCase())
-            .join("")}
+          {(profile?.nome ?? "?").split(" ").filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase()).join("")}
         </span>
         {!collapsed && (
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[13px] font-semibold text-sidebar-foreground">
-              {profile?.nome ?? "Usuário"}
-            </span>
+            <span className="block truncate text-[13px] font-semibold text-sidebar-foreground">{profile?.nome ?? "Usuário"}</span>
             <span className="block truncate text-[11px] text-sidebar-foreground/60">
               {role === "admin" ? "Administrador Principal" : role === "visualizador" ? "Visualizador — SEMADS" : "Responsável pela unidade"}
             </span>
           </span>
         )}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleSignOut}
-          title="Sair do sistema"
-          className="size-8 shrink-0 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-        >
+        <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sair do sistema" className="size-8 shrink-0 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
           <LogOut />
         </Button>
       </div>
@@ -196,26 +167,13 @@ function UnitSwitcher() {
   if (!units.length) return null;
   return (
     <div className="flex items-center gap-2">
-      <label htmlFor="unit-switch" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-        Unidade
-      </label>
+      <label htmlFor="unit-switch" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Unidade</label>
       {locked ? (
-        <Badge variant="secondary" className="max-w-[220px] truncate">
-          {unitId === ALL_UNITS ? "Todas as unidades" : units.find((u) => u.id === unitId)?.nome ?? "—"}
-        </Badge>
+        <Badge variant="secondary" className="max-w-[220px] truncate">{unitId === ALL_UNITS ? "Todas as unidades" : units.find((u) => u.id === unitId)?.nome ?? "—"}</Badge>
       ) : (
-        <select
-          id="unit-switch"
-          value={unitId ?? ""}
-          onChange={(e) => setUnitId(e.target.value)}
-          className="h-8 max-w-[240px] truncate rounded-md border border-input bg-background px-2 text-sm font-medium outline-none focus-visible:ring-1 focus-visible:ring-ring"
-        >
+        <select id="unit-switch" value={unitId ?? ""} onChange={(e) => setUnitId(e.target.value)} className="h-8 max-w-[240px] truncate rounded-md border border-input bg-background px-2 text-sm font-medium outline-none focus-visible:ring-1 focus-visible:ring-ring">
           {isViewer && <option value={ALL_UNITS}>Todas as unidades</option>}
-          {units.map((u) => (
-            <option key={u.id} value={u.id}>
-              {u.nome}
-            </option>
-          ))}
+          {units.map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
         </select>
       )}
     </div>
@@ -229,82 +187,43 @@ function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background md:flex">
-      {/* Sidebar desktop */}
-      <aside
-        className={cn(
-          "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-[width] md:flex",
-          collapsed ? "w-[74px]" : "w-[264px]",
-        )}
-      >
+      <aside className={cn("sticky top-0 hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-[width] md:flex", collapsed ? "w-[74px]" : "w-[264px]")}>
         <div className="flex items-center justify-between">
           <Brand compact={collapsed} />
-          <button
-            onClick={() => setCollapsed((v) => !v)}
-            title={collapsed ? "Expandir menu" : "Recolher menu"}
-            className="mr-2 grid size-7 place-items-center rounded-md text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          >
+          <button onClick={() => setCollapsed((v) => !v)} title={collapsed ? "Expandir menu" : "Recolher menu"} className="mr-2 grid size-7 place-items-center rounded-md text-sidebar-foreground/60 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
             <ChevronLeft className={cn("size-4 transition-transform", collapsed && "rotate-180")} />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-3 pb-4">
-          <NavLinks collapsed={collapsed} />
-        </div>
+        <div className="flex-1 overflow-y-auto px-3 pb-4"><NavLinks collapsed={collapsed} /></div>
         <UserFooter collapsed={collapsed} />
       </aside>
 
-      {/* Menu lateral em celular */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent side="left" className="w-[272px] gap-0 bg-sidebar p-0 text-sidebar-foreground">
           <SheetTitle className="sr-only">Menu</SheetTitle>
           <div className="flex items-center justify-between border-b border-sidebar-border">
             <Brand />
-            <button
-              onClick={() => setMobileOpen(false)}
-              className="mr-3 grid size-8 place-items-center rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent"
-            >
-              <X className="size-4" />
-            </button>
+            <button onClick={() => setMobileOpen(false)} className="mr-3 grid size-8 place-items-center rounded-md text-sidebar-foreground/70 hover:bg-sidebar-accent"><X className="size-4" /></button>
           </div>
-          <div className="flex-1 overflow-y-auto px-3 py-5">
-            <NavLinks onNavigate={() => setMobileOpen(false)} />
-          </div>
+          <div className="flex-1 overflow-y-auto px-3 py-5"><NavLinks onNavigate={() => setMobileOpen(false)} /></div>
           <UserFooter />
         </SheetContent>
       </Sheet>
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="grid size-9 place-items-center rounded-md border border-input text-foreground md:hidden"
-            title="Abrir menu"
-          >
-            <Menu className="size-[18px]" />
-          </button>
+          <button onClick={() => setMobileOpen(true)} className="grid size-9 place-items-center rounded-md border border-input text-foreground md:hidden" title="Abrir menu"><Menu className="size-[18px]" /></button>
           <div className="flex-1" />
           <UnitSwitcher />
-          {isAdmin && (
-            <Badge variant="outline" className="hidden gap-1 border-primary/40 text-primary sm:inline-flex">
-              <ShieldCheck className="size-3" />
-              Administrador
-            </Badge>
-          )}
+          {isAdmin && <Badge variant="outline" className="hidden gap-1 border-primary/40 text-primary sm:inline-flex"><ShieldCheck className="size-3" />Administrador</Badge>}
           {isViewer && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Somente leitura</Badge>}
         </header>
-        <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-6 sm:px-6 lg:px-8">
-          {children}
-        </main>
+        <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>
   );
 }
 
 export function AppShell() {
-  return (
-    <UnitProvider>
-      <Shell>
-        <Outlet />
-      </Shell>
-    </UnitProvider>
-  );
+  return <UnitProvider><Shell><Outlet /></Shell></UnitProvider>;
 }
