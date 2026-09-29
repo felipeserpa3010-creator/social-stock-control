@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-09-29T01:47:27.471995+00:00
+Generated: 2026-09-29T01:56:15.407535+00:00
 
 ## Tokens
 - --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif (src/styles.css)
@@ -56,7 +56,7 @@ Generated: 2026-09-29T01:47:27.471995+00:00
 - --card-foreground: oklch(0.24 0.025 50) (src/styles.css)
 - --popover: oklch(1 0 0) (src/styles.css)
 - --popover-foreground: oklch(0.24 0.025 50) (src/styles.css)
-- --primary: oklch(0.48 0.10 55) (src/styles.css)
+- --primary: #6B4226 (src/styles.css)
 - --primary-foreground: oklch(0.985 0.01 70) (src/styles.css)
 - --secondary: oklch(0.95 0.018 65) (src/styles.css)
 - --secondary-foreground: oklch(0.3 0.035 50) (src/styles.css)
@@ -72,20 +72,20 @@ Generated: 2026-09-29T01:47:27.471995+00:00
 - --warning-foreground: oklch(0.24 0.03 60) (src/styles.css)
 - --border: oklch(0.9 0.015 65) (src/styles.css)
 - --input: oklch(0.9 0.015 65) (src/styles.css)
-- --ring: oklch(0.48 0.10 55) (src/styles.css)
-- --chart-1: oklch(0.48 0.10 55) (src/styles.css)
+- --ring: #6B4226 (src/styles.css)
+- --chart-1: #6B4226 (src/styles.css)
 - --chart-2: oklch(0.58 0.13 85) (src/styles.css)
 - --chart-3: oklch(0.72 0.15 62) (src/styles.css)
 - --chart-4: oklch(0.55 0.2 25) (src/styles.css)
 - --chart-5: oklch(0.51 0.025 55) (src/styles.css)
-- --sidebar: oklch(0.30 0.055 48) (src/styles.css)
+- --sidebar: #6B4226 (src/styles.css)
 - --sidebar-foreground: oklch(0.93 0.018 65) (src/styles.css)
 - --sidebar-primary: oklch(0.68 0.13 75) (src/styles.css)
 - --sidebar-primary-foreground: oklch(0.18 0.03 50) (src/styles.css)
-- --sidebar-accent: oklch(0.39 0.06 48) (src/styles.css)
+- --sidebar-accent: #805734 (src/styles.css)
 - --sidebar-accent-foreground: oklch(0.97 0.01 70) (src/styles.css)
-- --sidebar-border: oklch(0.39 0.055 48) (src/styles.css)
-- --sidebar-ring: oklch(0.68 0.13 75) (src/styles.css)
+- --sidebar-border: #805734 (src/styles.css)
+- --sidebar-ring: #D2A36A (src/styles.css)
 - --background: oklch(0.19 0.025 50) (src/styles.css)
 - --foreground: oklch(0.96 0.012 70) (src/styles.css)
 - --card: oklch(0.25 0.03 50) (src/styles.css)

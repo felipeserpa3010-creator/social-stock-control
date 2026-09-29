@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T01:47:27.471995+00:00",
+  "generated_at": "2026-09-29T01:56:15.407535+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -43,7 +43,7 @@
     },
     {
       "path": "src/styles.css",
-      "bytes": 5550
+      "bytes": 5464
     },
     {
       "path": "src/server.ts",
@@ -99,7 +99,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 11673
+      "bytes": 11504
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -403,11 +403,11 @@
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
-      "bytes": 7250
+      "bytes": 7196
     },
     {
       "path": "src/routes/_authenticated/historico.tsx",
-      "bytes": 8702
+      "bytes": 8637
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
@@ -451,7 +451,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 8151
+      "bytes": 7557
     },
     {
       "path": "src/routes/_authenticated/produtos.tsx",
