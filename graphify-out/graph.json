@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28T16:51:38.449842+00:00",
+  "generated_at": "2026-09-29T01:35:17.438403+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -75,7 +75,7 @@
     },
     {
       "path": "supabase/migrations/20260928020000_deposito_semads_logo.sql",
-      "bytes": 263
+      "bytes": 272
     },
     {
       "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
@@ -91,7 +91,7 @@
     },
     {
       "path": "src/components/auth-layout.tsx",
-      "bytes": 4372
+      "bytes": 4440
     },
     {
       "path": "src/components/pickers.tsx",
@@ -99,7 +99,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 11657
+      "bytes": 11675
     },
     {
       "path": "src/components/ui-kit.tsx",
