@@ -45,7 +45,6 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/estoque", label: "Estoque", icon: Boxes },
       { to: "/entrada", label: "Entrada", icon: PackagePlus, adminOnly: true },
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
-      { to: "/conferencia", label: "Conferência", icon: ClipboardCheck, adminOnly: true },
     ],
   },
   {
@@ -54,7 +53,6 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/medias", label: "Média de consumo", icon: TrendingUp },
       { to: "/relatorios", label: "Relatórios PDF", icon: FileDown },
       { to: "/historico", label: "Histórico", icon: History },
-      { to: "/conferencias", label: "Conferências", icon: ClipboardCheck },
     ],
   },
   {
