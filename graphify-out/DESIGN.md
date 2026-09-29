@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-09-29T01:57:17.585139+00:00
+Generated: 2026-09-29T02:18:23.155205+00:00
 
 ## Tokens
 - --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif (src/styles.css)
@@ -223,3 +223,4 @@ Generated: 2026-09-29T01:57:17.585139+00:00
 - src/components/ui/toggle-group.tsx
 - src/components/ui/toggle.tsx
 - src/components/ui/tooltip.tsx
+- src/components/virtual-assistant.tsx

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T01:57:17.585139+00:00",
+  "generated_at": "2026-09-29T02:18:23.155205+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -86,6 +86,10 @@
       "bytes": 860
     },
     {
+      "path": "src/components/virtual-assistant.tsx",
+      "bytes": 5301
+    },
+    {
       "path": "src/components/movement-form.tsx",
       "bytes": 7146
     },
@@ -99,7 +103,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 10452
+      "bytes": 10548
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -616,6 +620,18 @@
       "target": "@/integrations/supabase/auth-attacher"
     },
     {
+      "source": "src/components/virtual-assistant.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/virtual-assistant.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/virtual-assistant.tsx",
+      "target": "@/lib/utils"
+    },
+    {
       "source": "src/components/movement-form.tsx",
       "target": "react"
     },
@@ -762,6 +778,10 @@
     {
       "source": "src/components/app-shell.tsx",
       "target": "@/components/ui/sheet"
+    },
+    {
+      "source": "src/components/app-shell.tsx",
+      "target": "@/components/virtual-assistant"
     },
     {
       "source": "src/components/ui-kit.tsx",
