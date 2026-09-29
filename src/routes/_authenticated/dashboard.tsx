@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Boxes, ClipboardCheck, PackageMinus, PackagePlus, TrendingUp } from "lucide-react";
+import { AlertTriangle, Boxes, PackageMinus, PackagePlus, TrendingUp } from "lucide-react";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
 import {
-  checksOptions,
   movementsOptions,
   productsOptions,
   stockOptions,
@@ -38,7 +37,6 @@ function DashboardPage() {
   const { data: products = [] } = useQuery(productsOptions(false));
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 400 }));
-  const { data: checks = [] } = useQuery(checksOptions(unitId));
 
   const month = todayISO().slice(0, 7);
   const entradasMes = movements
@@ -55,7 +53,6 @@ function DashboardPage() {
   const baixos = alertas.filter((s) => stockStatus(s.quantity) !== "zerado");
   const serie = byMonth(movements, lastMonths(6), "saida");
   const max = Math.max(1, ...serie.map((s) => s.total));
-  const ultima = checks[0];
 
   return (
     <>
@@ -70,11 +67,6 @@ function DashboardPage() {
         }
         actions={
           <>
-            <Button asChild variant="outline" size="sm">
-              <Link to="/conferencia">
-                <ClipboardCheck /> Nova conferência
-              </Link>
-            </Button>
             <Button asChild size="sm">
               <Link to="/relatorios">
                 <TrendingUp /> Gerar relatório
@@ -98,12 +90,6 @@ function DashboardPage() {
           value={baixos.length}
           tone={baixos.length ? "warning" : "success"}
           icon={AlertTriangle}
-        />
-        <StatCard
-          label="Última conferência"
-          value={ultima ? formatDate(ultima.data_conferencia) : "—"}
-          icon={ClipboardCheck}
-          hint={ultima?.responsavel ? `Por ${ultima.responsavel}` : "Nenhuma conferência registrada."}
         />
       </div>
 
