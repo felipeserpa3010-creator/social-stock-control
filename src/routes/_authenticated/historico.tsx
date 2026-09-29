@@ -114,7 +114,6 @@ function HistoryPage() {
               <option value="">Todos</option>
               <option value="entrada">Entradas</option>
               <option value="saida">Saídas</option>
-              <option value="conferencia">Conferências</option>
               <option value="ajuste">Ajustes</option>
             </select>
           </div>
