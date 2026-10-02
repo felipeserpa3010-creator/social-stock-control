@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-10-02T17:18:56.351098+00:00
+Generated: 2026-10-02T17:19:29.081237+00:00
 
 ## Tokens
 - --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif (src/styles.css)
@@ -174,6 +174,7 @@ Generated: 2026-10-02T17:18:56.351098+00:00
 ## Project components
 - src/components/app-shell.tsx
 - src/components/auth-layout.tsx
+- src/components/document-entry.tsx
 - src/components/movement-form.tsx
 - src/components/pickers.tsx
 - src/components/ui-kit.tsx

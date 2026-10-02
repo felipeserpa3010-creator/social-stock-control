@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T17:18:56.351098+00:00",
+  "generated_at": "2026-10-02T17:19:29.081237+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -108,6 +108,10 @@
     {
       "path": "src/components/ui-kit.tsx",
       "bytes": 6629
+    },
+    {
+      "path": "src/components/document-entry.tsx",
+      "bytes": 10124
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -460,6 +464,10 @@
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
       "bytes": 7557
+    },
+    {
+      "path": "src/routes/_authenticated/entrada-documento.tsx",
+      "bytes": 1201
     },
     {
       "path": "src/routes/_authenticated/produtos.tsx",
@@ -822,6 +830,54 @@
     {
       "source": "src/components/ui-kit.tsx",
       "target": "@/lib/format"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "tesseract.js"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/components/ui-kit"
     },
     {
       "source": "src/lib/pdf.ts",
@@ -2422,6 +2478,22 @@
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/entrada-documento.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/entrada-documento.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/_authenticated/entrada-documento.tsx",
+      "target": "@/components/document-entry"
+    },
+    {
+      "source": "src/routes/_authenticated/entrada-documento.tsx",
+      "target": "@/components/ui-kit"
     },
     {
       "source": "src/routes/_authenticated/produtos.tsx",
