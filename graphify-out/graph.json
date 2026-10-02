@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T23:27:11.541148+00:00",
+  "generated_at": "2026-10-02T23:27:19.793010+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -420,6 +420,10 @@
     {
       "path": "src/components/ui/scroll-area.tsx",
       "bytes": 1635
+    },
+    {
+      "path": "src/routes/_authenticated/recebimento.tsx",
+      "bytes": 6216
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -1958,6 +1962,50 @@
     {
       "source": "src/components/ui/scroll-area.tsx",
       "target": "@/lib/utils"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/components/ui/table"
     },
     {
       "source": "src/routes/_authenticated/estoque.tsx",
