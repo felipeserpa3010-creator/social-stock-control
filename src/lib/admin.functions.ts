@@ -165,8 +165,8 @@ export const adminCreateUser = createServerFn({ method: "POST" })
     if (!d?.nome?.trim()) throw new Error("Informe o nome.");
     if (!d?.email?.trim()) throw new Error("Informe o e-mail.");
     if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
-    if (d.role !== "admin" && d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
-    if (d.role !== "admin" && !d.unit_id) throw new Error("Selecione a unidade.");
+    if (d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
+    if (!d.unit_id) throw new Error("Selecione a unidade.");
     if (d.role === "visualizador" && !d.unit_id) throw new Error("O Visualizador deve ser vinculado ao Gabinete SEMADS.");
     return {
       nome: d.nome.trim(),
@@ -243,6 +243,9 @@ export const adminSetRole = createServerFn({ method: "POST" })
     await assertAdmin(context.supabase as any, context.userId);
     if (data.user_id === context.userId) {
       throw new Error("Você não pode alterar o seu próprio perfil de acesso.");
+    }
+    if (data.role === "admin") {
+      throw new Error("O sistema possui apenas um CEO/Administrador Principal.");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin.from("user_roles").delete().eq("user_id", data.user_id);
