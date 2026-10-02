@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T23:20:50.877582+00:00",
+  "generated_at": "2026-10-02T23:27:11.541148+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -82,6 +82,10 @@
       "bytes": 5877
     },
     {
+      "path": "supabase/migrations/20261002093000_confirmacao_recebimento.sql",
+      "bytes": 1280
+    },
+    {
       "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
       "bytes": 853
     },
@@ -155,7 +159,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 12508
+      "bytes": 14243
     },
     {
       "path": "src/lib/utils.ts",
@@ -219,7 +223,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 15806
+      "bytes": 16738
     },
     {
       "path": "src/integrations/supabase/client.ts",
