@@ -329,6 +329,41 @@ export type Database = {
           },
         ]
       }
+      stock_receipts: {
+        Row: {
+          id: string
+          movement_id: string
+          confirmed_by: string
+          confirmed_by_name: string
+          confirmed_at: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          movement_id: string
+          confirmed_by: string
+          confirmed_by_name: string
+          confirmed_at?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          movement_id?: string
+          confirmed_by?: string
+          confirmed_by_name?: string
+          confirmed_at?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_receipts_movement_id_fkey"
+            columns: ["movement_id"]
+            isOneToOne: true
+            referencedRelation: "stock_movements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       units: {
         Row: {
           ativo: boolean
