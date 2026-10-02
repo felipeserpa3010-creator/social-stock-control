@@ -20,7 +20,7 @@ import { ProductSelect } from "@/components/pickers";
 
 export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" | "saida"> }) {
   const { unitId, unit } = useUnit();
-  const { profile } = useAuth();
+  const { profile, isAdmin, isViewer } = useAuth();
   const queryClient = useQueryClient();
   const { data: products = [] } = useQuery(productsOptions(false));
   const { data: stock = [] } = useQuery(stockOptions(unitId));
@@ -39,6 +39,14 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isEntrada && !isAdmin) {
+      toast.error("Somente o CEO/Administrador Principal pode registrar entradas.");
+      return;
+    }
+    if (!isEntrada && isViewer) {
+      toast.error("O Gabinete possui acesso somente para consulta e relatórios.");
+      return;
+    }
     if (!unitId) {
       toast.error("Selecione a unidade.");
       return;
