@@ -1,4 +1,6 @@
 -- Controle de acesso definitivo para estoque por unidade
+-- O índice parcial garante no banco que exista no máximo um CEO/Admin.
+CREATE UNIQUE INDEX IF NOT EXISTS one_admin_only ON public.user_roles (role) WHERE role = 'admin';
 -- CEO/Admin: entradas e administração global.
 -- Responsável de unidade: somente saídas da própria unidade.
 -- Gabinete/Visualizador: somente leitura e relatórios de todas as unidades.
