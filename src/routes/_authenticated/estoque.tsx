@@ -180,6 +180,8 @@ function StockPage() {
             </Table>
           </div>
         )}
+      </Panel>
+
       <Panel
         title={unitId === ALL_UNITS ? "Lançamentos de entrada" : "Lançamentos recebidos pela unidade"}
         description={
