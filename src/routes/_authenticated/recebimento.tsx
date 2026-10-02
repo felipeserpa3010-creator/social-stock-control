@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Clock3, PackageCheck } from "lucide-react";
+import { CheckCircle2, Clock3 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnit } from "@/hooks/useUnit";
 import { receivedEntriesOptions, confirmStockReceipt } from "@/lib/queries";
