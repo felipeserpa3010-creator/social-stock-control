@@ -194,8 +194,7 @@ function UsersPage() {
                             onChange={(e) => changeRole(u.user_id, e.target.value as AppRole)}
                             className="h-8 rounded-md border border-input bg-background px-1.5 text-xs disabled:opacity-50"
                           >
-                            <option value="admin">Administrador</option>
-                            <option value="responsavel">Responsável</option>
+                            <option value="responsavel">Responsável de unidade</option>
                           </select>
                           <select
                             value={u.unit_id ?? ""}
@@ -268,8 +267,7 @@ function UsersPage() {
                   className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
                 >
                   <option value="responsavel">Responsável de unidade</option>
-                  <option value="visualizador">Visualizador — SEMADS</option>
-                  <option value="admin">Administrador</option>
+                  <option value="visualizador">Visualizador — Gabinete SEMADS</option>
                 </select>
               </Field>
               <Field
@@ -281,11 +279,11 @@ function UsersPage() {
                 <select
                   id="us-unit"
                   value={form.unit_id}
-                  disabled={form.role === "admin"}
+                  disabled={form.role === "visualizador"}
                   onChange={(e) => setForm({ ...form, unit_id: e.target.value })}
                   className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm disabled:opacity-50"
                 >
-                  <option value="">{form.role === "admin" ? "Todas as unidades" : "Selecione..."}</option>
+                  <option value="">{form.role === "visualizador" ? "Gabinete SEMADS" : "Selecione..."}</option>
                   {units.map((u) => (
                     <option key={u.id} value={u.id}>
                       {u.nome}
