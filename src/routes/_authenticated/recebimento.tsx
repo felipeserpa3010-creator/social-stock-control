@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Clock3, PackageCheck } from "lucide-react";
@@ -11,9 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/recebimento")({
-  beforeLoad: ({ context }) => {
-    if (!context?.auth?.session) throw redirect({ to: "/auth" });
-  },
   head: () => ({ meta: [
     { title: "Confirmar recebimento — Controle de Estoque" },
     { name: "description", content: "Confirme o recebimento das mercadorias lançadas pelo CEO." },
