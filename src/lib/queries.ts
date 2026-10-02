@@ -26,6 +26,8 @@ export type MovementRow = Movement & {
   products: Product | null;
   units: { nome: string } | null;
 };
+export type StockReceipt = Database["public"]["Tables"]["stock_receipts"]["Row"];
+export type ReceivedEntryRow = MovementRow & { receipt: StockReceipt | null };
 export type CheckRow = StockCheck & {
   units: { nome: string } | null;
   profiles: { nome: string } | null;
@@ -161,6 +163,44 @@ export function movementsOptions(filter: MovementFilter) {
       return (data ?? []) as unknown as MovementRow[];
     },
   });
+}
+
+export function receivedEntriesOptions(unitId: string | null, enabled = true) {
+  return queryOptions({
+    enabled: Boolean(unitId) && enabled,
+    queryKey: ["received-entries", unitId],
+    queryFn: async () => {
+      let query = supabase
+        .from("stock_movements")
+        .select("*, products(*), units(nome)")
+        .eq("tipo", "entrada")
+        .order("data", { ascending: false })
+        .order("created_at", { ascending: false });
+      if (unitId !== ALL_UNITS_SCOPE) query = query.eq("unit_id", unitId as string);
+      const { data, error } = await query.limit(300);
+      if (error) throw message(error);
+      const movements = (data ?? []) as unknown as MovementRow[];
+      if (!movements.length) return [] as ReceivedEntryRow[];
+      const { data: receipts, error: receiptError } = await supabase
+        .from("stock_receipts")
+        .select("*")
+        .in("movement_id", movements.map((m) => m.id));
+      if (receiptError) throw message(receiptError);
+      const receiptMap = new Map<string, StockReceipt>();
+      (receipts ?? []).forEach((r) => receiptMap.set(r.movement_id, r as StockReceipt));
+      return movements.map((m) => ({ ...m, receipt: receiptMap.get(m.id) ?? null }));
+    },
+  });
+}
+
+export async function confirmStockReceipt(movementId: string, confirmedByName: string) {
+  const user_id = await currentUserId();
+  const { error } = await supabase.from("stock_receipts").insert({
+    movement_id: movementId,
+    confirmed_by: user_id,
+    confirmed_by_name: confirmedByName,
+  });
+  if (error) throw message(error);
 }
 
 export function checksOptions(unitId: string | null) {
