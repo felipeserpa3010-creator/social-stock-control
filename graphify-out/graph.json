@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T17:19:38.122805+00:00",
+  "generated_at": "2026-10-02T18:42:28.819488+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -76,6 +76,10 @@
     {
       "path": "supabase/migrations/20260928020000_deposito_semads_logo.sql",
       "bytes": 271
+    },
+    {
+      "path": "supabase/migrations/20261002090000_estoque_permissoes_definitivas.sql",
+      "bytes": 5704
     },
     {
       "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
