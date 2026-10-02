@@ -10,6 +10,7 @@ import {
   Menu,
   PackagePlus,
   PackageMinus,
+  PackageCheck,
   Settings,
   ScanLine,
   ShieldCheck,
@@ -30,7 +31,7 @@ import { VirtualAssistant } from "@/components/virtual-assistant";
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" | "/conferencia" | "/medias" |
     "/relatorios" | "/historico" | "/conferencias" | "/unidades" | "/produtos" |
-    "/usuarios" | "/configuracoes" | "/entrada-documento";
+    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento";
   label: string;
   icon: typeof Boxes;
   adminOnly?: boolean;
@@ -46,6 +47,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/entrada", label: "Entrada", icon: PackagePlus, adminOnly: true },
       { to: "/entrada-documento", label: "Lançar por documento", icon: ScanLine, adminOnly: true },
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
+      { to: "/recebimento", label: "Confirmar recebimento", icon: PackageCheck, writeOnly: true },
     ],
   },
   {
