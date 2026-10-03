@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T17:44:35.640768+00:00",
+  "generated_at": "2026-10-03T17:47:14.253829+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -76,6 +76,10 @@
     {
       "path": "supabase/migrations/20260928020000_deposito_semads_logo.sql",
       "bytes": 271
+    },
+    {
+      "path": "supabase/migrations/20261003150000_excluir_lancamento_estoque.sql",
+      "bytes": 1664
     },
     {
       "path": "supabase/migrations/20261003120000_logo_semads_4k.sql",
@@ -167,7 +171,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 15721
+      "bytes": 15892
     },
     {
       "path": "src/lib/utils.ts",
