@@ -26,7 +26,7 @@ export function AuthLayout({
           className="pointer-events-none absolute inset-0 opacity-[0.14]"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 20%, oklch(0.75 0.12 158) 0, transparent 45%), radial-gradient(circle at 80% 70%, oklch(0.7 0.13 152) 0, transparent 40%)",
+              "radial-gradient(circle at 20% 20%, #B15B3B 0, transparent 45%), radial-gradient(circle at 80% 70%, #8F3B24 0, transparent 40%)",
           }}
         />
         <Link to="/auth" className="relative flex items-center gap-2.5">
