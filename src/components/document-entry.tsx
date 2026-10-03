@@ -103,6 +103,42 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     const looksLikeTableItem = /^\d{3}\s*\d*\s+.+$/i.test(line);
     if (isQuotationTable && !looksLikeTableItem) continue;
 
+    // Parser específico para linhas de cotação: código do item + descrição + unidade +
+    // quantidade + preço unitário + total. Os preços são descartados.
+    if (isQuotationTable) {
+      const row = line.match(/^\s*\d{3}\s+(.+?)\s+(kg|k6|kb|ki|k5|k8|ks|kº|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1|mm|m)\.?\s+(\d+(?:[.,]\d+)?)\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i);
+      if (row) {
+        let nome = row[1]
+          .replace(/^\d{2,7}\s*/i, "")
+          .replace(/^[A-Z]?\d{2,7}/i, "")
+          .replace(/\.{2,}\s*.*$/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        const unidade = normalizeOcrUnit(row[2]) || inferUnit(row[2]);
+        if (nome.length >= 3 && !knownNames.has(normalize(nome))) {
+          result.push({ nome, quantidade: row[3].replace(",", "."), unidade: unidade || "unidade" });
+          continue;
+        }
+      }
+
+      // Algumas linhas perdem a sigla da unidade. Nesse caso, ainda usamos
+      // os três números finais e inferimos a unidade pelo nome (ex.: KG).
+      const rowNoUnit = line.match(/^\s*\d{3}\s+(.+?)\s+(\d+(?:[.,]\d+)?)\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i);
+      if (rowNoUnit) {
+        let nome = rowNoUnit[1]
+          .replace(/^\d{2,7}\s*/i, "")
+          .replace(/^[A-Z]?\d{2,7}/i, "")
+          .replace(/\.{2,}\s*.*$/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        const unidade = /\b(?:kg|k6|kb|ki|k5|k8|ks|kº)\b/i.test(nome) ? "kg" :
+          /\b(?:un|und|unid|mm|m)\b/i.test(nome) ? "unidade" : "unidade";
+        if (nome.length >= 3 && !knownNames.has(normalize(nome))) {
+          result.push({ nome, quantidade: rowNoUnit[2].replace(",", "."), unidade });
+          continue;
+        }
+      }
+
     // Tabelas de orçamento/cotação. Aceita linhas com ou sem códigos no início.
     // Ex.: "01 001 CENOURA KG 10,000 4,25 42,50" ou "CENOURA KG 10,000 4,25 42,50".
     const tableMatch = line.match(new RegExp("^(?:\\d+\\s+){0,2}(.+?)\\s+(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
@@ -235,10 +271,10 @@ export function DocumentEntry() {
       ctx.putImageData(imageData, 0, 0);
 
       const worker = await createWorker("por");
-      // Para cotações em tabela, o modo 3 preserva melhor as linhas completas.
-      // Evitamos misturar duas leituras diferentes, que podem criar produtos falsos.
+      // Cotações impressas em tabela funcionam melhor no PSM 6:
+      // ele mantém cada linha de item completa, incluindo os 8 produtos.
       await worker.setParameters({
-        tessedit_pageseg_mode: "3",
+        tessedit_pageseg_mode: "6",
         preserve_interword_spaces: "1",
         user_defined_dpi: "300",
       });
