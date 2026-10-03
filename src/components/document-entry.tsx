@@ -26,7 +26,7 @@ function guessProducts(text: string, products: Product[]): DraftItem[] {
     if (!name || !normalizedText.includes(normalize(name))) continue;
 
     const lineIndex = lines.findIndex((line) => normalize(line).includes(normalize(name)));
-    const nearby = lineIndex >= 0 ? lines.slice(lineIndex, lineIndex + 2).join(" ") : text;
+    const nearby = lineIndex >= 0 ? lines.slice(lineIndex, lineIndex + 4).join(" ") : text;
     const quantidade = extractQuantity(nearby, name);
     if (!quantidade || Number(quantidade) <= 0) continue;
 
@@ -52,7 +52,7 @@ function extractQuantity(text: string, productName: string) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const target = normalize(productName);
   const index = lines.findIndex((value) => normalize(value).includes(target));
-  const nearby = index >= 0 ? lines.slice(index, index + 2) : lines;
+  const nearby = index >= 0 ? lines.slice(index, index + 4) : lines;
   const joined = nearby.join(" ");
 
   const table = joined.match(/(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\s+(\d+(?:[.,]\d+)?)\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?/i);
@@ -83,34 +83,51 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     const line = lines[i];
     if (/^(item|cod\.?|desc\.?|qtde|total|valor|cartao|troco|cnpj|cpf|data|consumidor|documento|protocolo|tributos|consulte|mfc|serie)/i.test(line)) continue;
 
-    // Tabelas de orçamento/cotação: DESCRIÇÃO ... EMB. QUANTID. VLR.UNIT. VLR.TOTAL.
-    // Ex.: "CENOURA KG ... KG 10,000 4,25 42,50"
-    const tableMatch = line.match(new RegExp("^\\d+\\s+\\d+\\s+(.+?)\\s+(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
+    // Tabelas de orçamento/cotação. Aceita linhas com ou sem códigos no início.
+    // Ex.: "01 001 CENOURA KG 10,000 4,25 42,50" ou "CENOURA KG 10,000 4,25 42,50".
+    const tableMatch = line.match(new RegExp("^(?:\\d+\\s+){0,2}(.+?)\\s+(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
     if (tableMatch) {
       const nome = tableMatch[1]
-        .replace(/\.{2,}/g, " ")
+        .replace(/\\.{2,}/g, " ")
         .replace(/[|*_]+/g, " ")
-        .replace(/\s+/g, " ")
+        .replace(/^\\d+\\s+\\d+\\s+/, "")
+        .replace(/\\s+/g, " ")
         .trim();
       const unitMatch = line.match(new RegExp("(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
       const unidade = inferUnit(unitMatch?.[0] ?? "");
-      if (nome.length >= 2 && !knownNames.has(normalize(nome))) {
+      if (nome.length >= 2 && !knownNames.has(normalize(nome)) && !/^(item|codigo|descri[cç][aã]o|total|valor)$/i.test(nome)) {
         result.push({ nome, quantidade: tableMatch[2].replace(",", "."), unidade });
       }
       continue;
     }
 
+    // Documento fiscal/recibo com descrição e quantidade na mesma linha.
+    // Ex.: "FÍGADO BOV CONG 22,220 KG".
+    const sameLineQty = line.match(new RegExp("^(.{3,}?)\\s+(\\d+(?:[.,]\\d+)?)\\s*(?:" + unitPattern + ")\\s*$", "i"));
+    if (sameLineQty) {
+      const nome = sameLineQty[1]
+        .replace(/^\\d+\\s+\\d+\\s+/, "")
+        .replace(/[|*_]+/g, " ")
+        .replace(/\\s+/g, " ")
+        .trim();
+      const unitMatch = line.match(new RegExp("(?:" + unitPattern + ")\\s*$", "i"));
+      if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^(item|total|valor|cartao|troco|quantidade|descricao)$/i.test(nome)) {
+        result.push({ nome, quantidade: sameLineQty[2].replace(",", "."), unidade: inferUnit(unitMatch?.[0] ?? "") });
+        continue;
+      }
+    }
+
     // NFC-e/recibo: descrição em uma linha e quantidade + unidade na linha seguinte.
     const next = lines[i + 1] ?? "";
-    const nextQty = next.match(/^(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/i);
+    const nextQty = next.match(new RegExp("^(\\d+(?:[.,]\\d+)?)\\s*(?:" + unitPattern + ")\\b", "i"));
     if (nextQty && line.length >= 3) {
       const clean = line
-        .replace(/^\d+\s+\d+\s+/i, "")
-        .replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/gi, "")
+        .replace(/^\\d+\\s+\\d+\\s+/i, "")
+        .replace(/\\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\\b/gi, "")
         .replace(/[|*_]+/g, " ")
-        .replace(/\s+/g, " ")
+        .replace(/\\s+/g, " ")
         .trim();
-      if (clean.length >= 3 && !knownNames.has(normalize(clean)) && !/^(item|total|valor|cartao|troco)$/i.test(clean)) {
+      if (clean.length >= 3 && !knownNames.has(normalize(clean)) && !/^(item|total|valor|cartao|troco|quantidade|descricao)$/i.test(clean)) {
         result.push({ nome: clean, quantidade: nextQty[1].replace(",", "."), unidade: inferUnit(nextQty[0]) });
       }
     }
@@ -140,9 +157,33 @@ export function DocumentEntry() {
   const readDocument = async (file: File) => {
     setReading(true); setConfirmed(false); setItems([]);
     try {
+      // Prepara a foto para melhorar OCR em celulares: amplia e aumenta o contraste.
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(2.5, Math.max(1, 1800 / Math.max(bitmap.width, bitmap.height)));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(bitmap.width * scale);
+      canvas.height = Math.round(bitmap.height * scale);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Não foi possível preparar a imagem para leitura.");
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      for (let p = 0; p < imageData.data.length; p += 4) {
+        const gray = Math.round(imageData.data[p] * 0.299 + imageData.data[p + 1] * 0.587 + imageData.data[p + 2] * 0.114);
+        const contrast = Math.max(0, Math.min(255, (gray - 128) * 1.35 + 128));
+        imageData.data[p] = contrast;
+        imageData.data[p + 1] = contrast;
+        imageData.data[p + 2] = contrast;
+      }
+      ctx.putImageData(imageData, 0, 0);
+
       const worker = await createWorker("por");
-      const result = await worker.recognize(file);
-      const text = result.data.text;
+      const [enhancedResult, originalResult] = await Promise.all([
+        worker.recognize(canvas),
+        worker.recognize(file),
+      ]);
+      const text = [enhancedResult.data.text, originalResult.data.text].filter(Boolean).join("\n");
       await worker.terminate();
       setOcrText(text);
 
@@ -164,11 +205,9 @@ export function DocumentEntry() {
         }
       }
 
-      // If OCR found only the product description and the quantity is on the following line,
-      // the candidate parser above handles it. No stock movement is created at this stage.
       const valid = detected.filter((item) => Number(item.quantidade.replace(",", ".")) > 0);
       if (!valid.length) {
-        toast.warning("Não identifiquei um produto e uma quantidade válidos na imagem.");
+        toast.warning("Não identifiquei um produto e uma quantidade válidos na imagem. Tente uma foto mais próxima e bem iluminada.");
         return;
       }
 
