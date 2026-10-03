@@ -100,7 +100,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
 
     // Em uma cotação, só linhas numeradas de itens podem virar produtos.
     // Isso impede que cabeçalho, endereço, total e observações sejam interpretados como produto.
-    const looksLikeTableItem = /^(?:\d+\s+){1,2}.+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i.test(line);
+    const looksLikeTableItem = /^\d{3}\s+.+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i.test(line);
     if (isQuotationTable && !looksLikeTableItem) continue;
 
     // Tabelas de orçamento/cotação. Aceita linhas com ou sem códigos no início.
