@@ -8,6 +8,7 @@ import { fileToLogoDataUrl } from "@/lib/logo";
 import { Field, PageHeader, Panel } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { semadsLogoUrl } from "@/lib/brand";
 
 export const Route = createFileRoute("/_authenticated/configuracoes")({
   head: () => ({
@@ -39,7 +40,7 @@ function SettingsPage() {
     if (!settings) return;
     setInstituicao(settings.nome_instituicao ?? "");
     setSecretaria(settings.nome_secretaria ?? "");
-    setLogo(settings.logo_url ?? null);
+    setLogo(settings.logo_url ?? semadsLogoUrl);
   }, [settings]);
 
   const onSave = async (e: React.FormEvent) => {

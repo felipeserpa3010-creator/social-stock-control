@@ -53,7 +53,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
   const pageH = doc.internal.pageSize.getHeight();
   const margin = 14;
 
-  const logo = await loadLogo(opts.logoUrl || semadsLogoUrl);
+  const logo = await loadLogo(semadsLogoUrl);
   const dataConf = opts.dataConferencia ? formatDate(opts.dataConferencia) : "—";
 
   const drawHeader = () => {
