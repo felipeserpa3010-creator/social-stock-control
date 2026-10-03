@@ -24,7 +24,7 @@ function DocumentEntryPage() {
     <>
       <PageHeader
         title="Lançamento por documento"
-        description="Somente o CEO. Tire uma foto de uma nota, recibo ou orçamento e confira os produtos e quantidades antes de lançar."
+        description="Somente o CEO. Tire uma foto ou escolha uma imagem da galeria: o sistema identifica os produtos, cadastra os que ainda não existem e lança as quantidades automaticamente no estoque."
       />
       <DocumentEntry />
     </>
