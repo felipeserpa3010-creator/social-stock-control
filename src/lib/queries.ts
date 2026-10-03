@@ -283,6 +283,11 @@ export type MovementInput = {
   responsavel?: string | null;
 };
 
+export async function removeMovement(id: string) {
+  const { error } = await supabase.from("stock_movements").delete().eq("id", id);
+  if (error) throw message(error);
+}
+
 export async function addMovement(input: MovementInput) {
   const user_id = await currentUserId();
   const { error } = await supabase.from("stock_movements").insert({ ...input, user_id });
