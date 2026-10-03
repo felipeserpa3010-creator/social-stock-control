@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T17:47:14.253829+00:00",
+  "generated_at": "2026-10-03T17:47:30.799100+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -447,7 +447,7 @@
     },
     {
       "path": "src/routes/_authenticated/historico.tsx",
-      "bytes": 8637
+      "bytes": 9692
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
@@ -2101,11 +2101,19 @@
     },
     {
       "source": "src/routes/_authenticated/historico.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/historico.tsx",
       "target": "@tanstack/react-query"
     },
     {
       "source": "src/routes/_authenticated/historico.tsx",
       "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/historico.tsx",
+      "target": "sonner"
     },
     {
       "source": "src/routes/_authenticated/historico.tsx",
