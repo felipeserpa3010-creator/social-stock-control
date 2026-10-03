@@ -21,10 +21,12 @@ import { Route as AuthenticatedConferenciasRouteImport } from './routes/_authent
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEntradaRouteImport } from './routes/_authenticated/entrada'
+import { Route as AuthenticatedEntradaDocumentoRouteImport } from './routes/_authenticated/entrada-documento'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
 import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedMediasRouteImport } from './routes/_authenticated/medias'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
+import { Route as AuthenticatedRecebimentoRouteImport } from './routes/_authenticated/recebimento'
 import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
 import { Route as AuthenticatedSaidaRouteImport } from './routes/_authenticated/saida'
 import { Route as AuthenticatedUnidadesRouteImport } from './routes/_authenticated/unidades'
@@ -92,6 +94,12 @@ const AuthenticatedEntradaRoute = AuthenticatedEntradaRouteImport.update({
   path: '/entrada',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedEntradaDocumentoRoute =
+  AuthenticatedEntradaDocumentoRouteImport.update({
+    id: '/entrada-documento',
+    path: '/entrada-documento',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
   id: '/estoque',
   path: '/estoque',
@@ -112,6 +120,12 @@ const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   path: '/produtos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRecebimentoRoute =
+  AuthenticatedRecebimentoRouteImport.update({
+    id: '/recebimento',
+    path: '/recebimento',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
   id: '/relatorios',
   path: '/relatorios',
@@ -145,10 +159,12 @@ export interface FileRoutesByFullPath {
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
+  '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
+  '/recebimento': typeof AuthenticatedRecebimentoRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/saida': typeof AuthenticatedSaidaRoute
   '/unidades': typeof AuthenticatedUnidadesRoute
@@ -166,10 +182,12 @@ export interface FileRoutesByTo {
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
+  '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
+  '/recebimento': typeof AuthenticatedRecebimentoRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/saida': typeof AuthenticatedSaidaRoute
   '/unidades': typeof AuthenticatedUnidadesRoute
@@ -189,10 +207,12 @@ export interface FileRoutesById {
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/entrada': typeof AuthenticatedEntradaRoute
+  '/_authenticated/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
   '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/medias': typeof AuthenticatedMediasRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
+  '/_authenticated/recebimento': typeof AuthenticatedRecebimentoRoute
   '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
   '/_authenticated/saida': typeof AuthenticatedSaidaRoute
   '/_authenticated/unidades': typeof AuthenticatedUnidadesRoute
@@ -212,10 +232,12 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/dashboard'
     | '/entrada'
+    | '/entrada-documento'
     | '/estoque'
     | '/historico'
     | '/medias'
     | '/produtos'
+    | '/recebimento'
     | '/relatorios'
     | '/saida'
     | '/unidades'
@@ -233,10 +255,12 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/dashboard'
     | '/entrada'
+    | '/entrada-documento'
     | '/estoque'
     | '/historico'
     | '/medias'
     | '/produtos'
+    | '/recebimento'
     | '/relatorios'
     | '/saida'
     | '/unidades'
@@ -255,10 +279,12 @@ export interface FileRouteTypes {
     | '/_authenticated/configuracoes'
     | '/_authenticated/dashboard'
     | '/_authenticated/entrada'
+    | '/_authenticated/entrada-documento'
     | '/_authenticated/estoque'
     | '/_authenticated/historico'
     | '/_authenticated/medias'
     | '/_authenticated/produtos'
+    | '/_authenticated/recebimento'
     | '/_authenticated/relatorios'
     | '/_authenticated/saida'
     | '/_authenticated/unidades'
@@ -361,6 +387,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEntradaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/entrada-documento': {
+      id: '/_authenticated/entrada-documento'
+      path: '/entrada-documento'
+      fullPath: '/entrada-documento'
+      preLoaderRoute: typeof AuthenticatedEntradaDocumentoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/estoque': {
       id: '/_authenticated/estoque'
       path: '/estoque'
@@ -387,6 +420,13 @@ declare module '@tanstack/react-router' {
       path: '/produtos'
       fullPath: '/produtos'
       preLoaderRoute: typeof AuthenticatedProdutosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/recebimento': {
+      id: '/_authenticated/recebimento'
+      path: '/recebimento'
+      fullPath: '/recebimento'
+      preLoaderRoute: typeof AuthenticatedRecebimentoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/relatorios': {
@@ -426,10 +466,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEntradaRoute: typeof AuthenticatedEntradaRoute
+  AuthenticatedEntradaDocumentoRoute: typeof AuthenticatedEntradaDocumentoRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
   AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedMediasRoute: typeof AuthenticatedMediasRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
+  AuthenticatedRecebimentoRoute: typeof AuthenticatedRecebimentoRoute
   AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
   AuthenticatedSaidaRoute: typeof AuthenticatedSaidaRoute
   AuthenticatedUnidadesRoute: typeof AuthenticatedUnidadesRoute
@@ -442,10 +484,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEntradaRoute: AuthenticatedEntradaRoute,
+  AuthenticatedEntradaDocumentoRoute: AuthenticatedEntradaDocumentoRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
   AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedMediasRoute: AuthenticatedMediasRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
+  AuthenticatedRecebimentoRoute: AuthenticatedRecebimentoRoute,
   AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
   AuthenticatedSaidaRoute: AuthenticatedSaidaRoute,
   AuthenticatedUnidadesRoute: AuthenticatedUnidadesRoute,
