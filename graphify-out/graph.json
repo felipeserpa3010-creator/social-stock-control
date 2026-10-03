@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T19:05:50.356101+00:00",
+  "generated_at": "2026-10-03T19:10:24.414036+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -207,7 +207,7 @@
     },
     {
       "path": "src/routes/index.tsx",
-      "bytes": 1475
+      "bytes": 1463
     },
     {
       "path": "src/routes/recuperar-senha.tsx",
