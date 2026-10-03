@@ -91,10 +91,17 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const result: { nome: string; quantidade: string; unidade: string }[] = [];
   const unitPattern = "(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)";
+  const isQuotationTable = /descri[cç][aã]o\s+do\s+produto|quantid|vlr\.?\s*\.?(?:unit|total)/i.test(text);
+
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     if (/^(item|cod\.?|desc\.?|qtde|total|valor|cartao|troco|cnpj|cpf|data|consumidor|documento|protocolo|tributos|consulte|mfc|serie)/i.test(line)) continue;
+
+    // Em uma cotação, só linhas numeradas de itens podem virar produtos.
+    // Isso impede que cabeçalho, endereço, total e observações sejam interpretados como produto.
+    const looksLikeTableItem = /^(?:\d+\s+){1,2}.+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i.test(line);
+    if (isQuotationTable && !looksLikeTableItem) continue;
 
     // Tabelas de orçamento/cotação. Aceita linhas com ou sem códigos no início.
     // Ex.: "01 001 CENOURA KG 10,000 4,25 42,50" ou "CENOURA KG 10,000 4,25 42,50".
@@ -207,15 +214,15 @@ export function DocumentEntry() {
       ctx.putImageData(imageData, 0, 0);
 
       const worker = await createWorker("por");
+      // Para cotações em tabela, o modo 3 preserva melhor as linhas completas.
+      // Evitamos misturar duas leituras diferentes, que podem criar produtos falsos.
       await worker.setParameters({
-        tessedit_pageseg_mode: "6",
+        tessedit_pageseg_mode: "3",
         preserve_interword_spaces: "1",
         user_defined_dpi: "300",
       });
-      const enhancedResult = await worker.recognize(canvas);
-      await worker.setParameters({ tessedit_pageseg_mode: "3", preserve_interword_spaces: "1" });
-      const originalResult = await worker.recognize(file);
-      const text = [enhancedResult.data.text, originalResult.data.text].filter(Boolean).join("\n");
+      const result = await worker.recognize(canvas);
+      const text = result.data.text;
       await worker.terminate();
       setOcrText(text);
 
