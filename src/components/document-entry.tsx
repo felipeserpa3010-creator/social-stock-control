@@ -74,6 +74,19 @@ function inferUnit(text: string, fallback = "unidade") {
   return fallback;
 }
 
+function normalizeOcrUnit(value: string) {
+  const token = value.toLocaleLowerCase("pt-BR").replace(/[^a-z0-9]/g, "");
+  if (/^(kg|k6|kb|ki|k5|k8|ks)$/.test(token)) return "kg";
+  if (/^(g|gr|gram|grama|gramas)$/.test(token)) return "g";
+  if (/^(l|lt|litro|litros)$/.test(token)) return "litro";
+  if (/^(un|und|unid|unidade|unidades|pl|p1)$/.test(token)) return "unidade";
+  if (/^(pc|pç|pct|pacote|pacotes)$/.test(token)) return "pacote";
+  if (/^(cx|caixa|caixas)$/.test(token)) return "caixa";
+  if (/^(sc|saco|sacos)$/.test(token)) return "saco";
+  if (/^(fd|fardo|fardos)$/.test(token)) return "fardo";
+  return "";
+}
+
 function extractUnknownCandidates(text: string, knownNames: Set<string>) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const result: { nome: string; quantidade: string; unidade: string }[] = [];
@@ -99,6 +112,21 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
         result.push({ nome, quantidade: tableMatch[2].replace(",", "."), unidade });
       }
       continue;
+    }
+
+    // Fallback para tabelas em que o OCR erra a sigla da unidade (ex.: "k6" no lugar de "kg")
+    // ou perde a unidade original. Usa as três colunas numéricas finais: quantidade, valor unitário e total.
+    const numericTail = line.match(/^(?:\\d+\\s+){0,2}(.+?)\\s+(\\d+(?:[.,]\\d+)?)\\s+(\\d+(?:[.,]\\d+)?)\\s+(\\d+(?:[.,]\\d+)?)\\s*$/);
+    if (numericTail) {
+      const prefix = numericTail[1].replace(/\\.{2,}/g, " ").replace(/[|*_]+/g, " ").replace(/\\s+/g, " ").trim();
+      const unitMatch = prefix.match(/(?:^|\\s)(kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1)\\.?$/i);
+      const unidade = normalizeOcrUnit(unitMatch?.[1] ?? "") || inferUnit(unitMatch?.[1] ?? "");
+      let nome = unitMatch ? prefix.slice(0, unitMatch.index).trim() : prefix;
+      nome = nome.replace(/^\\d+\\s+\\d+\\s+/, "").replace(/\\b(?:kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo)\\.?$/i, "").trim();
+      if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^(item|codigo|cod|referencia|descricao|total|valor|obs)$/i.test(nome)) {
+        result.push({ nome, quantidade: numericTail[2].replace(",", "."), unidade: unidade || "unidade" });
+        continue;
+      }
     }
 
     // Documento fiscal/recibo com descrição e quantidade na mesma linha.
@@ -179,10 +207,14 @@ export function DocumentEntry() {
       ctx.putImageData(imageData, 0, 0);
 
       const worker = await createWorker("por");
-      const [enhancedResult, originalResult] = await Promise.all([
-        worker.recognize(canvas),
-        worker.recognize(file),
-      ]);
+      await worker.setParameters({
+        tessedit_pageseg_mode: "6",
+        preserve_interword_spaces: "1",
+        user_defined_dpi: "300",
+      });
+      const enhancedResult = await worker.recognize(canvas);
+      await worker.setParameters({ tessedit_pageseg_mode: "3", preserve_interword_spaces: "1" });
+      const originalResult = await worker.recognize(file);
       const text = [enhancedResult.data.text, originalResult.data.text].filter(Boolean).join("\n");
       await worker.terminate();
       setOcrText(text);
