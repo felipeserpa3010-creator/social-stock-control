@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T19:18:04.584267+00:00",
+  "generated_at": "2026-10-03T19:18:18.273100+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -135,7 +135,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 25514
+      "bytes": 30622
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -918,6 +918,10 @@
     {
       "source": "src/components/document-entry.tsx",
       "target": "@/lib/queries"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/components/document-entry.tsx",
