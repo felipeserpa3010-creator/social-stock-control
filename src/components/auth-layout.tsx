@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { Boxes, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { settingsOptions } from "@/lib/queries";
+import { semadsLogoUrl } from "@/lib/brand";
 
 export function AuthLayout({
   title,
@@ -22,22 +23,10 @@ export function AuthLayout({
   return (
     <div className="grid min-h-screen lg:grid-cols-[1.05fr_1fr]">
       <div className="relative hidden flex-col justify-between bg-sidebar px-10 py-10 text-sidebar-foreground lg:flex">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.14]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 20%, #B15B3B 0, transparent 45%), radial-gradient(circle at 80% 70%, #8F3B24 0, transparent 40%)",
-          }}
-        />
-        <Link to="/auth" className="relative flex items-center gap-2.5">
-          <span className="grid size-10 place-items-center rounded-md bg-sidebar-primary/15 ring-1 ring-sidebar-primary/30">
-            {settings?.logo_url ? (
-              <img src={settings.logo_url || "/semads-logo-4k.svg"} alt="SEMADS" className="max-h-20 w-auto object-contain" />
-            ) : (
-              <img src="/semads-logo-4k.svg" alt="SEMADS" className="size-10 object-contain" />
-            )}
-          </span>
-          <span>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,color-mix(in_oklab,var(--sidebar-primary)_24%,transparent)_0,transparent_45%),radial-gradient(circle_at_80%_70%,color-mix(in_oklab,var(--sidebar-accent)_45%,transparent)_0,transparent_40%)]" />
+        <Link to="/auth" className="relative flex flex-col items-start gap-2.5">
+          <img src={semadsLogoUrl} alt="SEMADS" className="h-auto w-52 rounded-md object-contain shadow-panel" />
+          <span className="px-1">
             <span className="block text-sm font-bold leading-tight">{institution}</span>
             {secretaria && (
               <span className="block text-[11px] leading-tight text-sidebar-foreground/60">
@@ -76,14 +65,8 @@ export function AuthLayout({
 
       <div className="flex items-center justify-center bg-background px-4 py-10 sm:px-8">
         <div className="w-full max-w-[400px]">
-          <div className="mb-6 flex items-center gap-2.5 lg:hidden">
-            <span className="grid size-9 place-items-center rounded-md bg-primary/10 ring-1 ring-primary/20">
-              {settings?.logo_url ? (
-                <img src={settings.logo_url || "/semads-logo-4k.svg"} alt="SEMADS" className="size-10 object-contain" />
-              ) : (
-                <img src="/semads-logo-4k.svg" alt="SEMADS" className="size-10 object-contain" />
-              )}
-            </span>
+          <div className="mb-6 flex items-center gap-3 lg:hidden">
+            <img src={semadsLogoUrl} alt="SEMADS" className="h-14 w-auto rounded-md object-contain shadow-panel" />
             <span className="min-w-0">
               <span className="block truncate text-[13px] font-bold leading-tight">
                 {institution}

@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { VirtualAssistant } from "@/components/virtual-assistant";
+import { semadsLogoUrl } from "@/lib/brand";
 
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" | "/conferencia" | "/medias" |
@@ -120,11 +121,11 @@ function Brand({ compact }: { compact?: boolean }) {
     <div className={cn("flex items-center px-4 py-3", compact && "justify-center px-0")}>
       {compact ? (
         <span className="grid size-9 place-items-center rounded-md bg-sidebar-primary/10 ring-1 ring-sidebar-primary/25">
-          <img src="/semads-logo-4k.svg" alt="SEMADS" className="size-7 object-contain" />
+          <img src={semadsLogoUrl} alt="SEMADS" className="size-7 rounded object-cover" />
         </span>
       ) : (
         <div className="min-w-0">
-          <img src="/semads-logo-4k.svg" alt="SEMADS" className="h-auto w-[185px] max-w-full object-contain" />
+          <img src={semadsLogoUrl} alt="SEMADS" className="h-auto w-[185px] max-w-full rounded-md object-contain shadow-panel" />
           <span className="mt-0.5 block text-[11px] leading-tight text-sidebar-foreground/60">Controle de Estoque</span>
         </div>
       )}
