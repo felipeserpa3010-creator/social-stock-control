@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T19:10:24.414036+00:00",
+  "generated_at": "2026-10-03T19:18:04.584267+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -104,6 +104,10 @@
     {
       "path": "supabase/migrations/20260928165059_927e0640-a403-4074-a38c-45a576cf67b5.sql",
       "bytes": 860
+    },
+    {
+      "path": "supabase/functions/vision-ocr/index.ts",
+      "bytes": 7299
     },
     {
       "path": "src/components/virtual-assistant.tsx",
@@ -670,6 +674,10 @@
     {
       "source": "src/start.ts",
       "target": "@/integrations/supabase/auth-attacher"
+    },
+    {
+      "source": "supabase/functions/vision-ocr/index.ts",
+      "target": "https://esm.sh/@supabase/supabase-js@2.57.2"
     },
     {
       "source": "src/components/virtual-assistant.tsx",
