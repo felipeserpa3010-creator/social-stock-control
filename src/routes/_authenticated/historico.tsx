@@ -1,10 +1,12 @@
 import type { MovementType, MovementFilter } from "@/lib/queries";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Download } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Download, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
-import { movementsOptions, productsOptions } from "@/lib/queries";
+import { movementsOptions, productsOptions, removeMovement } from "@/lib/queries";
 import { formatDate, formatQty, todayISO } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton, TypeBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -38,6 +40,8 @@ export const Route = createFileRoute("/_authenticated/historico")({
 
 function HistoryPage() {
   const { unitId, unit } = useUnit();
+  const { isAdmin } = useAuth();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const { data: products = [] } = useQuery(productsOptions(true));
   const [tipo, setTipo] = useState<"" | MovementType>("");
   const [from, setFrom] = useState("");
@@ -45,6 +49,7 @@ function HistoryPage() {
   const [productId, setProductId] = useState("");
   const [term, setTerm] = useState("");
   const [visible, setVisible] = useState(80);
+  const queryClient = useQueryClient();
 
   const { data: movements = [], isPending } = useQuery(
     movementsOptions({
@@ -62,6 +67,22 @@ function HistoryPage() {
     const q = term.trim().toLowerCase();
     return movements.filter((m) => (m.products?.nome ?? "").toLowerCase().includes(q));
   }, [movements, term]);
+
+  const deleteLaunch = async (id: string) => {
+    if (!isAdmin) return;
+    if (!window.confirm("Excluir este lançamento? O efeito dele no estoque também será revertido.")) return;
+    setDeletingId(id);
+    try {
+      await removeMovement(id);
+      await queryClient.invalidateQueries({ queryKey: ["movements"] });
+      await queryClient.invalidateQueries({ queryKey: ["stock"] });
+      toast.success("Lançamento excluído e estoque revertido.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível excluir o lançamento.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const exportCsv = () => {
     const header = [...(unitId === ALL_UNITS ? ["Unidade"] : []), "Data", "Tipo", "Produto", "Quantidade", "Responsavel", "Observacao"];
@@ -89,7 +110,7 @@ function HistoryPage() {
     <>
       <PageHeader
         title="Histórico de movimentações"
-        description="Todos os lançamentos da dispensa. Registros não podem ser editados nem excluídos."
+        description={isAdmin ? "Todos os lançamentos da dispensa. O CEO pode excluir um lançamento; o efeito dele no estoque será revertido automaticamente." : "Todos os lançamentos da dispensa."}
         actions={
           <Button variant="outline" size="sm" onClick={exportCsv} disabled={!rows.length}>
             <Download /> CSV
@@ -174,7 +195,7 @@ function HistoryPage() {
                     <TableHead className="text-right">Quantidade</TableHead>
                     <TableHead>Tipo</TableHead>
                     <TableHead>Responsável</TableHead>
-                    <TableHead>Observação</TableHead>
+                    <TableHead>Observação</TableHead>{isAdmin && <TableHead className="text-right">Ação</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
