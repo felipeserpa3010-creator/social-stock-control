@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T14:31:49.511160+00:00",
+  "generated_at": "2026-10-03T14:32:01.619795+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -79,7 +79,7 @@
     },
     {
       "path": "supabase/migrations/20261003120000_logo_semads_4k.sql",
-      "bytes": 221
+      "bytes": 216
     },
     {
       "path": "supabase/migrations/20261002090000_estoque_permissoes_definitivas.sql",
