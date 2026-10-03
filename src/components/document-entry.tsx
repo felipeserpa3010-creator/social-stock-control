@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
-import { addMovement, productsOptions, unitsOptions, type Product } from "@/lib/queries";
+import { addMovement, ensureUncategorizedProduct, productsOptions, unitsOptions, type Product } from "@/lib/queries";
 import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,11 +63,79 @@ export function DocumentEntry() {
       const text = result.data.text;
       await worker.terminate();
       setOcrText(text);
-      const detected = guessProducts(text, products);
-      if (!detected.length) toast.warning("Não identifiquei produtos cadastrados. Confira a foto e tente novamente.");
-      else { setItems(detected); toast.success(detected.length + " produto(s) identificado(s). Confira antes de lançar."); }
+
+      const known = guessProducts(text, products);
+      const knownNames = new Set(known.map((item) => normalize(item.nome)));
+      const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      const unknownLines = lines
+        .map((line) => {
+          const clean = line.replace(/\b(?:cnpj|cpf|nota|cupom|total|subtotal|valor|r\$|data|telefone|endereco)\b/gi, "").trim();
+          const match = clean.match(/^(.*?)[\s:=\-]+(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)?\s*$/i);
+          if (!match) return null;
+          const nome = match[1].replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
+          if (nome.length < 3 || knownNames.has(normalize(nome)) || /^\d+$/.test(nome)) return null;
+          const unidade = match[3]?.toLowerCase().startsWith("kg") || /quilo|kilo/i.test(match[3] ?? "") ? "kg"
+            : /^(g|gram)/i.test(match[3] ?? "") ? "g"
+            : /^(l|lit)/i.test(match[3] ?? "") ? "litro"
+            : /^(cx|caixa)/i.test(match[3] ?? "") ? "caixa"
+            : /^(pct|pacote)/i.test(match[3] ?? "") ? "pacote"
+            : /^(saco)/i.test(match[3] ?? "") ? "saco"
+            : /^(fardo)/i.test(match[3] ?? "") ? "fardo"
+            : "unidade";
+          return { nome, quantidade: match[2].replace(",", "."), unidade };
+        })
+        .filter((item): item is { nome: string; quantidade: string; unidade: string } => Boolean(item));
+
+      const detected = [...known];
+      for (const candidate of unknownLines) {
+        const product = await ensureUncategorizedProduct(candidate.nome, candidate.unidade);
+        if (!detected.some((item) => item.productId === product.id)) {
+          detected.push({
+            id: crypto.randomUUID(),
+            productId: product.id,
+            nome: product.nome,
+            quantidade: candidate.quantidade,
+            unidade: product.unidade_medida,
+            encontrado: false,
+          });
+        }
+      }
+
+      if (!detected.length) {
+        toast.warning("Não identifiquei produtos e quantidades suficientes na imagem.");
+        return;
+      }
+
+      setItems(detected);
+
+      const targetUnit = destination || unitId || "";
+      if (!targetUnit) {
+        toast.warning("Produtos foram cadastrados/identificados, mas escolha a unidade de destino para lançar no estoque.");
+        return;
+      }
+
+      for (const item of detected) {
+        const quantidade = Number(item.quantidade.replace(",", "."));
+        if (!item.productId || !Number.isFinite(quantidade) || quantidade <= 0) continue;
+        await addMovement({
+          unit_id: targetUnit,
+          product_id: item.productId,
+          tipo: "entrada",
+          quantidade,
+          data,
+          observacao: "Entrada lançada automaticamente a partir de documento lido por OCR",
+          responsavel: null,
+        });
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["products", false] });
+      await queryClient.invalidateQueries({ queryKey: ["stock"] });
+      await queryClient.invalidateQueries({ queryKey: ["movements"] });
+      setDestination(targetUnit);
+      setConfirmed(true);
+      toast.success(detected.length + " produto(s) cadastrados/identificados e lançados automaticamente no estoque.");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Não foi possível ler o documento.");
+      toast.error(error instanceof Error ? error.message : "Não foi possível processar e lançar o documento.");
     } finally { setReading(false); }
   };
 
