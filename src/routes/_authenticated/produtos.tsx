@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { categoriesOptions, productsOptions, removeCategory, removeProduct, saveCategory, saveProduct, type Category, type Product } from "@/lib/queries";
@@ -53,6 +54,7 @@ const emptyProduct = {
 };
 
 function ProductsPage() {
+  const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
   const { data: products = [], isPending } = useQuery(productsOptions(true));
   const { data: categories = [] } = useQuery(categoriesOptions(true));
@@ -138,7 +140,7 @@ function ProductsPage() {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Produto excluído.");
     } catch {
-      toast.error("Este produto possui lançamentos. Desative-o em vez de excluir.");
+      toast.error("Não foi possível excluir este produto. Verifique os dados e tente novamente.");
     } finally {
       setConfirm(null);
     }
@@ -214,7 +216,7 @@ function ProductsPage() {
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
                             <Button variant="ghost" size="sm" onClick={() => startEdit(p)}>Editar</Button>
-                            <Button variant="ghost" size="sm" aria-label={`Excluir ${p.nome}`} onClick={() => setConfirm(p)}><Trash2 className="text-destructive" /></Button>
+                            {isAdmin && <Button variant="ghost" size="sm" aria-label={`Excluir ${p.nome}`} onClick={() => setConfirm(p)}><Trash2 className="text-destructive" /></Button>}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -284,7 +286,7 @@ function ProductsPage() {
       <Dialog open={Boolean(confirm)} onOpenChange={(o) => !o && setConfirm(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader><DialogTitle>Excluir produto</DialogTitle></DialogHeader>
-          <p className="text-sm text-muted-foreground">Excluir <strong>{confirm?.nome}</strong> remove o produto das listas. Produtos com histórico não podem ser excluídos — nesse caso, desative o produto.</p>
+          <p className="text-sm text-muted-foreground">Excluir <strong>{confirm?.nome}</strong> remove o produto das listas. A exclusão remove o produto e seus registros de estoque associados. Use somente para corrigir um produto cadastrado por engano.</p>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setConfirm(null)}>Cancelar</Button>
             <Button variant="destructive" onClick={doDelete}>Excluir</Button>
