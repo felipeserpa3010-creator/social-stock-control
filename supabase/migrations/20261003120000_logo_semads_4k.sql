@@ -1,0 +1,1 @@
+-- Identidade visual atualizada para a nova logomarca SEMADS em vetor escalável (4K+).\nUPDATE public.settings\nSET nome_instituicao = 'Depósito SEMADS',\n    logo_url = '/semads-logo-4k.svg',\n    updated_at = now();\n
