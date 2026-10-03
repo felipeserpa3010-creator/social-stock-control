@@ -20,12 +20,15 @@ function extractQuantity(text: string, productName: string) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const target = normalize(productName);
   const index = lines.findIndex((value) => normalize(value).includes(target));
-  const nearby = index >= 0 ? lines.slice(index, index + 4) : lines;
+  const nearby = index >= 0 ? lines.slice(index, index + 2) : lines;
   const joined = nearby.join(" ");
-  const match = joined.match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/i);
+
+  const table = joined.match(/(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\s+(\d+(?:[.,]\d+)?)\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?/i);
+  if (table) return table[1].replace(",", ".");
+
+  const match = joined.match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/i);
   if (match) return match[1].replace(",", ".");
-  const all = joined.match(/(\d+(?:[.,]\d+)?)/);
-  return all?.[1]?.replace(",", ".") ?? "";
+  return "";
 }
 
 function inferUnit(text: string, fallback = "unidade") {
