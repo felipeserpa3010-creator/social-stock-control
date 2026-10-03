@@ -41,7 +41,8 @@ export function DocumentEntry() {
   const { isAdmin } = useAuth();
   const { unitId } = useUnit();
   const queryClient = useQueryClient();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
   const { data: products = [] } = useQuery(productsOptions(false));
   const { data: units = [] } = useQuery(unitsOptions(false));
   const [items, setItems] = useState<DraftItem[]>([]);
@@ -105,14 +106,23 @@ export function DocumentEntry() {
               <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary"><Camera className="size-5" /></span>
               <div><p className="font-semibold">Fotografar ou enviar</p><p className="mt-1 text-sm text-muted-foreground">Nota, recibo ou orçamento. O documento é processado no navegador e não é salvo pelo recurso.</p></div>
             </div>
-            <input ref={inputRef} type="file" accept="image/*" capture="environment" className="sr-only"
+            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="sr-only"
               onChange={(e) => { const file = e.target.files?.[0]; if (file) void readDocument(file); e.currentTarget.value = ""; }} />
-            <div className="mt-4"><Button onClick={() => inputRef.current?.click()} disabled={reading}>{reading ? <Loader2 className="animate-spin" /> : <Upload />} {reading ? "Lendo..." : "Tirar foto / escolher imagem"}</Button></div>
+            <input ref={galleryInputRef} type="file" accept="image/*" className="sr-only"
+              onChange={(e) => { const file = e.target.files?.[0]; if (file) void readDocument(file); e.currentTarget.value = ""; }} />
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Button onClick={() => cameraInputRef.current?.click()} disabled={reading}>
+                {reading ? <Loader2 className="animate-spin" /> : <Camera />} {reading ? "Lendo..." : "Tirar foto"}
+              </Button>
+              <Button variant="outline" onClick={() => galleryInputRef.current?.click()} disabled={reading}>
+                <Upload /> Escolher da galeria
+              </Button>
+            </div>
           </div>
           <div className="rounded-lg border bg-muted/30 p-5">
             <div className="flex items-center gap-2 font-semibold"><FileText className="size-4" /> Como funciona</div>
             <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li>1. Tire a foto do documento.</li><li>2. O OCR identifica produtos cadastrados e quantidades.</li>
+              <li>1. Tire uma foto ou escolha uma imagem da galeria.</li><li>2. O OCR identifica produtos cadastrados e quantidades.</li>
               <li>3. Você pode editar tudo antes do lançamento.</li><li>4. Escolha a unidade e confirme somente quando estiver certo.</li>
             </ol>
           </div>
