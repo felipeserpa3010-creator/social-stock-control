@@ -120,11 +120,11 @@ function Brand({ compact }: { compact?: boolean }) {
     <div className={cn("flex items-center px-4 py-3", compact && "justify-center px-0")}>
       {compact ? (
         <span className="grid size-9 place-items-center rounded-md bg-sidebar-primary/10 ring-1 ring-sidebar-primary/25">
-          <img src="/IMG-20260917-WA0055.jpg" alt="SEMADS" className="size-7 object-contain" />
+          <img src="/semads-logo-4k.svg" alt="SEMADS" className="size-7 object-contain" />
         </span>
       ) : (
         <div className="min-w-0">
-          <img src="/IMG-20260917-WA0055.jpg" alt="SEMADS" className="h-auto w-[185px] max-w-full object-contain" />
+          <img src="/semads-logo-4k.svg" alt="SEMADS" className="h-auto w-[185px] max-w-full object-contain" />
           <span className="mt-0.5 block text-[11px] leading-tight text-sidebar-foreground/60">Controle de Estoque</span>
         </div>
       )}
