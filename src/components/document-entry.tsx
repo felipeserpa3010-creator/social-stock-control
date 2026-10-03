@@ -16,6 +16,38 @@ type DraftItem = { id: string; productId: string; nome: string; quantidade: stri
 const normalize = (value: string) =>
   value.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
 
+function guessProducts(text: string, products: Product[]): DraftItem[] {
+  const normalizedText = normalize(text);
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const items: DraftItem[] = [];
+
+  for (const product of products) {
+    const name = product.nome?.trim();
+    if (!name || !normalizedText.includes(normalize(name))) continue;
+
+    const lineIndex = lines.findIndex((line) => normalize(line).includes(normalize(name)));
+    const nearby = lineIndex >= 0 ? lines.slice(lineIndex, lineIndex + 2).join(" ") : text;
+    const quantidade = extractQuantity(nearby, name);
+    if (!quantidade || Number(quantidade) <= 0) continue;
+
+    const unitMatch = nearby.match(/\b(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/i);
+    const unidade = inferUnit(unitMatch?.[1] ?? "", product.unidade_medida || "unidade");
+
+    if (!items.some((item) => item.productId === product.id)) {
+      items.push({
+        id: crypto.randomUUID(),
+        productId: product.id,
+        nome: product.nome,
+        quantidade,
+        unidade,
+        encontrado: true,
+      });
+    }
+  }
+
+  return items;
+}
+
 function extractQuantity(text: string, productName: string) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const target = normalize(productName);
