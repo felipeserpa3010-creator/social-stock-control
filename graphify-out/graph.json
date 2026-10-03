@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T18:30:48.570457+00:00",
+  "generated_at": "2026-10-03T18:30:55.315431+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -64,6 +64,10 @@
     {
       "path": "supabase/migrations/20260928161520_14a2a83a-7a67-4a0b-86fb-2742dbc80f42.sql",
       "bytes": 513
+    },
+    {
+      "path": "supabase/migrations/20261003160000_reiniciar_produtos_e_estoque.sql",
+      "bytes": 397
     },
     {
       "path": "supabase/migrations/20260827033548_607fad6c-bb0f-4cc5-ac0e-6d723f41dcde.sql",
