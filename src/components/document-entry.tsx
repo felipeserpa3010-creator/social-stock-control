@@ -152,14 +152,13 @@ export function DocumentEntry() {
 
       const detected = [...known];
       for (const candidate of candidates) {
-        const product = await ensureUncategorizedProduct(candidate.nome, candidate.unidade);
-        if (!detected.some((item) => item.productId === product.id)) {
+        if (!detected.some((item) => normalize(item.nome) === normalize(candidate.nome))) {
           detected.push({
             id: crypto.randomUUID(),
-            productId: product.id,
-            nome: product.nome,
+            productId: "",
+            nome: candidate.nome,
             quantidade: candidate.quantidade,
-            unidade: product.unidade_medida,
+            unidade: candidate.unidade,
             encontrado: false,
           });
         }
@@ -191,12 +190,18 @@ export function DocumentEntry() {
     setReading(true);
     try {
       for (const item of items) {
+        let productId = item.productId;
+        if (!productId) {
+          const created = await ensureUncategorizedProduct(item.nome, item.unidade || "unidade");
+          productId = created.id;
+        }
         await addMovement({
-          unit_id: destination, product_id: item.productId, tipo: "entrada",
+          unit_id: destination, product_id: productId, tipo: "entrada",
           quantidade: Number(item.quantidade.replace(",", ".")), data,
           observacao: "Entrada lançada a partir de documento lido por OCR", responsavel: null,
         });
       }
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
       await queryClient.invalidateQueries({ queryKey: ["movements"] });
       setConfirmed(true);
@@ -239,7 +244,7 @@ export function DocumentEntry() {
       </Panel>
 
       {items.length > 0 && (
-        <Panel title="Conferência antes do lançamento" description="Confira produto e quantidade. Nada será lançado no estoque até você confirmar. Use 🗑️ para excluir uma linha que estiver errada.">
+        <Panel title="Conferência antes do lançamento" description="Confira produto e quantidade. Nada será lançado no estoque até você confirmar. Produtos novos identificados na foto só serão cadastrados depois da sua confirmação. Use 🗑️ para excluir uma linha que estiver errada.">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Unidade de destino" htmlFor="ocr-unit" required>
               <select id="ocr-unit" value={destination} onChange={(e) => setDestination(e.target.value)} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
@@ -253,12 +258,18 @@ export function DocumentEntry() {
               <th className="px-3 py-2 text-left">Produto</th><th className="px-3 py-2 text-left">Quantidade</th><th className="px-3 py-2 text-left">Unidade</th><th className="px-3 py-2" />
             </tr></thead><tbody>
               {items.map((item) => <tr key={item.id} className="border-t">
-                <td className="px-3 py-2"><select value={item.productId} onChange={(e) => {
-                  const p = products.find((product) => product.id === e.target.value);
-                  updateItem(item.id, { productId: e.target.value, nome: p?.nome ?? item.nome, unidade: p?.unidade_medida ?? item.unidade });
-                }} className="h-9 w-full rounded-md border border-input bg-background px-2">
-                  <option value="">Selecione...</option>{products.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
-                </select></td>
+                <td className="px-3 py-2">
+                  {item.productId ? (
+                    <select value={item.productId} onChange={(e) => {
+                      const p = products.find((product) => product.id === e.target.value);
+                      updateItem(item.id, { productId: e.target.value, nome: p?.nome ?? item.nome, unidade: p?.unidade_medida ?? item.unidade });
+                    }} className="h-9 w-full rounded-md border border-input bg-background px-2">
+                      <option value="">Selecione...</option>{products.map((p) => <option key={p.id} value={p.id}>{p.nome}</option>)}
+                    </select>
+                  ) : (
+                    <Input value={item.nome} onChange={(e) => updateItem(item.id, { nome: e.target.value })} placeholder="Novo produto" />
+                  )}
+                </td>
                 <td className="px-3 py-2"><Input inputMode="decimal" value={item.quantidade} onChange={(e) => updateItem(item.id, { quantidade: e.target.value })} /></td>
                 <td className="px-3 py-2 font-medium">{item.unidade}</td>
                 <td className="px-3 py-2 text-right"><Button variant="ghost" size="icon" onClick={() => setItems((current) => current.filter((x) => x.id !== item.id))}><Trash2 className="size-4" /></Button></td>
