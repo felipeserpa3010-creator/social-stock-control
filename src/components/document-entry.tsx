@@ -16,6 +16,23 @@ type DraftItem = { id: string; productId: string; nome: string; quantidade: stri
 const normalize = (value: string) =>
   value.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
 
+function simplifyOcrProductName(value: string) {
+  const cleaned = value
+    .replace(/^\s*[-–—]+\s*/, "")
+    .replace(/^\d{2,7}\s+/, "")
+    .replace(/\b(?:kg|k6|kb|ki|k5|k8|ks|kº|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1|mm|m)\b/gi, "")
+    .replace(/\.{2,}.*$/g, "")
+    .replace(/[|*_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // O OCR usa somente o nome principal do alimento/produto.
+  // Exemplos: "CEBOLA II" -> "CEBOLA"; "SALSICHA HOT DOG BOVINA" -> "SALSICHA";
+  // "TOMATE ANÁPOLIS" -> "TOMATE"; "LINGUIÇA CALABRESA SADIA" -> "LINGUIÇA".
+  const firstWord = cleaned.match(/^[A-Za-zÀ-ÖØ-öø-ÿ]+/u)?.[0] ?? "";
+  return firstWord || cleaned;
+}
+
 function guessProducts(text: string, products: Product[]): DraftItem[] {
   const normalizedText = normalize(text);
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
@@ -37,7 +54,7 @@ function guessProducts(text: string, products: Product[]): DraftItem[] {
       items.push({
         id: crypto.randomUUID(),
         productId: product.id,
-        nome: product.nome,
+        nome: simplifyOcrProductName(product.nome),
         quantidade,
         unidade,
         encontrado: true,
@@ -116,7 +133,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
           .trim();
         const unidade = normalizeOcrUnit(row[2]) || inferUnit(row[2]);
         if (nome.length >= 3 && !knownNames.has(normalize(nome))) {
-          result.push({ nome, quantidade: row[3].replace(",", "."), unidade: unidade || "unidade" });
+          result.push({ nome: simplifyOcrProductName(nome), quantidade: row[3].replace(",", "."), unidade: unidade || "unidade" });
           continue;
         }
       }
@@ -134,7 +151,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
         const unidade = /\b(?:kg|k6|kb|ki|k5|k8|ks|kº)\b/i.test(nome) ? "kg" :
           /\b(?:un|und|unid|mm|m)\b/i.test(nome) ? "unidade" : "unidade";
         if (nome.length >= 3 && !knownNames.has(normalize(nome))) {
-          result.push({ nome, quantidade: rowNoUnit[2].replace(",", "."), unidade });
+          result.push({ nome: simplifyOcrProductName(nome), quantidade: rowNoUnit[2].replace(",", "."), unidade });
           continue;
         }
       }
@@ -188,7 +205,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
       // Quando a unidade foi perdida, ainda conseguimos inferi-la pelo próprio nome.
       const unidadeFinal = unidade || (/\b(?:kg|k6|kb|ki|k5|k8|ks|kº)\b/i.test(nome) ? "kg" : /\b(?:un|und|unid|mm|m)\b/i.test(nome) ? "unidade" : "unidade");
       if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^(item|codigo|cod|referencia|descricao|total|valor|obs)$/i.test(nome)) {
-        result.push({ nome, quantidade: numericTail[2].replace(",", "."), unidade: unidadeFinal });
+        result.push({ nome: simplifyOcrProductName(nome), quantidade: numericTail[2].replace(",", "."), unidade: unidadeFinal });
         continue;
       }
     }
@@ -204,7 +221,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
         .trim();
       const unitMatch = line.match(new RegExp("(?:" + unitPattern + ")\\s*$", "i"));
       if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^(item|total|valor|cartao|troco|quantidade|descricao)$/i.test(nome)) {
-        result.push({ nome, quantidade: sameLineQty[2].replace(",", "."), unidade: inferUnit(unitMatch?.[0] ?? "") });
+        result.push({ nome: simplifyOcrProductName(nome), quantidade: sameLineQty[2].replace(",", "."), unidade: inferUnit(unitMatch?.[0] ?? "") });
         continue;
       }
     }
@@ -220,7 +237,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
         .replace(/\s+/g, " ")
         .trim();
       if (clean.length >= 3 && !knownNames.has(normalize(clean)) && !/^(item|total|valor|cartao|troco|quantidade|descricao)$/i.test(clean)) {
-        result.push({ nome: clean, quantidade: nextQty[1].replace(",", "."), unidade: inferUnit(nextQty[0]) });
+        result.push({ nome: simplifyOcrProductName(clean), quantidade: nextQty[1].replace(",", "."), unidade: inferUnit(nextQty[0]) });
       }
     }
   }
