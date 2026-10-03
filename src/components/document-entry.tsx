@@ -6,6 +6,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
 import { addMovement, ensureUncategorizedProduct, productsOptions, unitsOptions, type Product } from "@/lib/queries";
+import { supabase } from "@/integrations/supabase/client";
 import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -263,10 +264,116 @@ export function DocumentEntry() {
   const activeUnits = useMemo(() => units.filter((u) => u.ativo), [units]);
   if (!isAdmin) return null;
 
+  const normalizeVisionUnit = (value: string, fallback = "unidade") => {
+    const token = value.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+    if (/^(kg|quilo|kilo)$/.test(token)) return "kg";
+    if (/^(g|gr|grama|gramas)$/.test(token)) return "g";
+    if (/^(l|lt|litro|litros)$/.test(token)) return "litro";
+    if (/^(ml|mililitro|mililitros)$/.test(token)) return "ml";
+    if (/^(un|und|unid|unidade|unidades|pc|pç)$/.test(token)) return "unidade";
+    if (/^(pct|pacote|pacotes)$/.test(token)) return "pacote";
+    if (/^(cx|caixa|caixas)$/.test(token)) return "caixa";
+    if (/^(sc|saco|sacos)$/.test(token)) return "saco";
+    if (/^(fd|fardo|fardos)$/.test(token)) return "fardo";
+    if (/^(pote|potes)$/.test(token)) return "pote";
+    if (/^(frasco|frascos)$/.test(token)) return "frasco";
+    if (/^(lata|latas)$/.test(token)) return "lata";
+    if (/^(duzia|duzias)$/.test(token)) return "dúzia";
+    return fallback;
+  };
+
+  const fileToVisionDataUrl = async (file: File) => {
+    const bitmap = await createImageBitmap(file);
+    const maxDimension = 2400;
+    const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Não foi possível preparar a imagem para a leitura por visão.");
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((value) => value ? resolve(value) : reject(new Error("Não foi possível preparar a imagem.")), "image/jpeg", 0.88);
+    });
+
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => typeof reader.result === "string" ? resolve(reader.result) : reject(new Error("Não foi possível converter a imagem."));
+      reader.onerror = () => reject(new Error("Não foi possível converter a imagem."));
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const readWithVision = async (file: File) => {
+    const imageDataUrl = await fileToVisionDataUrl(file);
+    const { data, error } = await supabase.functions.invoke("vision-ocr", {
+      body: { image_data_url: imageDataUrl },
+    });
+
+    if (error) {
+      let message = error.message;
+      try {
+        const context = await error.context?.json?.();
+        if (context?.error) message = context.error;
+      } catch {
+        // Mantém a mensagem original do Supabase.
+      }
+      throw new Error(message || "A API de visão não conseguiu ler o documento.");
+    }
+
+    const visionItems = Array.isArray(data?.items) ? data.items : [];
+    if (!visionItems.length) throw new Error("A API de visão não identificou produtos legíveis na imagem.");
+
+    const detected: DraftItem[] = [];
+    for (const item of visionItems) {
+      const nomeOriginal = String(item?.produto ?? "").trim();
+      const quantidade = Number(item?.quantidade);
+      if (!nomeOriginal || !Number.isFinite(quantidade) || quantidade <= 0) continue;
+
+      const nome = simplifyOcrProductName(nomeOriginal);
+      const unidade = normalizeVisionUnit(String(item?.unidade ?? ""), "unidade");
+      const normalizedName = normalize(nome);
+      const product = products.find((p) => {
+        const full = normalize(p.nome ?? "");
+        const simple = normalize(simplifyOcrProductName(p.nome ?? ""));
+        return full === normalize(nomeOriginal) || full === normalizedName || simple === normalizedName;
+      });
+
+      if (!detected.some((entry) => normalize(entry.nome) === normalizedName && entry.quantidade === String(quantidade))) {
+        detected.push({
+          id: crypto.randomUUID(),
+          productId: product?.id ?? "",
+          nome: nome || nomeOriginal,
+          quantidade: String(quantidade).replace(".", ","),
+          unidade: product?.unidade_medida ? normalizeVisionUnit(product.unidade_medida, unidade) : unidade,
+          encontrado: Boolean(product),
+        });
+      }
+    }
+
+    if (!detected.length) throw new Error("A API de visão não encontrou produtos e quantidades válidos.");
+    return detected;
+  };
+
   const readDocument = async (file: File) => {
     setReading(true); setConfirmed(false); setItems([]);
     try {
-      // Prepara a foto para melhorar OCR em celulares: amplia e aumenta o contraste.
+      // Primeiro tenta a visão da OpenAI. O Tesseract permanece como fallback
+      // para não bloquear o lançamento caso a função de visão esteja temporariamente indisponível.
+      try {
+        const detected = await readWithVision(file);
+        setOcrText("Leitura realizada pela API de visão. Confira os itens antes de confirmar.");
+        setItems(detected);
+        toast.success(detected.length + " produto(s) identificado(s) pela visão. Confira e confirme o lançamento.");
+        return;
+      } catch (visionError) {
+        console.warn("Vision OCR indisponível; usando OCR local como fallback.", visionError);
+        setOcrText("A leitura por visão não ficou disponível nesta tentativa. O sistema usou OCR local como fallback.");
+      }
+
+      // Fallback local: prepara a foto para melhorar OCR em celulares.
       const bitmap = await createImageBitmap(file);
       const scale = Math.min(2.5, Math.max(1, 1800 / Math.max(bitmap.width, bitmap.height)));
       const canvas = document.createElement("canvas");
@@ -288,8 +395,6 @@ export function DocumentEntry() {
       ctx.putImageData(imageData, 0, 0);
 
       const worker = await createWorker("por");
-      // Cotações impressas em tabela funcionam melhor no PSM 6:
-      // ele mantém cada linha de item completa, incluindo os 8 produtos.
       await worker.setParameters({
         tessedit_pageseg_mode: "6",
         preserve_interword_spaces: "1",
@@ -303,8 +408,8 @@ export function DocumentEntry() {
       const known = guessProducts(text, products);
       const knownNames = new Set(known.map((item) => normalize(item.nome)));
       const candidates = extractUnknownCandidates(text, knownNames);
-
       const detected = [...known];
+
       for (const candidate of candidates) {
         if (!detected.some((item) => normalize(item.nome) === normalize(candidate.nome))) {
           detected.push({
@@ -320,8 +425,7 @@ export function DocumentEntry() {
 
       const valid = detected.filter((item) => Number(item.quantidade.replace(",", ".")) > 0);
       if (!valid.length) {
-        toast.warning("Não identifiquei um produto e uma quantidade válidos na imagem. Tente uma foto mais próxima e bem iluminada.");
-        return;
+        throw new Error("Não identifiquei um produto e uma quantidade válidos na imagem. Tente uma foto mais próxima e bem iluminada.");
       }
 
       setItems(valid);
@@ -365,12 +469,12 @@ export function DocumentEntry() {
 
   return (
     <div className="space-y-5">
-      <Panel title="Lançamento por foto ou documento" description="Leitura gratuita no próprio navegador. O sistema usa somente produto, quantidade e unidade; valores de preço não são lançados.">
+      <Panel title="Lançamento por foto ou documento" description="Leitura por visão com IA. O sistema usa somente produto, quantidade e unidade; valores de preço, códigos e dados fiscais não são lançados.">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-5">
             <div className="flex items-start gap-3">
               <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary"><Camera className="size-5" /></span>
-              <div><p className="font-semibold">Fotografar ou enviar</p><p className="mt-1 text-sm text-muted-foreground">Nota, recibo ou orçamento. O documento é processado no navegador e não é salvo pelo recurso.</p></div>
+              <div><p className="font-semibold">Fotografar ou enviar</p><p className="mt-1 text-sm text-muted-foreground">Nota, recibo ou orçamento. Uma API de visão analisa a imagem para identificar todas as linhas da tabela. O documento não é salvo pelo recurso.</p></div>
             </div>
             <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="sr-only"
               onChange={(e) => { const file = e.target.files?.[0]; if (file) void readDocument(file); e.currentTarget.value = ""; }} />
@@ -388,7 +492,7 @@ export function DocumentEntry() {
           <div className="rounded-lg border bg-muted/30 p-5">
             <div className="flex items-center gap-2 font-semibold"><FileText className="size-4" /> Como funciona</div>
             <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li>1. Tire uma foto ou escolha uma imagem da galeria.</li><li>2. O OCR identifica produtos cadastrados e quantidades.</li>
+              <li>1. Tire uma foto ou escolha uma imagem da galeria.</li><li>2. A visão por IA identifica todos os produtos, quantidades e unidades.</li>
               <li>3. Você pode editar tudo antes do lançamento.</li><li>4. Escolha a unidade e confirme somente quando estiver certo.</li>
             </ol>
           </div>
