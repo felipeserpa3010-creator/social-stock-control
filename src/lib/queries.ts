@@ -358,6 +358,53 @@ export type ProductInput = {
   ativo: boolean;
 };
 
+export async function ensureUncategorizedProduct(nome: string, unidade_medida = "unidade") {
+  const normalized = nome.trim();
+  if (!normalized) throw new Error("Nome do produto vazio.");
+
+  const { data: existing, error: existingError } = await supabase
+    .from("products")
+    .select("id, nome, unidade_medida")
+    .ilike("nome", normalized)
+    .limit(1)
+    .maybeSingle();
+  if (existingError) throw message(existingError);
+  if (existing) return existing as Pick<Product, "id" | "nome" | "unidade_medida">;
+
+  let { data: category, error: categoryError } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("nome", "Não categorizado")
+    .limit(1)
+    .maybeSingle();
+  if (categoryError) throw message(categoryError);
+
+  if (!category) {
+    const created = await supabase
+      .from("categories")
+      .insert({ nome: "Não categorizado", ativo: true, demo: false })
+      .select("id")
+      .single();
+    if (created.error) throw message(created.error);
+    category = created.data;
+  }
+
+  const { data: product, error } = await supabase
+    .from("products")
+    .insert({
+      nome: normalized,
+      category_id: category.id,
+      unidade_medida,
+      ativo: true,
+      demo: false,
+      observacao: "Cadastrado automaticamente a partir de documento lido por OCR.",
+    })
+    .select("id, nome, unidade_medida")
+    .single();
+  if (error) throw message(error);
+  return product as Pick<Product, "id" | "nome" | "unidade_medida">;
+}
+
 export async function saveProduct(id: string | null, input: ProductInput) {
   if (id) {
     const { error } = await supabase.from("products").update(input).eq("id", id);
