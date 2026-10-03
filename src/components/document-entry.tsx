@@ -185,7 +185,7 @@ export function DocumentEntry() {
   const confirmEntry = async () => {
     if (!destination) return toast.error("Escolha a unidade de destino.");
     if (!items.length) return toast.error("Adicione pelo menos um produto.");
-    if (items.some((item) => !item.productId || Number(item.quantidade.replace(",", ".")) <= 0))
+    if (items.some((item) => (!item.productId && !item.nome.trim()) || Number(item.quantidade.replace(",", ".")) <= 0))
       return toast.error("Revise produto e quantidade antes de confirmar.");
     setReading(true);
     try {
