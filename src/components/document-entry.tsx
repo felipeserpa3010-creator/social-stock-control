@@ -116,13 +116,13 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
 
     // Fallback para tabelas em que o OCR erra a sigla da unidade (ex.: "k6" no lugar de "kg")
     // ou perde a unidade original. Usa as três colunas numéricas finais: quantidade, valor unitário e total.
-    const numericTail = line.match(/^(?:\\d+\\s+){0,2}(.+?)\\s+(\\d+(?:[.,]\\d+)?)\\s+(\\d+(?:[.,]\\d+)?)\\s+(\\d+(?:[.,]\\d+)?)\\s*$/);
+    const numericTail = line.match(/^(?:\d+\s+){0,2}(.+?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)\s*$/);
     if (numericTail) {
-      const prefix = numericTail[1].replace(/\\.{2,}/g, " ").replace(/[|*_]+/g, " ").replace(/\\s+/g, " ").trim();
-      const unitMatch = prefix.match(/(?:^|\\s)(kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1)\\.?$/i);
+      const prefix = numericTail[1].replace(/\.{2,}/g, " ").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
+      const unitMatch = prefix.match(/(?:^|\s)(kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1)\.?$/i);
       const unidade = normalizeOcrUnit(unitMatch?.[1] ?? "") || inferUnit(unitMatch?.[1] ?? "");
       let nome = unitMatch ? prefix.slice(0, unitMatch.index).trim() : prefix;
-      nome = nome.replace(/^\\d+\\s+\\d+\\s+/, "").replace(/\\b(?:kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo)\\.?$/i, "").trim();
+      nome = nome.replace(/^\d+\s+\d+\s+/, "").replace(/\b(?:kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo)\.?$/i, "").trim();
       if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^(item|codigo|cod|referencia|descricao|total|valor|obs)$/i.test(nome)) {
         result.push({ nome, quantidade: numericTail[2].replace(",", "."), unidade: unidade || "unidade" });
         continue;
@@ -150,7 +150,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     const nextQty = next.match(new RegExp("^(\\d+(?:[.,]\\d+)?)\\s*(?:" + unitPattern + ")\\b", "i"));
     if (nextQty && line.length >= 3) {
       const clean = line
-        .replace(/^\\d+\\s+\\d+\\s+/i, "")
+        .replace(/^\d+\s+\d+\s+/i, "")
         .replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/gi, "")
         .replace(/[|*_]+/g, " ")
         .replace(/\s+/g, " ")
