@@ -63,7 +63,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     const next = lines[i + 1] ?? "";
     const nextQty = next.match(/^(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/i);
     if (nextQty && line.length >= 3) {
-      const clean = line.replace(/^\d+\s+\d+\s*\S*\s*/i, "").replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/gi, "").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
+      const clean = line.replace(/^\d+\s+\d+\s+/i, "").replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/gi, "").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
       if (clean.length >= 3 && !knownNames.has(normalize(clean)) && !/^(item|total|valor|cartao|troco)$/i.test(clean)) {
         result.push({ nome: clean, quantidade: nextQty[1].replace(",", "."), unidade: inferUnit(nextQty[0]) });
       }
