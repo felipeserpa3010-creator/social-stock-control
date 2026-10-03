@@ -42,28 +42,39 @@ function inferUnit(text: string, fallback = "unidade") {
 function extractUnknownCandidates(text: string, knownNames: Set<string>) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const result: { nome: string; quantidade: string; unidade: string }[] = [];
+  const unitPattern = "(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)";
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     if (/^(item|cod\.?|desc\.?|qtde|total|valor|cartao|troco|cnpj|cpf|data|consumidor|documento|protocolo|tributos|consulte|mfc|serie)/i.test(line)) continue;
 
-    const qtyMatch = line.match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/i);
-    if (qtyMatch) {
-      const beforeQty = line.slice(0, qtyMatch.index ?? 0).replace(/^\d+\s+/, "").trim();
-      if (beforeQty.length >= 3 && !/^(x|valor|vl|item|cod)$/i.test(beforeQty)) {
-        const nome = beforeQty.replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/gi, "").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
-        if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^\d+$/.test(nome)) {
-          result.push({ nome, quantidade: qtyMatch[1].replace(",", "."), unidade: inferUnit(qtyMatch[0]) });
-        }
+    // Tabelas de orçamento/cotação: DESCRIÇÃO ... EMB. QUANTID. VLR.UNIT. VLR.TOTAL.
+    // Ex.: "CENOURA KG ... KG 10,000 4,25 42,50"
+    const tableMatch = line.match(new RegExp("^\\d+\\s+\\d+\\s+(.+?)\\s+(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
+    if (tableMatch) {
+      const nome = tableMatch[1]
+        .replace(/\.{2,}/g, " ")
+        .replace(/[|*_]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      const unitMatch = line.match(new RegExp("(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
+      const unidade = inferUnit(unitMatch?.[0] ?? "");
+      if (nome.length >= 2 && !knownNames.has(normalize(nome))) {
+        result.push({ nome, quantidade: tableMatch[2].replace(",", "."), unidade });
       }
       continue;
     }
 
-    // Common NFC-e layout: description on one line and "22,220KG X 17,90" on the next.
+    // NFC-e/recibo: descrição em uma linha e quantidade + unidade na linha seguinte.
     const next = lines[i + 1] ?? "";
-    const nextQty = next.match(/^(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/i);
+    const nextQty = next.match(/^(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/i);
     if (nextQty && line.length >= 3) {
-      const clean = line.replace(/^\d+\s+\d+\s+/i, "").replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/gi, "").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
+      const clean = line
+        .replace(/^\d+\s+\d+\s+/i, "")
+        .replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/gi, "")
+        .replace(/[|*_]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
       if (clean.length >= 3 && !knownNames.has(normalize(clean)) && !/^(item|total|valor|cartao|troco)$/i.test(clean)) {
         result.push({ nome: clean, quantidade: nextQty[1].replace(",", "."), unidade: inferUnit(nextQty[0]) });
       }
@@ -71,17 +82,6 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
   }
 
   return result;
-}
-
-function guessProducts(text: string, products: Product[]): DraftItem[] {
-  const normalizedText = normalize(text);
-  const candidates = products.filter((p) => normalizedText.includes(normalize(p.nome))).sort((a, b) => normalize(b.nome).length - normalize(a.nome).length);
-  const unique = new Map<string, Product>();
-  candidates.forEach((p) => unique.set(p.id, p));
-  return Array.from(unique.values()).map((p) => ({
-    id: crypto.randomUUID(), productId: p.id, nome: p.nome, quantidade: extractQuantity(text, p.nome),
-    unidade: p.unidade_medida, encontrado: true,
-  }));
 }
 
 export function DocumentEntry() {
