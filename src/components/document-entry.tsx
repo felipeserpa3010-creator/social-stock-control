@@ -79,7 +79,7 @@ function normalizeOcrUnit(value: string) {
   if (/^(kg|k6|kb|ki|k5|k8|ks)$/.test(token)) return "kg";
   if (/^(g|gr|gram|grama|gramas)$/.test(token)) return "g";
   if (/^(l|lt|litro|litros)$/.test(token)) return "litro";
-  if (/^(un|und|unid|unidade|unidades|pl|p1)$/.test(token)) return "unidade";
+  if (/^(un|und|unid|unidade|unidades|pl|p1|mm|m)$/.test(token)) return "unidade";
   if (/^(pc|pç|pct|pacote|pacotes)$/.test(token)) return "pacote";
   if (/^(cx|caixa|caixas)$/.test(token)) return "caixa";
   if (/^(sc|saco|sacos)$/.test(token)) return "saco";
@@ -100,7 +100,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
 
     // Em uma cotação, só linhas numeradas de itens podem virar produtos.
     // Isso impede que cabeçalho, endereço, total e observações sejam interpretados como produto.
-    const looksLikeTableItem = /^\d{3}\s+.+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i.test(line);
+    const looksLikeTableItem = /^\d{3}\s*\d*\s+.+$/i.test(line);
     if (isQuotationTable && !looksLikeTableItem) continue;
 
     // Tabelas de orçamento/cotação. Aceita linhas com ou sem códigos no início.
@@ -123,15 +123,36 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
 
     // Fallback para tabelas em que o OCR erra a sigla da unidade (ex.: "k6" no lugar de "kg")
     // ou perde a unidade original. Usa as três colunas numéricas finais: quantidade, valor unitário e total.
-    const numericTail = line.match(/^(?:\d+\s+){0,2}(.+?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)\s*$/);
+    const numericTail = line.match(/^(?:\d+\s+){0,2}(.+?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)[^\d\s]*\s*$/);
     if (numericTail) {
-      const prefix = numericTail[1].replace(/\.{2,}/g, " ").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
-      const unitMatch = prefix.match(/(?:^|\s)(kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1)\.?$/i);
+      let prefix = numericTail[1].replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
+
+      // Remove item/código mesmo quando o OCR cola os números no início da descrição.
+      prefix = prefix.replace(/^\d{3}\s*/i, "").replace(/^\d{2,7}\s*/i, "").trim();
+
+      const unitMatch = prefix.match(/(?:^|\s)(kg|k6|kb|ki|k5|k8|ks|kº|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1|mm|m)\.?$/i);
       const unidade = normalizeOcrUnit(unitMatch?.[1] ?? "") || inferUnit(unitMatch?.[1] ?? "");
-      let nome = unitMatch ? prefix.slice(0, unitMatch.index).trim() : prefix;
-      nome = nome.replace(/^\d+\s+\d+\s+/, "").replace(/\b(?:kg|k6|kb|ki|k5|k8|ks|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo)\.?$/i, "").trim();
+
+      // A cotação usa pontilhado entre descrição e unidade. O OCR pode transformar
+      // esse pontilhado em uma sequência de letras sem sentido. Mantemos somente
+      // os tokens que parecem fazer parte da descrição impressa em maiúsculas.
+      let nomePrefix = unitMatch ? prefix.slice(0, unitMatch.index).trim() : prefix;
+      nomePrefix = nomePrefix.replace(/\.{1,}.*$/g, "").trim();
+      const tokens = nomePrefix.split(/\s+/).filter(Boolean);
+      const cleanTokens: string[] = [];
+      for (const token of tokens) {
+        if (/^[A-ZÀ-Ü0-9]+$/.test(token)) cleanTokens.push(token);
+        else break;
+      }
+      let nome = (cleanTokens.length ? cleanTokens.join(" ") : nomePrefix)
+        .replace(/^\d{2,7}\s*/i, "")
+        .replace(/\b(?:kg|k6|kb|ki|k5|k8|ks|kº|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1|mm|m)\.?$/i, "")
+        .trim();
+
+      // Quando a unidade foi perdida, ainda conseguimos inferi-la pelo próprio nome.
+      const unidadeFinal = unidade || (/\b(?:kg|k6|kb|ki|k5|k8|ks|kº)\b/i.test(nome) ? "kg" : /\b(?:un|und|unid|mm|m)\b/i.test(nome) ? "unidade" : "unidade");
       if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^(item|codigo|cod|referencia|descricao|total|valor|obs)$/i.test(nome)) {
-        result.push({ nome, quantidade: numericTail[2].replace(",", "."), unidade: unidade || "unidade" });
+        result.push({ nome, quantidade: numericTail[2].replace(",", "."), unidade: unidadeFinal });
         continue;
       }
     }
