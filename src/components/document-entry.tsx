@@ -19,11 +19,58 @@ const normalize = (value: string) =>
 function extractQuantity(text: string, productName: string) {
   const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const target = normalize(productName);
-  const line = lines.find((value) => normalize(value).includes(target)) ?? "";
-  const match = line.match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)?/i);
+  const index = lines.findIndex((value) => normalize(value).includes(target));
+  const nearby = index >= 0 ? lines.slice(index, index + 4) : lines;
+  const joined = nearby.join(" ");
+  const match = joined.match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/i);
   if (match) return match[1].replace(",", ".");
-  const all = line.match(/(\d+(?:[.,]\d+)?)/);
+  const all = joined.match(/(\d+(?:[.,]\d+)?)/);
   return all?.[1]?.replace(",", ".") ?? "";
+}
+
+function inferUnit(text: string, fallback = "unidade") {
+  if (/\bkg\b|\bkilo\b|\quilo\b/i.test(text)) return "kg";
+  if (/\b(?:g|gramas?)\b/i.test(text)) return "g";
+  if (/\b(?:l|litros?)\b/i.test(text)) return "litro";
+  if (/\b(?:cx|caixa)\b/i.test(text)) return "caixa";
+  if (/\b(?:pct|pacote)\b/i.test(text)) return "pacote";
+  if (/\b(?:saco)\b/i.test(text)) return "saco";
+  if (/\b(?:fardo)\b/i.test(text)) return "fardo";
+  return fallback;
+}
+
+function extractUnknownCandidates(text: string, knownNames: Set<string>) {
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const result: { nome: string; quantidade: string; unidade: string }[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^(item|cod\.?|desc\.?|qtde|total|valor|cartao|troco|cnpj|cpf|data|consumidor|documento|protocolo|tributos|consulte|mfc|serie)/i.test(line)) continue;
+
+    const qtyMatch = line.match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/i);
+    if (qtyMatch) {
+      const beforeQty = line.slice(0, qtyMatch.index ?? 0).replace(/^\d+\s+/, "").trim();
+      if (beforeQty.length >= 3 && !/^(x|valor|vl|item|cod)$/i.test(beforeQty)) {
+        const nome = beforeQty.replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/gi, "").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
+        if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^\d+$/.test(nome)) {
+          result.push({ nome, quantidade: qtyMatch[1].replace(",", "."), unidade: inferUnit(qtyMatch[0]) });
+        }
+      }
+      continue;
+    }
+
+    // Common NFC-e layout: description on one line and "22,220KG X 17,90" on the next.
+    const next = lines[i + 1] ?? "";
+    const nextQty = next.match(/^(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/i);
+    if (nextQty && line.length >= 3) {
+      const clean = line.replace(/^\d+\s+\d+\s*\S*\s*/i, "").replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)\b/gi, "").replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
+      if (clean.length >= 3 && !knownNames.has(normalize(clean)) && !/^(item|total|valor|cartao|troco)$/i.test(clean)) {
+        result.push({ nome: clean, quantidade: nextQty[1].replace(",", "."), unidade: inferUnit(nextQty[0]) });
+      }
+    }
+  }
+
+  return result;
 }
 
 function guessProducts(text: string, products: Product[]): DraftItem[] {
@@ -56,7 +103,7 @@ export function DocumentEntry() {
   if (!isAdmin) return null;
 
   const readDocument = async (file: File) => {
-    setReading(true); setConfirmed(false);
+    setReading(true); setConfirmed(false); setItems([]);
     try {
       const worker = await createWorker("por");
       const result = await worker.recognize(file);
@@ -66,28 +113,10 @@ export function DocumentEntry() {
 
       const known = guessProducts(text, products);
       const knownNames = new Set(known.map((item) => normalize(item.nome)));
-      const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-      const unknownLines = lines
-        .map((line) => {
-          const clean = line.replace(/\b(?:cnpj|cpf|nota|cupom|total|subtotal|valor|r\$|data|telefone|endereco)\b/gi, "").trim();
-          const match = clean.match(/^(.*?)[\s:=\-]+(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|cx|caixa|pct|pacote|saco|fardo)?\s*$/i);
-          if (!match) return null;
-          const nome = match[1].replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
-          if (nome.length < 3 || knownNames.has(normalize(nome)) || /^\d+$/.test(nome)) return null;
-          const unidade = match[3]?.toLowerCase().startsWith("kg") || /quilo|kilo/i.test(match[3] ?? "") ? "kg"
-            : /^(g|gram)/i.test(match[3] ?? "") ? "g"
-            : /^(l|lit)/i.test(match[3] ?? "") ? "litro"
-            : /^(cx|caixa)/i.test(match[3] ?? "") ? "caixa"
-            : /^(pct|pacote)/i.test(match[3] ?? "") ? "pacote"
-            : /^(saco)/i.test(match[3] ?? "") ? "saco"
-            : /^(fardo)/i.test(match[3] ?? "") ? "fardo"
-            : "unidade";
-          return { nome, quantidade: match[2].replace(",", "."), unidade };
-        })
-        .filter((item): item is { nome: string; quantidade: string; unidade: string } => Boolean(item));
+      const candidates = extractUnknownCandidates(text, knownNames);
 
       const detected = [...known];
-      for (const candidate of unknownLines) {
+      for (const candidate of candidates) {
         const product = await ensureUncategorizedProduct(candidate.nome, candidate.unidade);
         if (!detected.some((item) => item.productId === product.id)) {
           detected.push({
@@ -101,41 +130,18 @@ export function DocumentEntry() {
         }
       }
 
-      if (!detected.length) {
-        toast.warning("Não identifiquei produtos e quantidades suficientes na imagem.");
+      // If OCR found only the product description and the quantity is on the following line,
+      // the candidate parser above handles it. No stock movement is created at this stage.
+      const valid = detected.filter((item) => Number(item.quantidade.replace(",", ".")) > 0);
+      if (!valid.length) {
+        toast.warning("Não identifiquei um produto e uma quantidade válidos na imagem.");
         return;
       }
 
-      setItems(detected);
-
-      const targetUnit = destination || unitId || "";
-      if (!targetUnit) {
-        toast.warning("Produtos foram cadastrados/identificados, mas escolha a unidade de destino para lançar no estoque.");
-        return;
-      }
-
-      for (const item of detected) {
-        const quantidade = Number(item.quantidade.replace(",", "."));
-        if (!item.productId || !Number.isFinite(quantidade) || quantidade <= 0) continue;
-        await addMovement({
-          unit_id: targetUnit,
-          product_id: item.productId,
-          tipo: "entrada",
-          quantidade,
-          data,
-          observacao: "Entrada lançada automaticamente a partir de documento lido por OCR",
-          responsavel: null,
-        });
-      }
-
-      await queryClient.invalidateQueries({ queryKey: ["products", false] });
-      await queryClient.invalidateQueries({ queryKey: ["stock"] });
-      await queryClient.invalidateQueries({ queryKey: ["movements"] });
-      setDestination(targetUnit);
-      setConfirmed(true);
-      toast.success(detected.length + " produto(s) cadastrados/identificados e lançados automaticamente no estoque.");
+      setItems(valid);
+      toast.success(valid.length + " produto(s) identificado(s). Confira e confirme o lançamento.");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Não foi possível processar e lançar o documento.");
+      toast.error(error instanceof Error ? error.message : "Não foi possível ler o documento.");
     } finally { setReading(false); }
   };
 
@@ -159,7 +165,7 @@ export function DocumentEntry() {
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
       await queryClient.invalidateQueries({ queryKey: ["movements"] });
       setConfirmed(true);
-      toast.success(items.length + " entrada(s) lançada(s) na unidade.");
+      toast.success(items.length + " entrada(s) lançada(s) na unidade. Os produtos confirmados foram mantidos no cadastro.");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível confirmar o lançamento.");
     } finally { setReading(false); }
@@ -198,7 +204,7 @@ export function DocumentEntry() {
       </Panel>
 
       {items.length > 0 && (
-        <Panel title="Conferência antes do lançamento" description="Confira o resumo. Nada foi lançado no estoque ainda.">
+        <Panel title="Conferência antes do lançamento" description="Confira produto e quantidade. Nada será lançado no estoque até você confirmar. Use 🗑️ para excluir uma linha que estiver errada.">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Unidade de destino" htmlFor="ocr-unit" required>
               <select id="ocr-unit" value={destination} onChange={(e) => setDestination(e.target.value)} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm">
