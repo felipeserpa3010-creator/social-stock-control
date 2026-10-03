@@ -88,10 +88,10 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     const tableMatch = line.match(new RegExp("^(?:\\d+\\s+){0,2}(.+?)\\s+(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
     if (tableMatch) {
       const nome = tableMatch[1]
-        .replace(/\\.{2,}/g, " ")
+        .replace(/\.{2,}/g, " ")
         .replace(/[|*_]+/g, " ")
-        .replace(/^\\d+\\s+\\d+\\s+/, "")
-        .replace(/\\s+/g, " ")
+        .replace(/^\d+\s+\d+\s+/, "")
+        .replace(/\s+/g, " ")
         .trim();
       const unitMatch = line.match(new RegExp("(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
       const unidade = inferUnit(unitMatch?.[0] ?? "");
@@ -106,9 +106,9 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     const sameLineQty = line.match(new RegExp("^(.{3,}?)\\s+(\\d+(?:[.,]\\d+)?)\\s*(?:" + unitPattern + ")\\s*$", "i"));
     if (sameLineQty) {
       const nome = sameLineQty[1]
-        .replace(/^\\d+\\s+\\d+\\s+/, "")
+        .replace(/^\d+\s+\d+\s+/, "")
         .replace(/[|*_]+/g, " ")
-        .replace(/\\s+/g, " ")
+        .replace(/\s+/g, " ")
         .trim();
       const unitMatch = line.match(new RegExp("(?:" + unitPattern + ")\\s*$", "i"));
       if (nome.length >= 3 && !knownNames.has(normalize(nome)) && !/^(item|total|valor|cartao|troco|quantidade|descricao)$/i.test(nome)) {
@@ -123,9 +123,9 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     if (nextQty && line.length >= 3) {
       const clean = line
         .replace(/^\\d+\\s+\\d+\\s+/i, "")
-        .replace(/\\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\\b/gi, "")
+        .replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/gi, "")
         .replace(/[|*_]+/g, " ")
-        .replace(/\\s+/g, " ")
+        .replace(/\s+/g, " ")
         .trim();
       if (clean.length >= 3 && !knownNames.has(normalize(clean)) && !/^(item|total|valor|cartao|troco|quantidade|descricao)$/i.test(clean)) {
         result.push({ nome: clean, quantidade: nextQty[1].replace(",", "."), unidade: inferUnit(nextQty[0]) });
