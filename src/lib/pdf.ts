@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatDate, formatQty, slugify } from "./format";
+import { semadsLogoUrl } from "./brand";
 
 export type InventoryRow = {
   categoria: string;
@@ -52,7 +53,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
   const pageH = doc.internal.pageSize.getHeight();
   const margin = 14;
 
-  const logo = opts.logoUrl ? await loadLogo(opts.logoUrl) : null;
+  const logo = await loadLogo(semadsLogoUrl);
   const dataConf = opts.dataConferencia ? formatDate(opts.dataConferencia) : "—";
 
   const drawHeader = () => {

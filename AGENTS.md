@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Return typed failure results for expected authentication rejections so forms can show feedback without triggering the global runtime error screen.
+- Use the shared SEMADS brand asset exported by `src/lib/brand.ts` for screens and generated reports so branding stays consistent.

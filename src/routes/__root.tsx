@@ -87,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Sistema da Assistência Social para controlar o estoque das dispensas: entradas, saídas, conferências, média de consumo e relatórios em PDF.",
       },
       { name: "author", content: "Assistência Social" },
-      { name: "theme-color", content: "#1f4e42" },
+      { name: "theme-color", content: "#7d260b" },
       { property: "og:title", content: "Controle de Estoque — Assistência Social" },
       {
         property: "og:description",
@@ -116,7 +116,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/semads-logo-4k.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
