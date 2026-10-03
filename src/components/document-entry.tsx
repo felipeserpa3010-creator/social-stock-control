@@ -271,7 +271,29 @@ export function DocumentEntry() {
                   )}
                 </td>
                 <td className="px-3 py-2"><Input inputMode="decimal" value={item.quantidade} onChange={(e) => updateItem(item.id, { quantidade: e.target.value })} /></td>
-                <td className="px-3 py-2 font-medium">{item.unidade}</td>
+                <td className="px-3 py-2">
+                  <select
+                    value={item.unidade}
+                    onChange={(e) => updateItem(item.id, { unidade: e.target.value })}
+                    className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
+                  >
+                    <option value="kg">Quilo (kg)</option>
+                    <option value="g">Grama (g)</option>
+                    <option value="unidade">Unidade</option>
+                    <option value="pacote">Pacote</option>
+                    <option value="caixa">Caixa</option>
+                    <option value="fardo">Fardo</option>
+                    <option value="saco">Saco</option>
+                    <option value="litro">Litro</option>
+                    <option value="ml">Mililitro (ml)</option>
+                    <option value="pote">Pote</option>
+                    <option value="frasco">Frasco</option>
+                    <option value="lata">Lata</option>
+                    <option value="dúzia">Dúzia</option>
+                    <option value="pc">Peça (PC)</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </td>
                 <td className="px-3 py-2 text-right"><Button variant="ghost" size="icon" onClick={() => setItems((current) => current.filter((x) => x.id !== item.id))}><Trash2 className="size-4" /></Button></td>
               </tr>)}
             </tbody></table>
