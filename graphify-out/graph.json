@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-03T14:33:27.539155+00:00",
+  "generated_at": "2026-10-03T14:43:04.941783+00:00",
   "files": [
     {
       "path": "AGENTS.md",
-      "bytes": 630
+      "bytes": 761
     },
     {
       "path": "tsconfig.json",
@@ -23,7 +23,7 @@
     },
     {
       "path": "package.json",
-      "bytes": 2978
+      "bytes": 3066
     },
     {
       "path": "components.json",
@@ -39,7 +39,7 @@
     },
     {
       "path": "src/routeTree.gen.ts",
-      "bytes": 17472
+      "bytes": 19495
     },
     {
       "path": "src/styles.css",
@@ -107,7 +107,7 @@
     },
     {
       "path": "src/components/auth-layout.tsx",
-      "bytes": 4470
+      "bytes": 3892
     },
     {
       "path": "src/components/pickers.tsx",
@@ -115,7 +115,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 10806
+      "bytes": 10869
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -139,11 +139,15 @@
     },
     {
       "path": "src/lib/pdf.ts",
-      "bytes": 5502
+      "bytes": 5522
     },
     {
       "path": "src/lib/lovable-error-reporting.ts",
       "bytes": 1739
+    },
+    {
+      "path": "src/lib/brand.ts",
+      "bytes": 117
     },
     {
       "path": "src/lib/media.ts",
@@ -170,6 +174,10 @@
       "bytes": 169
     },
     {
+      "path": "src/assets/semads-logo.png.asset.json",
+      "bytes": 453
+    },
+    {
       "path": "src/routes/auth.tsx",
       "bytes": 4790
     },
@@ -183,7 +191,7 @@
     },
     {
       "path": "src/routes/__root.tsx",
-      "bytes": 5423
+      "bytes": 5412
     },
     {
       "path": "src/routes/README.md",
@@ -191,7 +199,7 @@
     },
     {
       "path": "src/routes/index.tsx",
-      "bytes": 1555
+      "bytes": 1475
     },
     {
       "path": "src/routes/recuperar-senha.tsx",
@@ -227,7 +235,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 16738
+      "bytes": 15806
     },
     {
       "path": "src/integrations/supabase/client.ts",
@@ -455,7 +463,7 @@
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
-      "bytes": 4113
+      "bytes": 4167
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
@@ -573,6 +581,10 @@
     },
     {
       "source": "src/routeTree.gen.ts",
+      "target": "./routes/_authenticated/entrada-documento"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
       "target": "./routes/_authenticated/estoque"
     },
     {
@@ -586,6 +598,10 @@
     {
       "source": "src/routeTree.gen.ts",
       "target": "./routes/_authenticated/produtos"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
+      "target": "./routes/_authenticated/recebimento"
     },
     {
       "source": "src/routeTree.gen.ts",
@@ -736,6 +752,10 @@
       "target": "@/lib/queries"
     },
     {
+      "source": "src/components/auth-layout.tsx",
+      "target": "@/lib/brand"
+    },
+    {
       "source": "src/components/pickers.tsx",
       "target": "react"
     },
@@ -814,6 +834,10 @@
     {
       "source": "src/components/app-shell.tsx",
       "target": "@/components/virtual-assistant"
+    },
+    {
+      "source": "src/components/app-shell.tsx",
+      "target": "@/lib/brand"
     },
     {
       "source": "src/components/ui-kit.tsx",
@@ -906,6 +930,14 @@
     {
       "source": "src/lib/pdf.ts",
       "target": "./format"
+    },
+    {
+      "source": "src/lib/pdf.ts",
+      "target": "./brand"
+    },
+    {
+      "source": "src/lib/brand.ts",
+      "target": "@/assets/semads-logo.png.asset.json"
     },
     {
       "source": "src/lib/admin.functions.ts",
@@ -1137,11 +1169,11 @@
     },
     {
       "source": "src/routes/index.tsx",
-      "target": "lucide-react"
+      "target": "@/hooks/useAuth"
     },
     {
       "source": "src/routes/index.tsx",
-      "target": "@/hooks/useAuth"
+      "target": "@/lib/brand"
     },
     {
       "source": "src/routes/recuperar-senha.tsx",
@@ -2318,6 +2350,10 @@
     {
       "source": "src/routes/_authenticated/configuracoes.tsx",
       "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/lib/brand"
     },
     {
       "source": "src/routes/_authenticated/conferencia.tsx",
