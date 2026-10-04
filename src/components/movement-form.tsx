@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUnit } from "@/hooks/useUnit";
 import {
   addMovement,
+  ensureUncategorizedProduct,
   movementsOptions,
   productsOptions,
   stockOptions,
@@ -31,6 +32,113 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
   const [data, setData] = useState(todayISO());
   const [observacao, setObservacao] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const [massaTexto, setMassaTexto] = useState("");
+  const [massaItens, setMassaItens] = useState<Array<{ nome: string; quantidade: number; unidade: string }>>([]);
+  const [massaSaving, setMassaSaving] = useState(false);
+
+  const parseMassa = (texto: string) => {
+    const unidades = ["KG", "PCT", "UND", "UN", "L", "LT", "CX", "FD", "SC", "DZ", "G", "ML"];
+    const itens: Array<{ nome: string; quantidade: number; unidade: string }> = [];
+    const erros: string[] = [];
+
+    texto.split(/\\r?\\n/).map((linha) => linha.trim()).filter(Boolean).forEach((linha, index) => {
+      const normalizada = linha.replace(/[—–]/g, "-").replace(/\\s+/g, " ").trim();
+      const match = normalizada.match(/^(.+?)\\s*(?:-|:)\\s*([0-9]+(?:[,.][0-9]+)?)\\s*([A-Za-zÀ-ÿ]+)?$/)
+        || normalizada.match(/^(.+?)\\s+([0-9]+(?:[,.][0-9]+)?)\\s*([A-Za-zÀ-ÿ]+)$/);
+
+      if (!match) {
+        erros.push(`Linha ${index + 1}: "${linha}"`);
+        return;
+      }
+
+      const nome = match[1].trim().replace(/[-:]+$/, "").trim();
+      const quantidade = Number(match[2].replace(",", "."));
+      const unidadeInformada = (match[3] ?? "UND").toUpperCase();
+      const unidade = unidadeInformada === "UN" ? "UND" : unidadeInformada === "LT" ? "L" : unidadeInformada;
+
+      if (!nome || !Number.isFinite(quantidade) || quantidade <= 0) {
+        erros.push(`Linha ${index + 1}: quantidade inválida`);
+        return;
+      }
+      if (!unidades.includes(unidade)) {
+        erros.push(`Linha ${index + 1}: unidade "${unidadeInformada}" não reconhecida`);
+        return;
+      }
+      itens.push({ nome, quantidade, unidade });
+    });
+
+    return { itens, erros };
+  };
+
+  const prepararMassa = () => {
+    const { itens, erros } = parseMassa(massaTexto);
+    if (erros.length) {
+      toast.error(`Corrija: ${erros.join(" | ")}`);
+      return;
+    }
+    if (!itens.length) {
+      toast.error("Cole pelo menos um produto.");
+      return;
+    }
+    setMassaItens(itens);
+  };
+
+  const confirmarMassa = async () => {
+    if (isViewer) {
+      toast.error("O Gabinete possui acesso somente para consulta e relatórios.");
+      return;
+    }
+    if (!isEntrada || !isAdmin) {
+      toast.error("Somente o CEO/Administrador Principal pode registrar entradas.");
+      return;
+    }
+    if (!unitId || !massaItens.length) return;
+
+    setMassaSaving(true);
+    try {
+      const produtosCriados = new Map<string, { id: string; unidade_medida: string }>();
+      for (const item of massaItens) {
+        const key = item.nome.toLocaleLowerCase("pt-BR");
+        let produto = produtosCriados.get(key);
+        if (!produto) {
+          const encontrado = products.find((p) => p.nome.trim().toLocaleLowerCase("pt-BR") === key);
+          if (encontrado) {
+            const unidadeAtual = (encontrado.unidade_medida ?? "UND").toUpperCase();
+            const unidadeNormalizada = unidadeAtual === "UN" ? "UND" : unidadeAtual === "LT" ? "L" : unidadeAtual;
+            if (unidadeNormalizada !== item.unidade) {
+              throw new Error(`O produto "${item.nome}" já está cadastrado como ${unidadeNormalizada}, mas o lançamento informa ${item.unidade}.`);
+            }
+            produto = { id: encontrado.id, unidade_medida: encontrado.unidade_medida };
+          } else {
+            const novo = await ensureUncategorizedProduct(item.nome, item.unidade);
+            produto = { id: novo.id, unidade_medida: novo.unidade_medida };
+          }
+          produtosCriados.set(key, produto);
+        }
+
+        await addMovement({
+          unit_id: unitId,
+          product_id: produto.id,
+          tipo: "entrada",
+          quantidade: item.quantidade,
+          data,
+          observacao: "Lançamento em massa",
+          responsavel: profile?.nome ?? null,
+        });
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["stock", unitId] });
+      await queryClient.invalidateQueries({ queryKey: ["movements"] });
+      toast.success(`${massaItens.length} produto(s) lançados no estoque.`);
+      setMassaTexto("");
+      setMassaItens([]);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível concluir o lançamento em massa.");
+    } finally {
+      setMassaSaving(false);
+    }
+  };
 
   const product = products.find((p) => p.id === productId);
   const current = stock.find((s) => s.product.id === productId)?.quantity ?? 0;
@@ -163,6 +271,55 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
           </div>
         </form>
       </Panel>
+
+      {isEntrada && isAdmin && (
+        <Panel
+          title="Lançamento em massa"
+          description="Cole uma lista com nome, quantidade e unidade. Ex.: CEBOLA — 4 KG"
+        >
+          <div className="space-y-4">
+            <Textarea
+              rows={8}
+              value={massaTexto}
+              onChange={(e) => setMassaTexto(e.target.value)}
+              placeholder={"CEBOLA — 4 KG\nLIMÃO — 3 KG\nSALSICHA — 5 PCT\nARROZ — 10 PCT"}
+            />
+            <div className="flex flex-wrap gap-3">
+              <Button type="button" variant="outline" onClick={prepararMassa} disabled={!massaTexto.trim() || massaSaving}>
+                Processar lista
+              </Button>
+              <Button type="button" onClick={confirmarMassa} disabled={!massaItens.length || massaSaving}>
+                {massaSaving ? <Loader2 className="animate-spin" /> : <PackagePlus />}
+                Confirmar lançamento
+              </Button>
+              {massaItens.length > 0 && (
+                <Button type="button" variant="ghost" onClick={() => setMassaItens([])}>
+                  Limpar prévia
+                </Button>
+              )}
+            </div>
+
+            {massaItens.length > 0 && (
+              <div className="rounded-lg border border-border/70 overflow-hidden">
+                <div className="grid grid-cols-[1fr_100px_80px] gap-2 bg-muted/50 px-3 py-2 text-xs font-semibold">
+                  <span>Produto</span><span>Quantidade</span><span>Unidade</span>
+                </div>
+                {massaItens.map((item, index) => (
+                  <div key={index} className="grid grid-cols-[1fr_100px_80px] gap-2 border-t border-border/60 px-3 py-2 text-sm">
+                    <span className="truncate">{item.nome}</span>
+                    <span className="tabular-nums">{formatQty(item.quantidade)}</span>
+                    <span className="font-medium">{item.unidade}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <p className="text-xs text-muted-foreground">
+              Aceita KG, PCT, UND, L, CX, FD, SC, DZ, G e ML. Uma linha por produto.
+            </p>
+          </div>
+        </Panel>
+      )}
 
       <div className="space-y-5">
         <StatCard
