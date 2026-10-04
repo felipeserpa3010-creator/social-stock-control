@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T03:50:41.903335+00:00",
+  "generated_at": "2026-10-04T03:58:23.815203+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -39,7 +39,7 @@
     },
     {
       "path": "src/routeTree.gen.ts",
-      "bytes": 19495
+      "bytes": 20113
     },
     {
       "path": "src/styles.css",
@@ -115,7 +115,7 @@
     },
     {
       "path": "src/components/virtual-assistant.tsx",
-      "bytes": 8978
+      "bytes": 9293
     },
     {
       "path": "src/components/movement-form.tsx",
@@ -139,7 +139,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 30622
+      "bytes": 30911
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -183,7 +183,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 15892
+      "bytes": 16307
     },
     {
       "path": "src/lib/utils.ts",
@@ -211,7 +211,7 @@
     },
     {
       "path": "src/routes/__root.tsx",
-      "bytes": 5412
+      "bytes": 5424
     },
     {
       "path": "src/routes/README.md",
@@ -455,7 +455,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 6088
+      "bytes": 6035
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -566,6 +566,10 @@
     {
       "source": "src/routeTree.gen.ts",
       "target": "./routes/cadastro"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
+      "target": "./routes/ia-visao"
     },
     {
       "source": "src/routeTree.gen.ts",
