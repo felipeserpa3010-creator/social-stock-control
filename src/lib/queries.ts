@@ -188,8 +188,8 @@ export function receivedEntriesOptions(unitId: string | null, enabled = true) {
       const movements = (data ?? []) as unknown as MovementRow[];
       if (!movements.length) return [] as ReceivedEntryRow[];
       // The table exists in migrations but is not yet present in the generated client types.
-      // @ts-expect-error stock_receipts is available in the connected database
-      const { data: receipts, error: receiptError } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: receipts, error: receiptError } = await (supabase as any)
         .from("stock_receipts")
         .select("*")
         .in("movement_id", movements.map((m) => m.id));
@@ -203,8 +203,9 @@ export function receivedEntriesOptions(unitId: string | null, enabled = true) {
 
 export async function confirmStockReceipt(movementId: string, confirmedByName: string) {
   const user_id = await currentUserId();
-  // @ts-expect-error stock_receipts is available in the connected database
-  const { error } = await supabase.from("stock_receipts").insert({
+  // The table exists in migrations but is not yet present in the generated client types.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).from("stock_receipts").insert({
     movement_id: movementId,
     confirmed_by: user_id,
     confirmed_by_name: confirmedByName,

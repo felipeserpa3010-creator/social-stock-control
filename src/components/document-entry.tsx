@@ -388,7 +388,10 @@ export function DocumentEntry() {
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       for (let p = 0; p < imageData.data.length; p += 4) {
-        const gray = Math.round(imageData.data[p] * 0.299 + imageData.data[p + 1] * 0.587 + imageData.data[p + 2] * 0.114);
+        const red = imageData.data[p] ?? 0;
+        const green = imageData.data[p + 1] ?? 0;
+        const blue = imageData.data[p + 2] ?? 0;
+        const gray = Math.round(red * 0.299 + green * 0.587 + blue * 0.114);
         const contrast = Math.max(0, Math.min(255, (gray - 128) * 1.35 + 128));
         imageData.data[p] = contrast;
         imageData.data[p + 1] = contrast;
