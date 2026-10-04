@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as IaVisaoRouteImport } from './routes/ia-visao'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
 import { Route as SetupRouteImport } from './routes/setup'
@@ -49,6 +50,11 @@ const AuthRoute = AuthRouteImport.update({
 const CadastroRoute = CadastroRouteImport.update({
   id: '/cadastro',
   path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IaVisaoRoute = IaVisaoRouteImport.update({
+  id: '/ia-visao',
+  path: '/ia-visao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cadastro': typeof CadastroRoute
+  '/ia-visao': typeof IaVisaoRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/setup': typeof SetupRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cadastro': typeof CadastroRoute
+  '/ia-visao': typeof IaVisaoRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/setup': typeof SetupRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/cadastro': typeof CadastroRoute
+  '/ia-visao': typeof IaVisaoRoute
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/redefinir-senha': typeof RedefinirSenhaRoute
   '/setup': typeof SetupRoute
@@ -224,6 +233,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cadastro'
+    | '/ia-visao'
     | '/recuperar-senha'
     | '/redefinir-senha'
     | '/setup'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cadastro'
+    | '/ia-visao'
     | '/recuperar-senha'
     | '/redefinir-senha'
     | '/setup'
@@ -271,6 +282,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/cadastro'
+    | '/ia-visao'
     | '/recuperar-senha'
     | '/redefinir-senha'
     | '/setup'
@@ -296,6 +308,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CadastroRoute: typeof CadastroRoute
+  IaVisaoRoute: typeof IaVisaoRoute
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
   RedefinirSenhaRoute: typeof RedefinirSenhaRoute
   SetupRoute: typeof SetupRoute
@@ -329,6 +342,13 @@ declare module '@tanstack/react-router' {
       path: '/cadastro'
       fullPath: '/cadastro'
       preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ia-visao': {
+      id: '/ia-visao'
+      path: '/ia-visao'
+      fullPath: '/ia-visao'
+      preLoaderRoute: typeof IaVisaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/recuperar-senha': {
@@ -504,6 +524,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CadastroRoute: CadastroRoute,
+  IaVisaoRoute: IaVisaoRoute,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
   RedefinirSenhaRoute: RedefinirSenhaRoute,
   SetupRoute: SetupRoute,
