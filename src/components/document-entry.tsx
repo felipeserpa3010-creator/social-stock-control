@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { createWorker } from "tesseract.js";
+import { createWorker, PSM } from "tesseract.js";
 import { Camera, Check, FileText, Loader2, Plus, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -74,10 +74,10 @@ function extractQuantity(text: string, productName: string) {
   const joined = nearby.join(" ");
 
   const table = joined.match(/(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\s+(\d+(?:[.,]\d+)?)\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?/i);
-  if (table) return table[1].replace(",", ".");
+  if (table?.[1]) return table[1].replace(",", ".");
 
   const match = joined.match(/(\d+(?:[.,]\d+)?)\s*(kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/i);
-  if (match) return match[1].replace(",", ".");
+  if (match?.[1]) return match[1].replace(",", ".");
   return "";
 }
 
@@ -114,6 +114,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+    if (!line) continue;
     if (/^(item|cod\.?|desc\.?|qtde|total|valor|cartao|troco|cnpj|cpf|data|consumidor|documento|protocolo|tributos|consulte|mfc|serie)/i.test(line)) continue;
 
     // Em uma cotação, só linhas numeradas de itens podem virar produtos.
@@ -125,7 +126,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     // quantidade + preço unitário + total. Os preços são descartados.
     if (isQuotationTable) {
       const row = line.match(/^\s*\d{3}\s+(.+?)\s+(kg|k6|kb|ki|k5|k8|ks|kº|g|gr|gramas?|l|lt|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|sc|saco|fd|fardo|pl|p1|mm|m)\.?\s+(\d+(?:[.,]\d+)?)\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i);
-      if (row) {
+      if (row?.[1] && row[2] && row[3]) {
         let nome = row[1]
           .replace(/^\d{2,7}\s*/i, "")
           .replace(/^[A-Z]?\d{2,7}/i, "")
@@ -142,7 +143,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
       // Algumas linhas perdem a sigla da unidade. Nesse caso, ainda usamos
       // os três números finais e inferimos a unidade pelo nome (ex.: KG).
       const rowNoUnit = line.match(/^\s*\d{3}\s+(.+?)\s+(\d+(?:[.,]\d+)?)\s+\d+(?:[.,]\d+)?\s+\d+(?:[.,]\d+)?\s*$/i);
-      if (rowNoUnit) {
+      if (rowNoUnit?.[1] && rowNoUnit[2]) {
         let nome = rowNoUnit[1]
           .replace(/^\d{2,7}\s*/i, "")
           .replace(/^[A-Z]?\d{2,7}/i, "")
@@ -156,11 +157,12 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
           continue;
         }
       }
+    }
 
     // Tabelas de orçamento/cotação. Aceita linhas com ou sem códigos no início.
     // Ex.: "01 001 CENOURA KG 10,000 4,25 42,50" ou "CENOURA KG 10,000 4,25 42,50".
     const tableMatch = line.match(new RegExp("^(?:\\d+\\s+){0,2}(.+?)\\s+(?:" + unitPattern + ")\\s+(\\d+(?:[.,]\\d+)?)\\s+\\d+(?:[.,]\\d+)?\\s+\\d+(?:[.,]\\d+)?\\s*$", "i"));
-    if (tableMatch) {
+    if (tableMatch?.[1] && tableMatch[2]) {
       const nome = tableMatch[1]
         .replace(/\.{2,}/g, " ")
         .replace(/[|*_]+/g, " ")
@@ -178,7 +180,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     // Fallback para tabelas em que o OCR erra a sigla da unidade (ex.: "k6" no lugar de "kg")
     // ou perde a unidade original. Usa as três colunas numéricas finais: quantidade, valor unitário e total.
     const numericTail = line.match(/^(?:\d+\s+){0,2}(.+?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)\s+(\d+(?:[.,]\d+)?)[^\d\s]*\s*$/);
-    if (numericTail) {
+    if (numericTail?.[1] && numericTail[2]) {
       let prefix = numericTail[1].replace(/[|*_]+/g, " ").replace(/\s+/g, " ").trim();
 
       // Remove item/código mesmo quando o OCR cola os números no início da descrição.
@@ -214,7 +216,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     // Documento fiscal/recibo com descrição e quantidade na mesma linha.
     // Ex.: "FÍGADO BOV CONG 22,220 KG".
     const sameLineQty = line.match(new RegExp("^(.{3,}?)\\s+(\\d+(?:[.,]\\d+)?)\\s*(?:" + unitPattern + ")\\s*$", "i"));
-    if (sameLineQty) {
+    if (sameLineQty?.[1] && sameLineQty[2]) {
       const nome = sameLineQty[1]
         .replace(/^\d+\s+\d+\s+/, "")
         .replace(/[|*_]+/g, " ")
@@ -230,7 +232,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
     // NFC-e/recibo: descrição em uma linha e quantidade + unidade na linha seguinte.
     const next = lines[i + 1] ?? "";
     const nextQty = next.match(new RegExp("^(\\d+(?:[.,]\\d+)?)\\s*(?:" + unitPattern + ")\\b", "i"));
-    if (nextQty && line.length >= 3) {
+    if (nextQty?.[1] && line.length >= 3) {
       const clean = line
         .replace(/^\d+\s+\d+\s+/i, "")
         .replace(/\b(?:kg|kilo|quilo|g|gramas?|l|litros?|un|und|unid(?:ade)?s?|pc|pç|pct|pacote|cx|caixa|saco|fardo)\b/gi, "")
@@ -386,7 +388,10 @@ export function DocumentEntry() {
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       for (let p = 0; p < imageData.data.length; p += 4) {
-        const gray = Math.round(imageData.data[p] * 0.299 + imageData.data[p + 1] * 0.587 + imageData.data[p + 2] * 0.114);
+        const red = imageData.data[p] ?? 0;
+        const green = imageData.data[p + 1] ?? 0;
+        const blue = imageData.data[p + 2] ?? 0;
+        const gray = Math.round(red * 0.299 + green * 0.587 + blue * 0.114);
         const contrast = Math.max(0, Math.min(255, (gray - 128) * 1.35 + 128));
         imageData.data[p] = contrast;
         imageData.data[p + 1] = contrast;
@@ -396,7 +401,7 @@ export function DocumentEntry() {
 
       const worker = await createWorker("por");
       await worker.setParameters({
-        tessedit_pageseg_mode: "6",
+        tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
         preserve_interword_spaces: "1",
         user_defined_dpi: "300",
       });
@@ -439,10 +444,10 @@ export function DocumentEntry() {
     setItems((current) => current.map((item) => item.id === id ? { ...item, ...patch } : item));
 
   const confirmEntry = async () => {
-    if (!destination) return toast.error("Escolha a unidade de destino.");
-    if (!items.length) return toast.error("Adicione pelo menos um produto.");
+    if (!destination) { toast.error("Escolha a unidade de destino."); return; }
+    if (!items.length) { toast.error("Adicione pelo menos um produto."); return; }
     if (items.some((item) => (!item.productId && !item.nome.trim()) || Number(item.quantidade.replace(",", ".")) <= 0))
-      return toast.error("Revise produto e quantidade antes de confirmar.");
+      { toast.error("Revise produto e quantidade antes de confirmar."); return; }
     setReading(true);
     try {
       for (const item of items) {

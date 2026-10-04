@@ -26,7 +26,13 @@ export type MovementRow = Movement & {
   products: Product | null;
   units: { nome: string } | null;
 };
-export type StockReceipt = Database["public"]["Tables"]["stock_receipts"]["Row"];
+export type StockReceipt = {
+  id: string;
+  movement_id: string;
+  confirmed_by: string;
+  confirmed_by_name: string;
+  confirmed_at: string;
+};
 export type ReceivedEntryRow = MovementRow & { receipt: StockReceipt | null };
 export type CheckRow = StockCheck & {
   units: { nome: string } | null;
@@ -181,13 +187,15 @@ export function receivedEntriesOptions(unitId: string | null, enabled = true) {
       if (error) throw message(error);
       const movements = (data ?? []) as unknown as MovementRow[];
       if (!movements.length) return [] as ReceivedEntryRow[];
-      const { data: receipts, error: receiptError } = await supabase
+      // The table exists in migrations but is not yet present in the generated client types.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: receipts, error: receiptError } = await (supabase as any)
         .from("stock_receipts")
         .select("*")
         .in("movement_id", movements.map((m) => m.id));
       if (receiptError) throw message(receiptError);
       const receiptMap = new Map<string, StockReceipt>();
-      (receipts ?? []).forEach((r) => receiptMap.set(r.movement_id, r as StockReceipt));
+      ((receipts ?? []) as unknown as StockReceipt[]).forEach((r) => receiptMap.set(r.movement_id, r));
       return movements.map((m) => ({ ...m, receipt: receiptMap.get(m.id) ?? null }));
     },
   });
@@ -195,7 +203,9 @@ export function receivedEntriesOptions(unitId: string | null, enabled = true) {
 
 export async function confirmStockReceipt(movementId: string, confirmedByName: string) {
   const user_id = await currentUserId();
-  const { error } = await supabase.from("stock_receipts").insert({
+  // The table exists in migrations but is not yet present in the generated client types.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).from("stock_receipts").insert({
     movement_id: movementId,
     confirmed_by: user_id,
     confirmed_by_name: confirmedByName,

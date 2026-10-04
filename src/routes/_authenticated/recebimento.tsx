@@ -55,8 +55,7 @@ function ReceiptPage() {
         description={unit ? "Mercadorias lançadas pelo CEO para " + unit.nome + "." : "Confira as mercadorias lançadas para sua unidade."} />
       <Panel title={pending.length + " recebimento" + (pending.length === 1 ? "" : "s") + " pendente" + (pending.length === 1 ? "" : "s")}
         description="Confira a quantidade recebida e confirme. A quantidade lançada pelo CEO não pode ser alterada nesta tela." bodyClassName="p-0">
-        {pending.length === 0 ? <div className="p-4"><EmptyState icon={<PackageCheck className="size-5" />}
-          title="Nenhum recebimento pendente"
+        {pending.length === 0 ? <div className="p-4"><EmptyState title="Nenhum recebimento pendente"
           description={confirmed.length ? "Todos os lançamentos disponíveis já foram confirmados." : "Quando o CEO lançar uma mercadoria para sua unidade, ela aparecerá aqui."} /></div>
         : <div className="overflow-x-auto"><Table className="min-w-[760px]"><TableHeader><TableRow>
           <TableHead>Produto</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Data do lançamento</TableHead><TableHead>Responsável pelo lançamento</TableHead><TableHead className="text-right">Ação</TableHead>

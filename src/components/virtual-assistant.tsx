@@ -28,20 +28,26 @@ function parseTargetGrams(question: string) {
     q.match(/(?:para|de|em|ate|atingir|chegar a)\s+(\d+(?:[.,]\d+)?)\s*(kg|quilo|quilos|g|grama|gramas)/) ??
     q.match(/(\d+(?:[.,]\d+)?)\s*(kg|quilo|quilos|g|grama|gramas)/);
   if (!match) return 1000;
-  const value = Number(match[1].replace(",", "."));
-  return match[2].startsWith("kg") || match[2].startsWith("quilo") ? value * 1000 : value;
+  const rawValue = match[1];
+  const rawUnit = match[2];
+  if (!rawValue || !rawUnit) return 1000;
+  const value = Number(rawValue.replace(",", "."));
+  return rawUnit.startsWith("kg") || rawUnit.startsWith("quilo") ? value * 1000 : value;
 }
 
 function parseExplicitQuantity(question: string) {
   const q = normalize(question);
   const food = findFood(question);
   if (!food) return null;
-  const foodPosition = q.indexOf(normalize(food.aliases[0]));
+  const primaryAlias = food.aliases[0];
+  if (!primaryAlias) return null;
+  const foodPosition = q.indexOf(normalize(primaryAlias));
   if (foodPosition < 0) return null;
   const beforeFood = q.slice(0, foodPosition);
   const match = beforeFood.match(/(\d+(?:[.,]\d+)?)\s*(?:unidades?|unid\.?|un\.?)?\s*$/);
   if (!match) return null;
-  return Number(match[1].replace(",", "."));
+  const rawQuantity = match[1];
+  return rawQuantity ? Number(rawQuantity.replace(",", ".")) : null;
 }
 
 function weightAnswer(question: string) {
@@ -65,6 +71,7 @@ function weightAnswer(question: string) {
 function conservationAnswer(question: string) {
   const q = normalize(question);
   const tip = CONSERVATION_TIPS.find((item) => item.keywords.some((keyword) => q.includes(normalize(keyword)))) ?? CONSERVATION_TIPS[0];
+  if (!tip) return "Não encontrei uma orientação de conservação para este alimento.";
   return `${tip.title}\n\n${tip.text}\n\nFonte: ${ASSISTANT_SOURCES.conservation}`;
 }
 
