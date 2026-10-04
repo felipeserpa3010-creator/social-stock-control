@@ -156,6 +156,7 @@ function extractUnknownCandidates(text: string, knownNames: Set<string>) {
           continue;
         }
       }
+    }
 
     // Tabelas de orçamento/cotação. Aceita linhas com ou sem códigos no início.
     // Ex.: "01 001 CENOURA KG 10,000 4,25 42,50" ou "CENOURA KG 10,000 4,25 42,50".
