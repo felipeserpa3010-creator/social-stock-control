@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T19:18:18.273100+00:00",
+  "generated_at": "2026-10-04T03:50:41.903335+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -106,6 +106,10 @@
       "bytes": 860
     },
     {
+      "path": "supabase/functions/analyze-inventory-image/index.ts",
+      "bytes": 3956
+    },
+    {
       "path": "supabase/functions/vision-ocr/index.ts",
       "bytes": 7299
     },
@@ -192,6 +196,10 @@
     {
       "path": "src/routes/auth.tsx",
       "bytes": 4790
+    },
+    {
+      "path": "src/routes/ia-visao.tsx",
+      "bytes": 5622
     },
     {
       "path": "src/routes/setup.tsx",
@@ -1066,6 +1074,22 @@
     {
       "source": "src/routes/auth.tsx",
       "target": "@/components/auth-layout"
+    },
+    {
+      "source": "src/routes/ia-visao.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/ia-visao.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/ia-visao.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/ia-visao.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/setup.tsx",
