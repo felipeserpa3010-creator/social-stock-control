@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
-import { addMovement, productsOptions, unitsOptions, type Product } from "@/lib/queries";
+import { addMovement, ensureUncategorizedProduct, productsOptions, unitsOptions, type Product } from "@/lib/queries";
 import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,7 @@ export function DocumentEntry() {
   const [data, setData] = useState(todayISO());
   const [saving, setSaving] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [textoMassa, setTextoMassa] = useState("");
 
   const activeUnits = useMemo(() => units.filter((u) => u.ativo), [units]);
   const activeProducts = useMemo(
@@ -37,6 +38,32 @@ export function DocumentEntry() {
   );
 
   if (!isAdmin) return null;
+
+  const parseTextoMassa = (text: string) => {
+    const rows: DraftItem[] = [];
+    for (const raw of text.split(/\\r?\\n/)) {
+      const line = raw.trim();
+      if (!line) continue;
+      const match = line.match(/^(?:[-•*]\\s*)?(.+?)\\s*[—–-]\\s*(\\d+(?:[.,]\\d+)?)\\s*(kg|g|unidade(?:s)?|un|und|pc|pacote|caixa|fardo|saco|litro|l|ml|pote|frasco|lata|dúzia|duzia)?\\s*$/i);
+      if (!match) continue;
+      const nome = match[1].trim();
+      const quantidade = match[2].replace(",", ".");
+      const unidadeRaw = (match[3] || "").toLowerCase();
+      const unidade = /kg/.test(unidadeRaw) ? "Kg" : /(^g$|gram)/.test(unidadeRaw) ? "g" : /^(l|litro)/.test(unidadeRaw) ? "Litro" : /ml/.test(unidadeRaw) ? "ml" : /^(un|und|unidade|pc)/.test(unidadeRaw) ? "Unidade" : unidadeRaw ? unidadeRaw.charAt(0).toUpperCase() + unidadeRaw.slice(1) : "Unidade";
+      const normalized = nome.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+      const product = activeProducts.find((p) => p.nome.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "") === normalized);
+      if (!rows.some((r) => r.nome.toLocaleLowerCase("pt-BR") === nome.toLocaleLowerCase("pt-BR"))) rows.push({ id: crypto.randomUUID(), productId: product?.id ?? "", nome, quantidade, unidade: product?.unidade_medida ?? unidade });
+    }
+    return rows;
+  };
+
+  const interpretarTexto = () => {
+    const parsed = parseTextoMassa(textoMassa);
+    if (!parsed.length) { toast.error("Não encontrei linhas no formato: CEBOLA — 4 kg"); return; }
+    setItems(parsed);
+    setConfirmed(false);
+    toast.success(parsed.length + " produto(s) preparados para conferência.");
+  };
 
   const addRow = (product?: Product) => {
     const selected = product ?? activeProducts.find((p) => !items.some((item) => item.productId === p.id));
@@ -111,9 +138,14 @@ export function DocumentEntry() {
     setSaving(true);
     try {
       for (const item of validItems) {
+        let productId = item.productId;
+        if (!productId) {
+          const created = await ensureUncategorizedProduct(item.nome.trim(), item.unidade || "Unidade");
+          productId = created.id;
+        }
         await addMovement({
           unit_id: destination,
-          product_id: item.productId,
+          product_id: productId,
           tipo: "entrada",
           quantidade: Number(item.quantidade.replace(",", ".")),
           data,
@@ -175,7 +207,7 @@ export function DocumentEntry() {
 
       <Panel
         title={`${items.length} produto(s) na lista`}
-        description="Digite somente as quantidades que deseja lançar. Linhas sem quantidade não serão lançadas."
+        description="Confira a lista completa antes de lançar. Você pode editar produto, quantidade e unidade. Produtos novos serão cadastrados individualmente somente após a confirmação."
       >
         {items.length === 0 ? (
           <div className="rounded-lg border border-dashed p-8 text-center">
