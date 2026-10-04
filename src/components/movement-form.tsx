@@ -42,10 +42,10 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
     const itens: Array<{ nome: string; quantidade: number; unidade: string }> = [];
     const erros: string[] = [];
 
-    texto.split(/\\r?\\n/).map((linha) => linha.trim()).filter(Boolean).forEach((linha, index) => {
-      const normalizada = linha.replace(/[—–]/g, "-").replace(/\\s+/g, " ").trim();
-      const match = normalizada.match(/^(.+?)\\s*(?:-|:)\\s*([0-9]+(?:[,.][0-9]+)?)\\s*([A-Za-zÀ-ÿ]+)?$/)
-        || normalizada.match(/^(.+?)\\s+([0-9]+(?:[,.][0-9]+)?)\\s*([A-Za-zÀ-ÿ]+)$/);
+    texto.split(/\r?\n/).map((linha) => linha.trim()).filter(Boolean).forEach((linha, index) => {
+      const normalizada = linha.replace(/[—–]/g, "-").replace(/\s+/g, " ").trim();
+      const match = normalizada.match(/^(.+?)\s*(?:-|:)\s*([0-9]+(?:[,.][0-9]+)?)\s*([A-Za-zÀ-ÿ]+)?$/)
+        || normalizada.match(/^(.+?)\s+([0-9]+(?:[,.][0-9]+)?)\s*([A-Za-zÀ-ÿ]+)$/);
 
       if (!match) {
         erros.push(`Linha ${index + 1}: "${linha}"`);
