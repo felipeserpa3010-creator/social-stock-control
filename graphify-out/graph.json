@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T03:58:23.815203+00:00",
+  "generated_at": "2026-10-04T04:11:29.714132+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -139,7 +139,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 30911
+      "bytes": 9621
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -905,10 +905,6 @@
     },
     {
       "source": "src/components/document-entry.tsx",
-      "target": "tesseract.js"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
       "target": "lucide-react"
     },
     {
@@ -930,10 +926,6 @@
     {
       "source": "src/components/document-entry.tsx",
       "target": "@/lib/queries"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/components/document-entry.tsx",
