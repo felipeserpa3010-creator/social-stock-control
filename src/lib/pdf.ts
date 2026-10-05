@@ -4,7 +4,6 @@ import { formatDate, formatQty, slugify } from "./format";
 import { semadsLogoUrl } from "./brand";
 
 export type InventoryRow = {
-  categoria: string;
   produto: string;
   medida: string;
   estoque: number;
@@ -70,7 +69,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     }
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    doc.setTextColor(20, 55, 45);
+    doc.setTextColor(125, 38, 11);
     doc.text(opts.instituicao.toUpperCase(), x, 15);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9.5);
@@ -82,7 +81,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(13.5);
-    doc.setTextColor(20, 55, 45);
+    doc.setTextColor(125, 38, 11);
     doc.text(opts.titulo.toUpperCase(), pageW / 2, 34.5, { align: "center" });
 
     doc.setFont("helvetica", "normal");
@@ -92,11 +91,11 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     doc.text(`Data da última conferência: ${dataConf}`, pageW - margin, 42, { align: "right" });
   };
 
-  const head = ["Categoria", "Produto", "Unidade de medida", opts.modo === "consumo" ? "Consumo no período" : "Estoque aproximado"];
+  const head = ["Produto", "Unidade de medida", opts.modo === "consumo" ? "Consumo no período" : "Estoque aproximado"];
   if (opts.incluirMedia) head.push("Média de consumo mensal");
 
   const body = opts.rows.map((r) => {
-    const line = [r.categoria, r.produto, r.medida, formatQty(r.estoque)];
+    const line = [r.produto, r.medida, formatQty(r.estoque)];
     if (opts.incluirMedia) {
       line.push(r.media === null || r.media === undefined ? "Dados insuficientes" : formatQty(r.media));
     }
@@ -105,15 +104,15 @@ export async function buildInventoryPdf(opts: ReportOptions) {
 
   autoTable(doc, {
     head: [head],
-    body: body.length ? body : [["—", "Nenhum produto encontrado", "—", "—", ...(opts.incluirMedia ? ["—"] : [])]],
+    body: body.length ? body : [["Nenhum produto encontrado", "—", "—", ...(opts.incluirMedia ? ["—"] : [])]],
     startY: 47,
     margin: { top: 47, left: margin, right: margin, bottom: 22 },
     styles: { fontSize: 9, cellPadding: 2.2, lineColor: [215, 220, 216], lineWidth: 0.1 },
     headStyles: { fillColor: [31, 78, 66], textColor: 255, fontStyle: "bold", fontSize: 9 },
     alternateRowStyles: { fillColor: [246, 249, 247] },
     columnStyles: {
-      3: { halign: "right", cellWidth: 30 },
-      4: { halign: "right", cellWidth: 34 },
+      2: { halign: "right", cellWidth: 32 },
+      3: { halign: "right", cellWidth: 38 },
     },
     didDrawPage: () => {
       drawHeader();
@@ -121,7 +120,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
   });
 
   // Assinatura
-  if (opts.assinatura !== false) {
+  if (false && opts.assinatura !== false) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let y = ((doc as any).lastAutoTable?.finalY ?? 60) + 16;
     if (y > pageH - 60) {
