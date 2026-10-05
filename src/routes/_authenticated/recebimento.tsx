@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Clock3 } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnit } from "@/hooks/useUnit";
 import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
@@ -59,9 +60,15 @@ function ReceiptPage() {
         ? confirmStockReceiptGroup(receiptId, profile?.nome ?? "Responsável pela unidade")
         : confirmStockReceipt(receiptId, profile?.nome ?? "Responsável pela unidade"),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["received-entries"] });
-      await queryClient.invalidateQueries({ queryKey: ["stock"] });
+      toast.success("Recebimento confirmado. As quantidades já estão no estoque.");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["received-entries"] }),
+        queryClient.invalidateQueries({ queryKey: ["pending-receipts"] }),
+        queryClient.invalidateQueries({ queryKey: ["stock"] }),
+        queryClient.invalidateQueries({ queryKey: ["movements"] }),
+      ]);
     },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Não foi possível confirmar o recebimento."),
   });
 
   if (isAdmin || isViewer) return (
