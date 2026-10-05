@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Boxes, PackageMinus, PackagePlus, TrendingUp } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertTriangle, Boxes, PackageMinus, PackagePlus, TrendingUp, Trash2 } from "lucide-react";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
 import {
   movementsOptions,
   productsOptions,
   stockOptions,
+  pendingReceiptOptions,
+  removePendingReceipt,
 } from "@/lib/queries";
 import { byMonth, lastMonths, monthKey } from "@/lib/media";
 import { formatDate, formatQty, stockStatus, todayISO } from "@/lib/format";
@@ -33,10 +35,20 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function DashboardPage() {
   const { unitId, unit } = useUnit();
-  const { isViewer } = useAuth();
+  const { isViewer, isAdmin } = useAuth();
+  const queryClient = useQueryClient();
   const { data: products = [] } = useQuery(productsOptions(false));
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 400 }));
+  const { data: pendingReceipts = [] } = useQuery(pendingReceiptOptions(unitId, isAdmin));
+  const deletePending = useMutation({
+    mutationFn: removePendingReceipt,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["pending-receipts"] });
+      await queryClient.invalidateQueries({ queryKey: ["stock"] });
+      await queryClient.invalidateQueries({ queryKey: ["movements"] });
+    },
+  });
 
   const month = todayISO().slice(0, 7);
   const entradasMes = movements
@@ -75,6 +87,48 @@ function DashboardPage() {
           </>
         }
       />
+
+      {isAdmin && (
+        <div className="mb-5">
+          <Panel
+            title="Lançamentos pendentes de recebimento"
+            description="Esses lançamentos foram enviados pelo CEO para as unidades e ainda não entram no estoque disponível. Você pode cancelar um pendente."
+            bodyClassName="p-0"
+          >
+            {pendingReceipts.length === 0 ? (
+              <div className="p-4">
+                <EmptyState title="Nenhum lançamento pendente" description="Quando o CEO enviar mercadorias para uma unidade, elas aparecerão aqui até a confirmação." />
+              </div>
+            ) : (
+              <ul className="divide-y divide-border/70">
+                {pendingReceipts.map((m) => (
+                  <li key={m.id} className="flex items-center gap-3 px-4 py-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold">{m.products?.nome ?? "Produto"}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {m.units?.nome ?? "Unidade"} · {formatQty(m.quantidade)} {m.products?.unidade_medida ?? ""} · lançado em {formatDate(m.data)}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0"
+                      onClick={() => {
+                        if (window.confirm("Excluir este lançamento pendente? Ele não será adicionado ao estoque da unidade.")) {
+                          deletePending.mutate(m.id);
+                        }
+                      }}
+                      disabled={deletePending.isPending}
+                    >
+                      <Trash2 /> Excluir pendente
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Panel>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Produtos ativos" value={products.length} icon={Boxes} />
