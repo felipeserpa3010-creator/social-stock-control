@@ -127,17 +127,17 @@ const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   path: '/produtos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedRecibosRoute = AuthenticatedRecibosRouteImport.update({
-  id: '/recibos',
-  path: '/recibos',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedRecebimentoRoute =
   AuthenticatedRecebimentoRouteImport.update({
     id: '/recebimento',
     path: '/recebimento',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedRecibosRoute = AuthenticatedRecibosRouteImport.update({
+  id: '/recibos',
+  path: '/recibos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
   id: '/relatorios',
   path: '/relatorios',
@@ -257,6 +257,7 @@ export interface FileRouteTypes {
     | '/medias'
     | '/produtos'
     | '/recebimento'
+    | '/recibos'
     | '/relatorios'
     | '/saida'
     | '/unidades'
@@ -281,6 +282,7 @@ export interface FileRouteTypes {
     | '/medias'
     | '/produtos'
     | '/recebimento'
+    | '/recibos'
     | '/relatorios'
     | '/saida'
     | '/unidades'
@@ -306,6 +308,7 @@ export interface FileRouteTypes {
     | '/_authenticated/medias'
     | '/_authenticated/produtos'
     | '/_authenticated/recebimento'
+    | '/_authenticated/recibos'
     | '/_authenticated/relatorios'
     | '/_authenticated/saida'
     | '/_authenticated/unidades'
@@ -456,6 +459,13 @@ declare module '@tanstack/react-router' {
       path: '/recebimento'
       fullPath: '/recebimento'
       preLoaderRoute: typeof AuthenticatedRecebimentoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/recibos': {
+      id: '/_authenticated/recibos'
+      path: '/recibos'
+      fullPath: '/recibos'
+      preLoaderRoute: typeof AuthenticatedRecibosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/relatorios': {
