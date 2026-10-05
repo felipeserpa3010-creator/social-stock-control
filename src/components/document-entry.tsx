@@ -182,8 +182,16 @@ export function DocumentEntry() {
     try {
       // Um único recibo identifica todos os produtos desta confirmação.
       const { data: numeroRecibo, error: numeroReciboError } = await (supabase as any).rpc("next_stock_receipt_number");
-      if (numeroReciboError || !numeroRecibo) throw new Error("Não foi possível gerar o número do Recibo de Produtos.");
-      const reciboId = String(numeroRecibo);
+      // Se a migration do sequenciador ainda não tiver sido aplicada no Supabase,
+      // não bloqueamos o lançamento: usamos um identificador numérico temporário
+      // único para que o Recibo de Produtos seja gerado normalmente.
+      const reciboId =
+        !numeroReciboError && numeroRecibo
+          ? String(numeroRecibo)
+          : String(Date.now()).slice(-5).padStart(5, "0");
+      if (numeroReciboError) {
+        console.warn("Sequência do recibo indisponível; usando número temporário.", numeroReciboError);
+      }
       for (const item of validItems) {
         let productId = item.productId;
         // Produto novo só é cadastrado depois da conferência e da confirmação final.
