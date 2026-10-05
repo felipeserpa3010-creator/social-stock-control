@@ -139,46 +139,6 @@ export function stockOptions(unitId: string | null) {
         products: ProductWithCategory | null;
       }>;
 
-      // Entradas enviadas pelo CEO para uma unidade ficam pendentes até que
-      // o responsável confirme o recebimento. O gatilho do estoque já pode
-      // ter registrado a entrada; por isso descontamos visualmente as pendentes
-      // de todos os saldos até existir a confirmação.
-      let pendingQuery = supabase
-        .from("stock_movements")
-        .select("id, product_id, unit_id, quantidade")
-        .eq("tipo", "entrada")
-        .ilike("observacao", "%PENDENTE_RECEBIMENTO%");
-      if (unitId !== ALL_UNITS_SCOPE) pendingQuery = pendingQuery.eq("unit_id", unitId as string);
-      const { data: pendingMovements, error: pendingError } = await pendingQuery.limit(5000);
-      if (pendingError) throw message(pendingError);
-
-      const pending = (pendingMovements ?? []) as Array<{
-        id: string;
-        product_id: string;
-        unit_id: string;
-        quantidade: number;
-      }>;
-      let pendingIds = pending.map((m) => m.id);
-      if (pendingIds.length) {
-        // The receipt table is created by the confirmation migration and may
-        // not yet be present in generated TypeScript types.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: receipts, error: receiptError } = await (supabase as any)
-          .from("stock_receipts")
-          .select("movement_id")
-          .in("movement_id", pendingIds);
-        if (receiptError) throw message(receiptError);
-        const confirmedIds = new Set<string>((receipts ?? []).map((r: { movement_id: string }) => r.movement_id));
-        pendingIds = pending.filter((m) => !confirmedIds.has(m.id)).map((m) => m.id);
-      }
-
-      const pendingByStock = new Map<string, number>();
-      pending.forEach((m) => {
-        if (!pendingIds.includes(m.id)) return;
-        const key = m.product_id + ":" + m.unit_id;
-        pendingByStock.set(key, (pendingByStock.get(key) ?? 0) + Number(m.quantidade));
-      });
-
       return rows
         .filter((r) => {
           if (!r.products) return false;
