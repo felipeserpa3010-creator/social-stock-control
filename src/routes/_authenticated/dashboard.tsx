@@ -16,6 +16,7 @@ import { byMonth, lastMonths, monthKey } from "@/lib/media";
 import { formatDate, formatQty, stockStatus, todayISO } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, StatCard, StatusPill, TypeBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
