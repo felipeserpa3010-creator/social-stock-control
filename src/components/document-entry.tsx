@@ -9,7 +9,8 @@ import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, Panel } from "@/components/ui-kit";
-import { buildReceiptPdf, reportFileName } from "@/lib/pdf";\nimport { supabase } from "@/integrations/supabase/client";
+import { buildReceiptPdf, reportFileName } from "@/lib/pdf";
+import { supabase } from "@/integrations/supabase/client";
 
 type DraftItem = { id: string; productId: string; nome: string; quantidade: string; unidade: string };
 
@@ -80,15 +81,15 @@ export function DocumentEntry() {
       let nome = chunk;
 
       if (quantityWithUnit) {
-        quantidade = quantityWithUnit[1].replace(",", ".");
+        quantidade = (quantityWithUnit[1] ?? "0").replace(",", ".");
         unidade = normalizeUnit(quantityWithUnit[2] || "Unidade");
         nome = chunk.slice(0, quantityWithUnit.index ?? 0) + chunk.slice((quantityWithUnit.index ?? 0) + quantityWithUnit[0].length);
       } else if (unitBeforeQuantity) {
-        quantidade = unitBeforeQuantity[2].replace(",", ".");
+        quantidade = (unitBeforeQuantity[2] ?? "0").replace(",", ".");
         unidade = normalizeUnit(unitBeforeQuantity[1] || "Unidade");
         nome = chunk.slice(0, unitBeforeQuantity.index ?? 0) + chunk.slice((unitBeforeQuantity.index ?? 0) + unitBeforeQuantity[0].length);
       } else if (quantityOnly) {
-        quantidade = quantityOnly[1].replace(",", ".");
+        quantidade = (quantityOnly[1] ?? "0").replace(",", ".");
         nome = chunk.replace(quantityOnly[0], " ");
       }
 
@@ -180,7 +181,9 @@ export function DocumentEntry() {
     setSaving(true);
     try {
       // Um único recibo identifica todos os produtos desta confirmação.
-      const { data: numeroRecibo, error: numeroReciboError } = await (supabase as any).rpc("next_stock_receipt_number");\n      if (numeroReciboError || !numeroRecibo) throw new Error("Não foi possível gerar o número do Recibo de Produtos.");\n      const reciboId = String(numeroRecibo);
+      const { data: numeroRecibo, error: numeroReciboError } = await (supabase as any).rpc("next_stock_receipt_number");
+      if (numeroReciboError || !numeroRecibo) throw new Error("Não foi possível gerar o número do Recibo de Produtos.");
+      const reciboId = String(numeroRecibo);
       for (const item of validItems) {
         let productId = item.productId;
         // Produto novo só é cadastrado depois da conferência e da confirmação final.
