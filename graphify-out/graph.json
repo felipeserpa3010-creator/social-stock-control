@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T16:31:22.886458+00:00",
+  "generated_at": "2026-10-05T16:31:32.864340+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -135,7 +135,7 @@
     },
     {
       "path": "src/components/virtual-assistant.tsx",
-      "bytes": 9293
+      "bytes": 9921
     },
     {
       "path": "src/components/movement-form.tsx",
