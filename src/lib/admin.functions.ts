@@ -278,6 +278,21 @@ export const adminSetRole = createServerFn({ method: "POST" })
       throw new Error("O sistema possui apenas um CEO/Administrador Principal.");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (data.role === "visualizador") {
+      const { data: gabinete, error: gabineteError } = await supabaseAdmin
+        .from("units")
+        .select("id")
+        .ilike("nome", "Gabinete SEMADS")
+        .eq("ativo", true)
+        .maybeSingle();
+      if (gabineteError) throw new Error(gabineteError.message);
+      if (!gabinete?.id) throw new Error("A unidade Gabinete SEMADS não está cadastrada.");
+      const { error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .update({ unit_id: gabinete.id })
+        .eq("user_id", data.user_id);
+      if (profileError) throw new Error(profileError.message);
+    }
     await supabaseAdmin.from("user_roles").delete().eq("user_id", data.user_id);
     const { error } = await supabaseAdmin
       .from("user_roles")
