@@ -61,8 +61,8 @@ export function DocumentEntry() {
       if (!line) continue;
       const match = line.match(/^(?:[-•*]\s*)?(.+?)\s*(?:—|–|-|:)\s*(\d+(?:[.,]\d+)?)\s*(kg|g|unidade(?:s)?|un|und|pc|pcs|pacote(?:s)?|caixa(?:s)?|fardo(?:s)?|saco(?:s)?|litro(?:s)?|l|ml|pote(?:s)?|frasco(?:s)?|lata(?:s)?|dúzia(?:s)?|duzia(?:s)?)?\s*$/i);
       if (!match) continue;
-      const nome = match[1].trim();
-      const quantidade = match[2].replace(",", ".");
+      const nome = (match[1] ?? "").trim();
+      const quantidade = (match[2] ?? "0").replace(",", ".");
       const unidade = normalizeUnit(match[3] || "Unidade");
       const product = activeProducts.find((p) => normalizeName(p.nome) === normalizeName(nome));
       if (!rows.some((r) => normalizeName(r.nome) === normalizeName(nome))) {
