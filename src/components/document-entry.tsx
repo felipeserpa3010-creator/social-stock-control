@@ -9,7 +9,7 @@ import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, Panel } from "@/components/ui-kit";
-import { buildReceiptPdf, reportFileName } from "@/lib/pdf";
+import { buildReceiptPdf, reportFileName } from "@/lib/pdf";\nimport { supabase } from "@/integrations/supabase/client";
 
 type DraftItem = { id: string; productId: string; nome: string; quantidade: string; unidade: string };
 
@@ -180,7 +180,7 @@ export function DocumentEntry() {
     setSaving(true);
     try {
       // Um único recibo identifica todos os produtos desta confirmação.
-      const reciboId = `REC-${data.replace(/-/g, "")}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+      const { data: numeroRecibo, error: numeroReciboError } = await (supabase as any).rpc("next_stock_receipt_number");\n      if (numeroReciboError || !numeroRecibo) throw new Error("Não foi possível gerar o número do Recibo de Produtos.");\n      const reciboId = String(numeroRecibo);
       for (const item of validItems) {
         let productId = item.productId;
         // Produto novo só é cadastrado depois da conferência e da confirmação final.
