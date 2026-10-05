@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T15:04:08.713038+00:00",
+  "generated_at": "2026-10-05T15:10:57.197968+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -143,7 +143,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 15987
+      "bytes": 17086
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -159,7 +159,7 @@
     },
     {
       "path": "src/lib/pdf.ts",
-      "bytes": 5339
+      "bytes": 8075
     },
     {
       "path": "src/lib/lovable-error-reporting.ts",
@@ -946,6 +946,10 @@
     {
       "source": "src/components/document-entry.tsx",
       "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/lib/pdf"
     },
     {
       "source": "src/lib/pdf.ts",
