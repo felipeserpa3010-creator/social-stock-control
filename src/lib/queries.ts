@@ -126,15 +126,60 @@ export function stockOptions(unitId: string | null) {
         units: { nome: string; sigla: string | null } | null;
         products: ProductWithCategory | null;
       }>;
+
+      // Entradas enviadas pelo CEO para uma unidade ficam pendentes até que
+      // o responsável confirme o recebimento. O gatilho do estoque já pode
+      // ter registrado a entrada; por isso descontamos visualmente as pendentes
+      // de todos os saldos até existir a confirmação.
+      let pendingQuery = supabase
+        .from("stock_movements")
+        .select("id, product_id, unit_id, quantidade")
+        .eq("tipo", "entrada")
+        .ilike("observacao", "%PENDENTE_RECEBIMENTO%");
+      if (unitId !== ALL_UNITS_SCOPE) pendingQuery = pendingQuery.eq("unit_id", unitId as string);
+      const { data: pendingMovements, error: pendingError } = await pendingQuery.limit(5000);
+      if (pendingError) throw message(pendingError);
+
+      const pending = (pendingMovements ?? []) as Array<{
+        id: string;
+        product_id: string;
+        unit_id: string;
+        quantidade: number;
+      }>;
+      let pendingIds = pending.map((m) => m.id);
+      if (pendingIds.length) {
+        // The receipt table is created by the confirmation migration and may
+        // not yet be present in generated TypeScript types.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: receipts, error: receiptError } = await (supabase as any)
+          .from("stock_receipts")
+          .select("movement_id")
+          .in("movement_id", pendingIds);
+        if (receiptError) throw message(receiptError);
+        const confirmedIds = new Set<string>((receipts ?? []).map((r: { movement_id: string }) => r.movement_id));
+        pendingIds = pending.filter((m) => !confirmedIds.has(m.id)).map((m) => m.id);
+      }
+
+      const pendingByStock = new Map<string, number>();
+      pending.forEach((m) => {
+        if (!pendingIds.includes(m.id)) return;
+        const key = m.product_id + ":" + m.unit_id;
+        pendingByStock.set(key, (pendingByStock.get(key) ?? 0) + Number(m.quantidade));
+      });
+
       return rows
         .filter((r) => r.products)
-        .map<StockEntry>((r) => ({
-          product: r.products as ProductWithCategory,
-          quantity: Number(r.quantidade),
-          updated_at: r.updated_at,
-          unit_id: r.unit_id,
-          unit: r.units,
-        }));
+        .map<StockEntry>((r) => {
+          const key = r.product_id + ":" + r.unit_id;
+          const pendingQty = pendingByStock.get(key) ?? 0;
+          return {
+            product: r.products as ProductWithCategory,
+            quantity: Math.max(0, Number(r.quantidade) - pendingQty),
+            updated_at: r.updated_at,
+            unit_id: r.unit_id,
+            unit: r.units,
+          };
+        });
     },
   });
 }
@@ -210,6 +255,53 @@ export async function confirmStockReceipt(movementId: string, confirmedByName: s
     confirmed_by: user_id,
     confirmed_by_name: confirmedByName,
   });
+  if (error) throw message(error);
+}
+
+export function pendingReceiptOptions(unitId: string | null, enabled = true) {
+  return queryOptions({
+    enabled: Boolean(unitId) && enabled,
+    queryKey: ["pending-receipts", unitId],
+    queryFn: async () => {
+      let query = supabase
+        .from("stock_movements")
+        .select("*, products(*), units(nome)")
+        .eq("tipo", "entrada")
+        .ilike("observacao", "%PENDENTE_RECEBIMENTO%")
+        .order("data", { ascending: false })
+        .order("created_at", { ascending: false });
+      if (unitId !== ALL_UNITS_SCOPE) query = query.eq("unit_id", unitId as string);
+      const { data, error } = await query.limit(500);
+      if (error) throw message(error);
+      const movements = (data ?? []) as unknown as MovementRow[];
+      if (!movements.length) return [] as ReceivedEntryRow[];
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data: receipts, error: receiptError } = await (supabase as any)
+        .from("stock_receipts")
+        .select("*")
+        .in("movement_id", movements.map((m) => m.id));
+      if (receiptError) throw message(receiptError);
+      const confirmedIds = new Set<string>((receipts ?? []).map((r: { movement_id: string }) => r.movement_id));
+      return movements.filter((m) => !confirmedIds.has(m.id)).map((m) => ({ ...m, receipt: null }));
+    },
+  });
+}
+
+export async function removePendingReceipt(movementId: string) {
+  const { data, error: readError } = await supabase
+    .from("stock_movements")
+    .select("id, observacao")
+    .eq("id", movementId)
+    .single();
+  if (readError) throw message(readError);
+  if (!String(data?.observacao ?? "").includes("PENDENTE_RECEBIMENTO")) {
+    throw new Error("Este lançamento não está pendente de recebimento.");
+  }
+
+  // Só o CEO deve ter permissão para excluir. A política do banco continua
+  // sendo a autoridade final sobre a operação.
+  const { error } = await supabase.from("stock_movements").delete().eq("id", movementId);
   if (error) throw message(error);
 }
 
