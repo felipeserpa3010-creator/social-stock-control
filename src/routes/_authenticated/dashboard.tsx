@@ -253,7 +253,7 @@ function DashboardPage() {
                       index.set(key, grouped.length);
                       grouped.push({ key, receiptId, items: [m] });
                     } else {
-                      grouped[existing].items.push(m);
+                      grouped[existing]?.items.push(m);
                     }
                   });
                   return grouped.slice(0, 7).map((group) => {
