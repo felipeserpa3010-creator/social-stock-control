@@ -180,7 +180,15 @@ export function stockOptions(unitId: string | null) {
       });
 
       return rows
-        .filter((r) => r.products)
+        .filter((r) => {
+          if (!r.products) return false;
+          const key = r.product_id + ":" + r.unit_id;
+          const pendingQty = pendingByStock.get(key) ?? 0;
+          // Uma entrada pendente não pode aparecer no estoque da unidade.
+          // Se todo o saldo atual veio de lançamentos ainda não confirmados,
+          // ocultamos a ficha até o responsável confirmar o recebimento.
+          return Number(r.quantidade) > pendingQty;
+        })
         .map<StockEntry>((r) => {
           const key = r.product_id + ":" + r.unit_id;
           const pendingQty = pendingByStock.get(key) ?? 0;
