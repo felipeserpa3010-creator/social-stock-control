@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Download } from "lucide-react";
+import { FileText } from "lucide-react";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { stockOptions } from "@/lib/queries";
-import { formatDate, formatQty, stockStatus } from "@/lib/format";
+import { formatDate, formatQty, stockStatus, todayISO } from "@/lib/format";
+import { buildInventoryPdf } from "@/lib/pdf";
 import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import {
@@ -65,29 +66,7 @@ function StockPage() {
     };
   }, [entries]);
 
-  const exportCsv = () => {
-    const header = ["Produto", "Estoque aproximado", "Unidade de medida", "Situação", "Atualizado em"];
-    const lines = rows.map((r) => {
-      const status = stockStatus(r.quantity, r.product.estoque_minimo);
-      const situacao = status === "zerado" ? "Zerado" : status === "baixo" ? "Quase acabando" : "Disponível";
-      return [
-        r.product.nome,
-        String(r.quantity),
-        r.product.unidade_medida,
-        situacao,
-        r.updated_at ? new Date(r.updated_at).toLocaleDateString("pt-BR") : "",
-      ];
-    });
-    const csv = [header, ...lines]
-      .map((cols) => cols.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";"))
-      .join("\n");
-    const url = URL.createObjectURL(new Blob([`\ufeff${csv}`], { type: "text/csv;charset=utf-8" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `estoque_${unit?.sigla ?? "unidade"}_${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const exportPdf = async () => {\n    if (!rows.length) return;\n    const doc = await buildInventoryPdf({\n      titulo: "Relatório de Estoque",\n      instituicao: "SEMADS",\n      secretaria: "Depósito SEMADS",\n      unidade: unit?.nome ?? "Unidade",\n      dataConferencia: todayISO(),\n      rows: rows.map((r) => ({ produto: r.product.nome, estoque: r.quantity, medida: r.product.unidade_medida })),\n      modo: "estoque",\n      incluirMedia: false,\n      assinatura: false,\n    });\n    doc.save("estoque_" + (unit?.sigla ?? "unidade") + "_" + todayISO() + ".pdf");\n  };
 
   return (
     <>
@@ -99,8 +78,8 @@ function StockPage() {
             : "Nenhuma unidade disponível."
         }
         actions={
-          <Button variant="outline" size="sm" onClick={exportCsv} disabled={!rows.length}>
-            <Download /> CSV
+          <Button variant="outline" size="sm" onClick={exportPdf} disabled={!rows.length}>
+            <FileText /> PDF
           </Button>
         }
       />
