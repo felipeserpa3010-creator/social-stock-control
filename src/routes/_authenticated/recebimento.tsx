@@ -94,7 +94,7 @@ function ReceiptPage() {
             return <div key={receiptId} className="rounded-lg border p-4">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-semibold">Recibo de Produtos {receiptId.startsWith("REC-") ? "nº " + receiptId : ""}</p>
+                  <p className="font-semibold">Recibo de Produtos nº {receiptId}</p>
                   <p className="text-xs text-muted-foreground">Data do lançamento: {formatDate(first?.data ?? null)} · {group.entries.length} produto(s)</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
