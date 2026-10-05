@@ -37,9 +37,8 @@ export function UnitProvider({ children }: { children: ReactNode }) {
 
   const unitId = useMemo(() => {
     if (viewer) {
-      if (stored === ALL_UNITS) return ALL_UNITS;
       if (stored && units.some((u) => u.id === stored)) return stored;
-      return ALL_UNITS;
+      return units[0]?.id ?? null;
     }
     if (locked && profile?.unit_id) return profile.unit_id;
     if (stored && units.some((u) => u.id === stored)) return stored;
@@ -47,7 +46,7 @@ export function UnitProvider({ children }: { children: ReactNode }) {
   }, [locked, profile?.unit_id, stored, units]);
 
   const setUnitId = (id: string) => {
-    if (locked) return;
+    if (locked || (viewer && !units.some((u) => u.id === id))) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, id);
     } catch {
