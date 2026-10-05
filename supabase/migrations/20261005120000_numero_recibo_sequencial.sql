@@ -6,7 +6,7 @@ language sql
 security definer
 set search_path = public
 as $$
-  select lpad(nextval('public.stock_receipt_number_seq')::text, 5, '0');
+  select lpad(nextval('public.stock_receipt_number_seq')::text, 3, '0');
 $$;
 
 revoke all on function public.next_stock_receipt_number() from public;
