@@ -9,6 +9,8 @@ import {
   stockOptions,
   pendingReceiptOptions,
   removePendingReceipt,
+  removePendingReceiptGroup,
+  receiptIdFromObservation,
 } from "@/lib/queries";
 import { byMonth, lastMonths, monthKey } from "@/lib/media";
 import { formatDate, formatQty, stockStatus, todayISO } from "@/lib/format";
@@ -43,6 +45,7 @@ function DashboardPage() {
   const { data: pendingReceipts = [] } = useQuery(pendingReceiptOptions(unitId, isAdmin));
   const deletePending = useMutation({
     mutationFn: removePendingReceipt,
+
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["pending-receipts"] });
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
@@ -97,33 +100,57 @@ function DashboardPage() {
           >
             {pendingReceipts.length === 0 ? (
               <div className="p-4">
-                <EmptyState title="Nenhum lançamento pendente" description="Quando o CEO enviar mercadorias para uma unidade, elas aparecerão aqui até a confirmação." />
+                <EmptyState title="Nenhum Recibo de Produtos pendente" description="Quando o CEO enviar mercadorias para uma unidade, o recibo aparecerá aqui até a confirmação." />
               </div>
             ) : (
               <ul className="divide-y divide-border/70">
-                {pendingReceipts.map((m) => (
-                  <li key={m.id} className="flex items-center gap-3 px-4 py-3">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold">{m.products?.nome ?? "Produto"}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {m.units?.nome ?? "Unidade"} · {formatQty(m.quantidade)} {m.products?.unidade_medida ?? ""} · lançado em {formatDate(m.data)}
-                      </p>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="shrink-0"
-                      onClick={() => {
-                        if (window.confirm("Excluir este lançamento pendente? Ele não será adicionado ao estoque da unidade.")) {
-                          deletePending.mutate(m.id);
-                        }
-                      }}
-                      disabled={deletePending.isPending}
-                    >
-                      <Trash2 /> Excluir pendente
-                    </Button>
-                  </li>
-                ))}
+                {Array.from(new Map(pendingReceipts.map((m) => [receiptIdFromObservation(m.observacao) ?? m.id, m])).values()).map((m) => {
+                  const receiptId = receiptIdFromObservation(m.observacao);
+                  const group = receiptId ? pendingReceipts.filter((x) => receiptIdFromObservation(x.observacao) === receiptId) : [m];
+                  return (
+                    <li key={receiptId ?? m.id} className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold">Recibo de Produtos {receiptId ? "nº " + receiptId : ""}</p>
+                          <p className="text-xs text-muted-foreground">{m.units?.nome ?? "Unidade"} · {group.length} produto(s) · lançado em {formatDate(m.data)}</p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="shrink-0"
+                          onClick={() => {
+                            const message = receiptId
+                              ? "Excluir o Recibo de Produtos inteiro? Todos os produtos deste recibo serão excluídos e não entrarão no estoque."
+                              : "Excluir este lançamento pendente? Ele não será adicionado ao estoque da unidade.";
+                            if (window.confirm(message)) {
+                              if (receiptId) removePendingReceiptGroup(receiptId).then(() => {
+                                queryClient.invalidateQueries({ queryKey: ["pending-receipts"] });
+                                queryClient.invalidateQueries({ queryKey: ["stock"] });
+                                queryClient.invalidateQueries({ queryKey: ["movements"] });
+                              }).catch((error) => toast.error(error instanceof Error ? error.message : "Não foi possível excluir o recibo."));
+                              else deletePending.mutate(m.id);
+                            }
+                          }}
+                          disabled={deletePending.isPending}
+                        >
+                          <Trash2 /> Excluir recibo
+                        </Button>
+                      </div>
+                      <div className="mt-3 space-y-1 border-t pt-2">
+                        {group.map((item) => (
+                          <div key={item.id} className="flex items-center gap-2 text-xs">
+                            <span className="min-w-0 flex-1 truncate">{item.products?.nome ?? "Produto"} · {formatQty(item.quantidade)} {item.products?.unidade_medida ?? ""}</span>
+                            <Button variant="ghost" size="sm" onClick={() => {
+                              if (window.confirm("Excluir somente este produto do recibo?")) deletePending.mutate(item.id);
+                            }} disabled={deletePending.isPending}>
+                              Excluir produto
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </Panel>
