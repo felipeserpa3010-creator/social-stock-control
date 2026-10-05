@@ -91,11 +91,11 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     doc.text(`Data da última conferência: ${dataConf}`, pageW - margin, 42, { align: "right" });
   };
 
-  const head = ["Produto", "Unidade de medida", opts.modo === "consumo" ? "Consumo no período" : "Estoque aproximado"];
+  const head = ["Produto", opts.modo === "consumo" ? "Consumo no período" : "Estoque aproximado", "Unidade de medida"];
   if (opts.incluirMedia) head.push("Média de consumo mensal");
 
   const body = opts.rows.map((r) => {
-    const line = [r.produto, r.medida, formatQty(r.estoque)];
+    const line = [r.produto, formatQty(r.estoque), r.medida];
     if (opts.incluirMedia) {
       line.push(r.media === null || r.media === undefined ? "Dados insuficientes" : formatQty(r.media));
     }
