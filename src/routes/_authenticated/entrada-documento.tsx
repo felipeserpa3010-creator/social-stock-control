@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui-kit";
 export const Route = createFileRoute("/_authenticated/entrada-documento")({
   head: () => ({
     meta: [
-      { title: "Lançamento por documento — Controle de Estoque" },
+      { title: "Lançamento em massa — Controle de Estoque" },
       { name: "description", content: "Leitura gratuita de documentos para lançamento de entradas pelo Administrador Principal." },
     ],
   }),
@@ -23,7 +23,7 @@ function DocumentEntryPage() {
   return (
     <>
       <PageHeader
-        title="Lançamento por documento"
+        title="Lançamento em massa"
         description="Somente o CEO. Tire uma foto ou escolha uma imagem da galeria: o sistema identifica os produtos, cadastra os que ainda não existem e lança as quantidades automaticamente no estoque."
       />
       <DocumentEntry />
