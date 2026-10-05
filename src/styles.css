@@ -159,3 +159,9 @@
     background: white;
   }
 }
+
+
+/* Oculta o selo do Lovable quando presente na prévia/publicação. */
+#lovable-badge {
+  display: none !important;
+}
