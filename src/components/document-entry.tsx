@@ -56,14 +56,48 @@ export function DocumentEntry() {
 
   const parseTextoMassa = (text: string) => {
     const rows: DraftItem[] = [];
-    for (const raw of text.split(/\r?\n/)) {
-      const line = raw.trim();
-      if (!line) continue;
-      const match = line.match(/^(?:[-•*]\s*)?(.+?)\s*(?:—|–|-|:)\s*(\d+(?:[.,]\d+)?)\s*(kg|g|unidade(?:s)?|un|und|pc|pcs|pacote(?:s)?|caixa(?:s)?|fardo(?:s)?|saco(?:s)?|litro(?:s)?|l|ml|pote(?:s)?|frasco(?:s)?|lata(?:s)?|dúzia(?:s)?|duzia(?:s)?)?\s*$/i);
-      if (!match) continue;
-      const nome = (match[1] ?? "").trim();
-      const quantidade = (match[2] ?? "0").replace(",", ".");
-      const unidade = normalizeUnit(match[3] || "Unidade");
+    const unitPattern = "(kg|g|unidade(?:s)?|un|und|pc|pcs|pacote(?:s)?|caixa(?:s)?|fardo(?:s)?|saco(?:s)?|litro(?:s)?|l|ml|pote(?:s)?|frasco(?:s)?|lata(?:s)?|dúzia(?:s)?|duzia(?:s)?)";
+    // Não exige um formato fixo. O usuário pode escrever, por exemplo:
+    // "4 kg de cebola", "cebola 4kg", "cebola: 4 kg", "cebola - 4",
+    // "cebola 4 quilos" ou vários produtos separados por linha/ponto e vírgula.
+    const chunks = text
+      .split(/\r?\n|;|•/)
+      .map((part) => part.trim().replace(/^[-*]\s*/, ""))
+      .filter(Boolean);
+
+    for (const chunk of chunks) {
+      const quantityWithUnit = chunk.match(new RegExp("(\\d+(?:[.,]\\d+)?)\\s*" + unitPattern + "\\b", "i"));
+      const unitBeforeQuantity = chunk.match(new RegExp(unitPattern + "\\s*(\\d+(?:[.,]\\d+)?)\\b", "i"));
+      const quantityOnly = chunk.match(/(?:^|\\s)(\\d+(?:[.,]\\d+)?)(?:\\s|$)/);
+
+      const quantityMatch = quantityWithUnit ?? unitBeforeQuantity;
+      if (!quantityMatch && !quantityOnly) continue;
+
+      let quantidade = "";
+      let unidade = "Unidade";
+      let nome = chunk;
+
+      if (quantityWithUnit) {
+        quantidade = quantityWithUnit[1].replace(",", ".");
+        unidade = normalizeUnit(quantityWithUnit[2] || "Unidade");
+        nome = chunk.slice(0, quantityWithUnit.index ?? 0) + chunk.slice((quantityWithUnit.index ?? 0) + quantityWithUnit[0].length);
+      } else if (unitBeforeQuantity) {
+        quantidade = unitBeforeQuantity[2].replace(",", ".");
+        unidade = normalizeUnit(unitBeforeQuantity[1] || "Unidade");
+        nome = chunk.slice(0, unitBeforeQuantity.index ?? 0) + chunk.slice((unitBeforeQuantity.index ?? 0) + unitBeforeQuantity[0].length);
+      } else if (quantityOnly) {
+        quantidade = quantityOnly[1].replace(",", ".");
+        nome = chunk.replace(quantityOnly[0], " ");
+      }
+
+      nome = nome
+        .replace(/(?:^|\\s)(?:de|do|da|dos|das)(?:\\s|$)/gi, " ")
+        .replace(/\\s+/g, " ")
+        .replace(/^[\\s:—–-]+|[\\s:—–-]+$/g, "")
+        .trim();
+
+      if (!nome || !quantidade) continue;
+
       const product = activeProducts.find((p) => normalizeName(p.nome) === normalizeName(nome));
       if (!rows.some((r) => normalizeName(r.nome) === normalizeName(nome))) {
         rows.push({
@@ -81,7 +115,7 @@ export function DocumentEntry() {
   const interpretarTexto = () => {
     const parsed = parseTextoMassa(textoMassa);
     if (!parsed.length) {
-      toast.error("Não encontrei produtos. Use uma linha por produto, por exemplo: CEBOLA — 4 kg");
+      toast.error("Não consegui identificar produtos e quantidades no texto. Você pode escrever livremente, por exemplo: 4 kg de cebola, cebola 4kg ou cebola - 4.");
       return;
     }
     setItems(parsed);
@@ -177,14 +211,14 @@ export function DocumentEntry() {
     <div className="space-y-5">
       <Panel
         title="Lançamento em massa"
-        description="Cole ou digite vários produtos de uma vez. O sistema separa cada linha, identifica nome, quantidade e unidade e prepara tudo para você conferir."
+        description="Digite ou cole os produtos do jeito que preferir. O sistema identifica automaticamente nome, quantidade e unidade e prepara tudo para você conferir antes de lançar."
       >
         <Field label="Produtos e quantidades" htmlFor="mass-text" required>
           <textarea
             id="mass-text"
             value={textoMassa}
             onChange={(e) => { setTextoMassa(e.target.value); setConfirmed(false); }}
-            placeholder={"CEBOLA — 4 kg\nLIMÃO — 3 kg\nSALSICHA — 5 kg\nTOMATE — 3 kg"}
+            placeholder={"Ex.: 4 kg de cebola, cebola 4kg, 3 pacotes de arroz; tomate 5 kg"}
             rows={9}
             className="min-h-48 w-full resize-y rounded-md border border-input bg-background px-3 py-3 text-sm outline-none ring-offset-background placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
           />
