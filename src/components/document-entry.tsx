@@ -154,7 +154,7 @@ export function DocumentEntry() {
           tipo: "entrada",
           quantidade: Number(item.quantidade.replace(",", ".")),
           data,
-          observacao: "Entrada lançada em massa pelo Administrador Principal",
+          observacao: "PENDENTE_RECEBIMENTO | Entrada lançada em massa pelo Administrador Principal; aguardando confirmação da unidade",
           responsavel: null,
         });
       }
@@ -163,7 +163,7 @@ export function DocumentEntry() {
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
       await queryClient.invalidateQueries({ queryKey: ["movements"] });
       setConfirmed(true);
-      toast.success(validItems.length + " produto(s) lançado(s) no estoque.");
+      toast.success(validItems.length + " produto(s) enviados para confirmação da unidade.");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível concluir o lançamento em massa.");
     } finally {
