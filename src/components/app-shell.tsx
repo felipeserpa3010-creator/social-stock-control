@@ -31,7 +31,7 @@ import { semadsLogoUrl } from "@/lib/brand";
 
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" | "/conferencia" | "/medias" |
-    "/relatorios" | "/historico" | "/conferencias" | "/unidades" | "/produtos" |
+    "/relatorios" | "/historico" | "/conferencias" | "/recibos" | "/unidades" | "/produtos" |
     "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento";
   label: string;
   icon: typeof Boxes;
@@ -49,6 +49,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/entrada-documento", label: "Lançamento em massa", icon: ScanLine, adminOnly: true },
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
       { to: "/recebimento", label: "Confirmar recebimento", icon: PackageCheck, writeOnly: true },
+      { to: "/recibos", label: "Recibos", icon: FileDown },
     ],
   },
   {
