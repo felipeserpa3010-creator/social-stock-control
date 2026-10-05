@@ -99,7 +99,7 @@ function ReceiptPage() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries)}>
-                    Imprimir / conferir PDF
+                    Imprimir
                   </Button>
                   <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending}>
                     <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Confirmar recebimento"}
