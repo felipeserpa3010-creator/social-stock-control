@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-10-05T16:33:16.578181+00:00
+Generated: 2026-10-05T16:36:03.663942+00:00
 
 ## Tokens
 - --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif (src/styles.css)

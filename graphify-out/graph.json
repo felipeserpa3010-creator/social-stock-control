@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T16:33:16.578181+00:00",
+  "generated_at": "2026-10-05T16:36:03.663942+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -43,7 +43,7 @@
     },
     {
       "path": "src/routeTree.gen.ts",
-      "bytes": 20650
+      "bytes": 20952
     },
     {
       "path": "src/styles.css",
@@ -479,7 +479,7 @@
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
-      "bytes": 7234
+      "bytes": 7220
     },
     {
       "path": "src/routes/_authenticated/historico.tsx",
