@@ -8,7 +8,9 @@ type Message = { from: "bot" | "user"; text: string };
 const QUICK = [
   "Quantas laranjas dão aproximadamente 1 kg?",
   "Como conservar frutas e verduras?",
-  "Como registrar uma entrada?",
+  "Como funciona o lançamento em massa?",
+  "Como confirmar um Recibo de Produtos?",
+  "Onde consultar os recibos de entrega?",
 ];
 
 function normalize(value: string) {
@@ -86,21 +88,21 @@ function answer(question: string) {
   const q = normalize(question);
   const asksWeight = q.includes("peso") || q.includes("kg") || q.includes("quilo") || q.includes("quantas") || q.includes("quantidade") || Boolean(findFood(question) && (q.includes("unidade") || q.match(/\b\d+\b/)));
   const asksConservation = q.includes("conservar") || q.includes("conservacao") || q.includes("guardar") || q.includes("armazenar") || q.includes("geladeira") || q.includes("freezer") || q.includes("descongelar") || q.includes("higienizar") || q.includes("lavar");
-  const asksSystem = q.includes("sistema") || q.includes("painel") || q.includes("estoque") || q.includes("entrada") || q.includes("saida") || q.includes("relatorio") || q.includes("produto") || q.includes("unidade") || q.includes("usuario") || q.includes("configuracao");
+  const asksSystem = q.includes("sistema") || q.includes("painel") || q.includes("estoque") || q.includes("entrada") || q.includes("saida") || q.includes("relatorio") || q.includes("produto") || q.includes("unidade") || q.includes("usuario") || q.includes("configuracao") || q.includes("recibo") || q.includes("lancamento") || q.includes("lote") || q.includes("recebimento") || q.includes("ceo") || q.includes("permissao") || q.includes("imprimir") || q.includes("senha");
 
   if (asksWeight && findFood(question)) return weightAnswer(question);
   if (asksConservation) return conservationAnswer(question);
   if (asksSystem) return systemAnswer(question);
   if (findFood(question)) return weightAnswer(question);
 
-  return "Sou o Assistente Virtual. Tenho três funções: informar pesos médios por quantidade, orientar sobre conservação dos alimentos e ensinar como usar as funções do sistema. Escolha uma das opções abaixo ou escreva sua dúvida.";
+  return "Sou o Assistente Virtual do Controle de Estoque SEMADS. Posso explicar praticamente todas as funções do sistema, incluindo permissões, estoque, entradas, lançamento em massa, Recibos de Produtos, confirmação de recebimento, saídas, relatórios, usuários, unidades e recuperação de senha. Também informo pesos médios de alimentos e orientações de conservação. Escreva sua dúvida com suas próprias palavras.";
 }
 
 export function VirtualAssistant() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
-    { from: "bot", text: "Olá! Sou o Assistente Virtual. Posso informar pesos médios por quantidade, orientar sobre conservação dos alimentos e ensinar como usar as funções do sistema." },
+    { from: "bot", text: "Olá! Sou o Assistente Virtual do Controle de Estoque SEMADS. Posso explicar as funções do sistema, permissões, estoque, lançamentos, Recibos de Produtos, confirmação de recebimento, saídas, relatórios e usuários. Também posso informar pesos médios de alimentos e orientar sobre conservação." },
   ]);
 
   const suggestions = useMemo(() => QUICK.filter((item) => !messages.some((m) => m.text === item)), [messages]);
