@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T16:22:09.209086+00:00",
+  "generated_at": "2026-10-05T16:22:33.121424+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -492,6 +492,10 @@
     {
       "path": "src/routes/_authenticated/conferencias.tsx",
       "bytes": 7478
+    },
+    {
+      "path": "src/routes/_authenticated/recibos.tsx",
+      "bytes": 8094
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
@@ -2290,6 +2294,50 @@
     {
       "source": "src/routes/_authenticated/conferencias.tsx",
       "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/lib/pdf"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/components/ui/table"
     },
     {
       "source": "src/routes/_authenticated/relatorios.tsx",
