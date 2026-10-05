@@ -52,8 +52,8 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
         return;
       }
 
-      const nome = match[1].trim().replace(/[-:]+$/, "").trim();
-      const quantidade = Number(match[2].replace(",", "."));
+      const nome = (match[1] ?? "").trim().replace(/[-:]+$/, "").trim();
+      const quantidade = Number((match[2] ?? "0").replace(",", "."));
       const unidadeInformada = (match[3] ?? "UND").toUpperCase();
       const unidade = unidadeInformada === "UN" ? "UND" : unidadeInformada === "LT" ? "L" : unidadeInformada;
 
