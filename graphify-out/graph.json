@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T14:58:09.692508+00:00",
+  "generated_at": "2026-10-05T15:00:31.293532+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -243,7 +243,7 @@
     },
     {
       "path": "src/hooks/useUnit.tsx",
-      "bytes": 2142
+      "bytes": 2430
     },
     {
       "path": "src/integrations/supabase/cron-auth.ts",
@@ -511,7 +511,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 14683
+      "bytes": 14684
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
