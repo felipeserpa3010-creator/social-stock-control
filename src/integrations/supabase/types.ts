@@ -329,6 +329,38 @@ export type Database = {
           },
         ]
       }
+      stock_receipts: {
+        Row: {
+          confirmed_at: string
+          confirmed_by: string
+          confirmed_by_name: string
+          id: string
+          movement_id: string
+        }
+        Insert: {
+          confirmed_at?: string
+          confirmed_by: string
+          confirmed_by_name?: string
+          id?: string
+          movement_id: string
+        }
+        Update: {
+          confirmed_at?: string
+          confirmed_by?: string
+          confirmed_by_name?: string
+          id?: string
+          movement_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_receipts_movement_id_fkey"
+            columns: ["movement_id"]
+            isOneToOne: true
+            referencedRelation: "stock_movements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       units: {
         Row: {
           ativo: boolean
@@ -410,6 +442,7 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       is_viewer: { Args: never; Returns: boolean }
       my_unit: { Args: never; Returns: string }
+      next_stock_receipt_number: { Args: never; Returns: string }
     }
     Enums: {
       app_role: "admin" | "responsavel" | "visualizador"
