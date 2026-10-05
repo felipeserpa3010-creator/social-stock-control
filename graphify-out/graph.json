@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T16:22:33.121424+00:00",
+  "generated_at": "2026-10-05T16:22:52.742405+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -43,7 +43,7 @@
     },
     {
       "path": "src/routeTree.gen.ts",
-      "bytes": 20113
+      "bytes": 20650
     },
     {
       "path": "src/styles.css",
@@ -666,6 +666,10 @@
     {
       "source": "src/routeTree.gen.ts",
       "target": "./routes/_authenticated/recebimento"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
+      "target": "./routes/_authenticated/recibos"
     },
     {
       "source": "src/routeTree.gen.ts",
