@@ -51,7 +51,6 @@ function ReportsPage() {
           current.estoque += s.quantity;
         } else {
           byProduct.set(s.product.id, {
-            categoria: s.product.categories?.nome ?? "—",
             produto: s.product.nome,
             medida: s.product.unidade_medida,
             estoque: s.quantity,
@@ -61,8 +60,7 @@ function ReportsPage() {
       });
       const rows: InventoryRow[] = Array.from(byProduct.values()).sort(
         (a, b) =>
-          a.categoria.localeCompare(b.categoria, "pt-BR") ||
-          a.produto.localeCompare(b.produto, "pt-BR"),
+a.produto.localeCompare(b.produto, "pt-BR"),
       );
       const today = new Date().toISOString().slice(0, 10);
       const doc = await buildInventoryPdf({
@@ -99,8 +97,7 @@ function ReportsPage() {
           if (current) current.estoque += Number(m.quantidade);
           else {
             totals.set(product.id, {
-              categoria: categoryMap.get(product.id) ?? "—",
-              produto: product.nome,
+                produto: product.nome,
               medida: product.unidade_medida,
               estoque: Number(m.quantidade),
             });
