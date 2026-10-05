@@ -1,6 +1,10 @@
 {
-  "generated_at": "2026-10-05T15:38:40.132445+00:00",
+  "generated_at": "2026-10-05T16:14:38.960276+00:00",
   "files": [
+    {
+      "path": "drizzle.config.ts",
+      "bytes": 245
+    },
     {
       "path": "AGENTS.md",
       "bytes": 761
@@ -23,7 +27,7 @@
     },
     {
       "path": "package.json",
-      "bytes": 3066
+      "bytes": 3154
     },
     {
       "path": "components.json",
@@ -56,6 +60,10 @@
     {
       "path": "src/start.ts",
       "bytes": 1064
+    },
+    {
+      "path": "drizzle/schema.ts",
+      "bytes": 60
     },
     {
       "path": "supabase/migrations/20261005120000_numero_recibo_sequencial.sql",
@@ -195,7 +203,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 21653
+      "bytes": 23102
     },
     {
       "path": "src/lib/utils.ts",
@@ -267,7 +275,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 15806
+      "bytes": 16716
     },
     {
       "path": "src/integrations/supabase/client.ts",
@@ -467,7 +475,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 8003
+      "bytes": 8411
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -528,9 +536,25 @@
     {
       "path": "src/routes/_authenticated/produtos.tsx",
       "bytes": 17635
+    },
+    {
+      "path": "drizzle/migrations/0000_stock_receipts.sql",
+      "bytes": 1561
+    },
+    {
+      "path": "drizzle/migrations/meta/0000_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/_journal.json",
+      "bytes": 209
     }
   ],
   "dependencies": [
+    {
+      "source": "drizzle.config.ts",
+      "target": "drizzle-kit"
+    },
     {
       "source": "vite.config.ts",
       "target": "@lovable.dev/vite-tanstack-config"
@@ -2074,6 +2098,10 @@
     {
       "source": "src/routes/_authenticated/recebimento.tsx",
       "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "sonner"
     },
     {
       "source": "src/routes/_authenticated/recebimento.tsx",
