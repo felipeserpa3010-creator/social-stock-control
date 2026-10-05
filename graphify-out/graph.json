@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T15:13:08.852406+00:00",
+  "generated_at": "2026-10-05T15:16:39.491858+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -56,6 +56,10 @@
     {
       "path": "src/start.ts",
       "bytes": 1064
+    },
+    {
+      "path": "supabase/migrations/20261005120000_numero_recibo_sequencial.sql",
+      "bytes": 459
     },
     {
       "path": "supabase/migrations/20260928161332_ad16cb3c-5662-4329-aadb-3c2d8953c854.sql",
@@ -143,7 +147,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 17086
+      "bytes": 17333
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -950,6 +954,10 @@
     {
       "source": "src/components/document-entry.tsx",
       "target": "@/lib/pdf"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/lib/pdf.ts",
