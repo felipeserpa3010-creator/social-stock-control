@@ -34,6 +34,18 @@ export type StockReceipt = {
   confirmed_at: string;
 };
 export type ReceivedEntryRow = MovementRow & { receipt: StockReceipt | null };
+export type ReceiptGroup = {
+  id: string;
+  data: string;
+  unitId: string;
+  unitName: string;
+  entries: ReceivedEntryRow[];
+};
+
+export function receiptIdFromObservation(observacao: string | null | undefined) {
+  const match = String(observacao ?? "").match(/RECIBO_PRODUTOS:([^|\s]+)/);
+  return match?.[1] ?? null;
+}
 export type CheckRow = StockCheck & {
   units: { nome: string } | null;
   profiles: { nome: string } | null;
@@ -287,6 +299,21 @@ export function pendingReceiptOptions(unitId: string | null, enabled = true) {
       return movements.filter((m) => !confirmedIds.has(m.id)).map((m) => ({ ...m, receipt: null }));
     },
   });
+}
+
+export async function removePendingReceiptGroup(receiptId: string) {
+  const { data: movements, error: readError } = await supabase
+    .from("stock_movements")
+    .select("id, observacao")
+    .eq("tipo", "entrada")
+    .ilike("observacao", `%RECIBO_PRODUTOS:${receiptId}%`);
+  if (readError) throw message(readError);
+  const pendingIds = (movements ?? [])
+    .filter((m) => String(m.observacao ?? "").includes("PENDENTE_RECEBIMENTO"))
+    .map((m) => m.id);
+  if (!pendingIds.length) throw new Error("Este recibo não possui produtos pendentes.");
+  const { error } = await supabase.from("stock_movements").delete().in("id", pendingIds);
+  if (error) throw message(error);
 }
 
 export async function removePendingReceipt(movementId: string) {
