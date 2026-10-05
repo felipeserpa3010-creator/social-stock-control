@@ -9,6 +9,7 @@ import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, Panel } from "@/components/ui-kit";
+import { buildReceiptPdf, reportFileName } from "@/lib/pdf";
 
 type DraftItem = { id: string; productId: string; nome: string; quantidade: string; unidade: string };
 
@@ -45,6 +46,7 @@ export function DocumentEntry() {
   const [saving, setSaving] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [textoMassa, setTextoMassa] = useState("");
+  const [reciboId, setReciboId] = useState<string | null>(null);
 
   const activeUnits = useMemo(() => units.filter((u) => u.ativo), [units]);
   const activeProducts = useMemo(
@@ -119,6 +121,7 @@ export function DocumentEntry() {
       return;
     }
     setItems(parsed);
+    setReciboId(null);
     setConfirmed(false);
     toast.success(parsed.length + " produto(s) preparados para conferência.");
   };
@@ -136,6 +139,7 @@ export function DocumentEntry() {
       },
     ]);
     setConfirmed(false);
+    setReciboId(null);
   };
 
   const updateItem = (id: string, patch: Partial<DraftItem>) => {
@@ -198,6 +202,7 @@ export function DocumentEntry() {
       await queryClient.invalidateQueries({ queryKey: ["products"] });
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
       await queryClient.invalidateQueries({ queryKey: ["movements"] });
+      setReciboId(reciboId);
       setConfirmed(true);
       toast.success(validItems.length + " produto(s) enviados em um Recibo de Produtos para confirmação da unidade.");
     } catch (error) {
@@ -205,6 +210,22 @@ export function DocumentEntry() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const imprimirRecibo = async () => {
+    if (!reciboId || !destination) return;
+    const unidadeNome = activeUnits.find((u) => u.id === destination)?.nome ?? "Unidade";
+    const doc = await buildReceiptPdf({
+      reciboId,
+      unidade: unidadeNome,
+      data,
+      rows: items.filter((item) => Number(item.quantidade.replace(",", ".")) > 0).map((item) => ({
+        produto: item.nome,
+        quantidade: item.quantidade.replace(",", "."),
+        medida: item.unidade,
+      })),
+    });
+    doc.save(reportFileName("Recibo_de_Produtos", unidadeNome, data));
   };
 
   return (
@@ -334,10 +355,17 @@ export function DocumentEntry() {
               <Button variant="outline" onClick={() => addRow()} disabled={saving}>
                 <Plus /> Adicionar produto
               </Button>
-              <Button onClick={confirmEntry} disabled={saving || confirmed || !destination}>
-                {saving ? <Loader2 className="animate-spin" /> : <Check />}
-                {confirmed ? "Lançamento confirmado" : "Confirmar lançamento"}
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                {confirmed && reciboId && (
+                  <Button variant="outline" onClick={imprimirRecibo} disabled={saving}>
+                    <ClipboardList /> Imprimir recibo em PDF
+                  </Button>
+                )}
+                <Button onClick={confirmEntry} disabled={saving || confirmed || !destination}>
+                  {saving ? <Loader2 className="animate-spin" /> : <Check />}
+                  {confirmed ? "Lançamento confirmado" : "Confirmar lançamento"}
+                </Button>
+              </div>
             </div>
 
             <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
