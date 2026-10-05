@@ -66,7 +66,21 @@ function StockPage() {
     };
   }, [entries]);
 
-  const exportPdf = async () => {\n    if (!rows.length) return;\n    const doc = await buildInventoryPdf({\n      titulo: "Relatório de Estoque",\n      instituicao: "SEMADS",\n      secretaria: "Depósito SEMADS",\n      unidade: unit?.nome ?? "Unidade",\n      dataConferencia: todayISO(),\n      rows: rows.map((r) => ({ produto: r.product.nome, estoque: r.quantity, medida: r.product.unidade_medida })),\n      modo: "estoque",\n      incluirMedia: false,\n      assinatura: false,\n    });\n    doc.save("estoque_" + (unit?.sigla ?? "unidade") + "_" + todayISO() + ".pdf");\n  };
+  const exportPdf = async () => {
+    if (!rows.length) return;
+    const doc = await buildInventoryPdf({
+      titulo: "Relatório de Estoque",
+      instituicao: "SEMADS",
+      secretaria: "Depósito SEMADS",
+      unidade: unit?.nome ?? "Unidade",
+      dataConferencia: todayISO(),
+      rows: rows.map((r) => ({ produto: r.product.nome, estoque: r.quantity, medida: r.product.unidade_medida })),
+      modo: "estoque",
+      incluirMedia: false,
+      assinatura: false,
+    });
+    doc.save("estoque_" + (unit?.sigla ?? "unidade") + "_" + todayISO() + ".pdf");
+  };
 
   return (
     <>
