@@ -15,7 +15,10 @@ type UnitState = {
   setUnitId: (id: string) => void;
 };
 
-const UnitContext = createContext<UnitState | undefined>(undefined);
+// Keep one context instance across hot reloads so provider and consumers match.
+const globalKey = "__inventarioUnitContext" as const;
+const g = globalThis as unknown as Record<string, ReturnType<typeof createContext<UnitState | undefined>> | undefined>;
+const UnitContext = g[globalKey] ?? (g[globalKey] = createContext<UnitState | undefined>(undefined));
 
 export function UnitProvider({ children }: { children: ReactNode }) {
   const { profile, role } = useAuth();
