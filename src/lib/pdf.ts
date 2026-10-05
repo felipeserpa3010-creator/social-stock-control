@@ -109,7 +109,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     margin: { top: 47, left: margin, right: margin, bottom: 22 },
     styles: { fontSize: 9, cellPadding: 2.2, lineColor: [215, 220, 216], lineWidth: 0.1 },
     headStyles: { fillColor: [125, 38, 11], textColor: 255, fontStyle: "bold", fontSize: 9 },
-    alternateRowStyles: { fillColor: [246, 249, 247] },
+    alternateRowStyles: { fillColor: [249, 244, 241] },
     columnStyles: {
       2: { halign: "right", cellWidth: 32 },
       3: { halign: "right", cellWidth: 38 },
