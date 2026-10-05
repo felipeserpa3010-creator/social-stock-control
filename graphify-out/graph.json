@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T15:10:57.197968+00:00",
+  "generated_at": "2026-10-05T15:11:11.965995+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -459,7 +459,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 7140
+      "bytes": 8059
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -2086,6 +2086,10 @@
     {
       "source": "src/routes/_authenticated/recebimento.tsx",
       "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/lib/pdf"
     },
     {
       "source": "src/routes/_authenticated/recebimento.tsx",
