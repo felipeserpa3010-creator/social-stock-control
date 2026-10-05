@@ -259,7 +259,12 @@ export function receivedEntriesOptions(unitId: string | null, enabled = true) {
         .from("stock_receipts")
         .select("*")
         .in("movement_id", movements.map((m) => m.id));
-      if (receiptError) throw message(receiptError);
+      // Se a tabela de confirmações ainda não estiver disponível no projeto,
+      // os lançamentos continuam aparecendo como pendentes para a unidade.
+      // A confirmação só é efetivada quando a tabela estiver disponível.
+      if (receiptError) {
+        return movements.map((m) => ({ ...m, receipt: null }));
+      }
       const receiptMap = new Map<string, StockReceipt>();
       ((receipts ?? []) as unknown as StockReceipt[]).forEach((r) => receiptMap.set(r.movement_id, r));
       return movements.map((m) => ({ ...m, receipt: receiptMap.get(m.id) ?? null }));
