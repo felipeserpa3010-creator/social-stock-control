@@ -28,6 +28,7 @@ import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authentica
 import { Route as AuthenticatedMediasRouteImport } from './routes/_authenticated/medias'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
 import { Route as AuthenticatedRecebimentoRouteImport } from './routes/_authenticated/recebimento'
+import { Route as AuthenticatedRecibosRouteImport } from './routes/_authenticated/recibos'
 import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
 import { Route as AuthenticatedSaidaRouteImport } from './routes/_authenticated/saida'
 import { Route as AuthenticatedUnidadesRouteImport } from './routes/_authenticated/unidades'
@@ -126,6 +127,11 @@ const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   path: '/produtos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRecibosRoute = AuthenticatedRecibosRouteImport.update({
+  id: '/recibos',
+  path: '/recibos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRecebimentoRoute =
   AuthenticatedRecebimentoRouteImport.update({
     id: '/recebimento',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/recebimento': typeof AuthenticatedRecebimentoRoute
+  '/recibos': typeof AuthenticatedRecibosRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/saida': typeof AuthenticatedSaidaRoute
   '/unidades': typeof AuthenticatedUnidadesRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/recebimento': typeof AuthenticatedRecebimentoRoute
+  '/recibos': typeof AuthenticatedRecibosRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/saida': typeof AuthenticatedSaidaRoute
   '/unidades': typeof AuthenticatedUnidadesRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/_authenticated/medias': typeof AuthenticatedMediasRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
   '/_authenticated/recebimento': typeof AuthenticatedRecebimentoRoute
+  '/_authenticated/recibos': typeof AuthenticatedRecibosRoute
   '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
   '/_authenticated/saida': typeof AuthenticatedSaidaRoute
   '/_authenticated/unidades': typeof AuthenticatedUnidadesRoute
@@ -492,6 +501,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMediasRoute: typeof AuthenticatedMediasRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
   AuthenticatedRecebimentoRoute: typeof AuthenticatedRecebimentoRoute
+  AuthenticatedRecibosRoute: typeof AuthenticatedRecibosRoute
   AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
   AuthenticatedSaidaRoute: typeof AuthenticatedSaidaRoute
   AuthenticatedUnidadesRoute: typeof AuthenticatedUnidadesRoute
@@ -510,6 +520,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMediasRoute: AuthenticatedMediasRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
   AuthenticatedRecebimentoRoute: AuthenticatedRecebimentoRoute,
+  AuthenticatedRecibosRoute: AuthenticatedRecibosRoute,
   AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
   AuthenticatedSaidaRoute: AuthenticatedSaidaRoute,
   AuthenticatedUnidadesRoute: AuthenticatedUnidadesRoute,
