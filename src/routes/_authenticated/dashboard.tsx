@@ -242,18 +242,58 @@ function DashboardPage() {
               </div>
             ) : (
               <ul className="divide-y divide-border/70">
-                {movements.slice(0, 7).map((m) => (
-                  <li key={m.id} className="flex items-center gap-3 px-4 py-2.5">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm">{m.products?.nome ?? "Produto"}</p>
-                      <p className="text-[11px] text-muted-foreground">{formatDate(m.data)}</p>
-                    </div>
-                    <span className="text-sm font-semibold tabular-nums">
-                      {formatQty(m.quantidade)}
-                    </span>
-                    <TypeBadge tipo={m.tipo} />
-                  </li>
-                ))}
+                {(() => {
+                  const grouped: Array<{ key: string; receiptId: string | null; items: typeof movements }> = [];
+                  const index = new Map<string, number>();
+                  movements.forEach((m) => {
+                    const receiptId = m.tipo === "entrada" ? receiptIdFromObservation(m.observacao) : null;
+                    const key = receiptId ? "RECIBO:" + receiptId : "MOV:" + m.id;
+                    const existing = index.get(key);
+                    if (existing === undefined) {
+                      index.set(key, grouped.length);
+                      grouped.push({ key, receiptId, items: [m] });
+                    } else {
+                      grouped[existing].items.push(m);
+                    }
+                  });
+                  return grouped.slice(0, 7).map((group) => {
+                    const first = group.items[0];
+                    return (
+                      <li key={group.key} className="px-4 py-3">
+                        {group.receiptId ? (
+                          <>
+                            <div className="flex items-center gap-3">
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-semibold">Recibo de Produtos nº {group.receiptId}</p>
+                                <p className="text-[11px] text-muted-foreground">
+                                  {first?.units?.nome ?? "Unidade"} · {group.items.length} produto(s) · lançado em {formatDate(first?.data ?? null)}
+                                </p>
+                              </div>
+                              <TypeBadge tipo="entrada" />
+                            </div>
+                            <div className="mt-2 space-y-1 border-t pt-2">
+                              {group.items.map((item) => (
+                                <div key={item.id} className="flex items-center gap-2 text-xs">
+                                  <span className="min-w-0 flex-1 truncate">{item.products?.nome ?? "Produto"}</span>
+                                  <span className="font-semibold tabular-nums">{formatQty(item.quantidade)} {item.products?.unidade_medida ?? ""}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex items-center gap-3">
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm">{first?.products?.nome ?? "Produto"}</p>
+                              <p className="text-[11px] text-muted-foreground">{formatDate(first?.data ?? null)}</p>
+                            </div>
+                            <span className="text-sm font-semibold tabular-nums">{formatQty(first?.quantidade ?? 0)}</span>
+                            <TypeBadge tipo={first?.tipo ?? "saida"} />
+                          </div>
+                        )}
+                      </li>
+                    );
+                  });
+                })()}
               </ul>
             )}
           </Panel>
