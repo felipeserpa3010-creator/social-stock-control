@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Clock3 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnit } from "@/hooks/useUnit";
-import { receivedEntriesOptions, confirmStockReceiptGroup, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
+import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,10 @@ function ReceiptPage() {
     return Array.from(map.entries()).map(([id, entries]) => ({ id, entries }));
   }, [pending]);
   const mutation = useMutation({
-    mutationFn: (receiptId: string) => confirmStockReceiptGroup(receiptId, profile?.nome ?? "Responsável pela unidade"),
+    mutationFn: (receiptId: string) =>
+      receiptId.startsWith("REC-")
+        ? confirmStockReceiptGroup(receiptId, profile?.nome ?? "Responsável pela unidade")
+        : confirmStockReceipt(receiptId, profile?.nome ?? "Responsável pela unidade"),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["received-entries"] });
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
@@ -77,7 +80,7 @@ function ReceiptPage() {
                   <p className="font-semibold">Recibo de Produtos {receiptId.startsWith("REC-") ? "nº " + receiptId : ""}</p>
                   <p className="text-xs text-muted-foreground">Data do lançamento: {formatDate(first?.data ?? null)} · {group.entries.length} produto(s)</p>
                 </div>
-                <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending || !receiptId.startsWith("REC-")}>
+                <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending}>
                   <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Confirmar recebimento"}
                 </Button>
               </div>
