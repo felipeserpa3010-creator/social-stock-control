@@ -214,12 +214,5 @@ export async function buildReceiptPdf(opts: ReceiptPdfOptions) {
   doc.text("Este recibo registra os produtos enviados à unidade.", margin, finalY + 10);
   doc.text("O estoque da unidade somente é atualizado após a confirmação do recebimento.", margin, finalY + 16);
 
-  doc.setDrawColor(125, 38, 11);
-  doc.line(margin, pageH - 35, 85, pageH - 35);
-  doc.line(pageW - 85, pageH - 35, pageW - margin, pageH - 35);
-  doc.setFontSize(8);
-  doc.text("Responsável pelo envio", margin, pageH - 30);
-  doc.text("Responsável pelo recebimento", pageW - margin, pageH - 30, { align: "right" });
-
   return doc;
 }
