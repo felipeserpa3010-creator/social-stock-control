@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T13:57:59.029972+00:00",
+  "generated_at": "2026-10-05T13:58:09.283572+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -135,7 +135,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 10869
+      "bytes": 10868
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -511,11 +511,11 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 12173
+      "bytes": 12205
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
-      "bytes": 1268
+      "bytes": 1258
     },
     {
       "path": "src/routes/_authenticated/produtos.tsx",
@@ -2626,6 +2626,10 @@
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/dashboard.tsx",
+      "target": "sonner"
     },
     {
       "source": "src/routes/_authenticated/entrada-documento.tsx",
