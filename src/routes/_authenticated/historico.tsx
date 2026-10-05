@@ -215,6 +215,23 @@ function HistoryPage() {
                       <TableCell className="max-w-[280px] truncate text-xs text-muted-foreground">
                         {m.observacao ?? "—"}
                       </TableCell>
+                      {isAdmin && (
+                        <TableCell className="text-right">
+                          {m.tipo === "entrada" || m.tipo === "saida" ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-destructive hover:text-destructive"
+                              onClick={() => deleteLaunch(m.id)}
+                              disabled={deletingId === m.id}
+                              title="Excluir lançamento"
+                              aria-label={`Excluir lançamento de ${m.products?.nome ?? "produto"}`}
+                            >
+                              {deletingId === m.id ? "..." : <Trash2 />}
+                            </Button>
+                          ) : null}
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>
