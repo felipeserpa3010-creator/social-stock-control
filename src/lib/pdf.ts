@@ -108,7 +108,7 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     startY: 47,
     margin: { top: 47, left: margin, right: margin, bottom: 22 },
     styles: { fontSize: 9, cellPadding: 2.2, lineColor: [215, 220, 216], lineWidth: 0.1 },
-    headStyles: { fillColor: [31, 78, 66], textColor: 255, fontStyle: "bold", fontSize: 9 },
+    headStyles: { fillColor: [125, 38, 11], textColor: 255, fontStyle: "bold", fontSize: 9 },
     alternateRowStyles: { fillColor: [246, 249, 247] },
     columnStyles: {
       2: { halign: "right", cellWidth: 32 },
@@ -119,31 +119,11 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     },
   });
 
-  // Assinatura
-  if (false && opts.assinatura !== false) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let y = ((doc as any).lastAutoTable?.finalY ?? 60) + 16;
-    if (y > pageH - 60) {
-      doc.addPage();
-      drawHeader();
-      y = 55;
-    }
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10.5);
-    doc.setTextColor(20, 55, 45);
-    doc.text("RESPONSÁVEL PELA CONFERÊNCIA", margin, y);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.setTextColor(40);
-    doc.text("Nome: __________________________________________", margin, y + 14);
-    doc.text("Assinatura: ______________________________________", margin, y + 30);
-    doc.text("Data: ______ / ______ / __________", margin, y + 46);
-  }
 
   const total = doc.getNumberOfPages();
   for (let i = 1; i <= total; i++) {
     doc.setPage(i);
-    doc.setDrawColor(210);
+    doc.setDrawColor(125, 38, 11);
     doc.line(margin, pageH - 14, pageW - margin, pageH - 14);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
