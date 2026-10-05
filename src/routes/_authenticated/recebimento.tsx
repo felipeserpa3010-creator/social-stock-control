@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Clock3 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnit } from "@/hooks/useUnit";
-import { receivedEntriesOptions, confirmStockReceipt } from "@/lib/queries";
+import { receivedEntriesOptions, confirmStockReceiptGroup, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -26,8 +26,18 @@ function ReceiptPage() {
   const { data: entries = [], isPending } = useQuery(receivedEntriesOptions(unitId, canConfirm));
   const pending = useMemo(() => entries.filter((e) => !e.receipt), [entries]);
   const confirmed = useMemo(() => entries.filter((e) => e.receipt), [entries]);
+  const pendingGroups = useMemo(() => {
+    const map = new Map<string, ReceivedEntryRow[]>();
+    pending.forEach((entry) => {
+      const id = receiptIdFromObservation(entry.observacao) ?? `INDIVIDUAL-${entry.id}`;
+      const list = map.get(id) ?? [];
+      list.push(entry);
+      map.set(id, list);
+    });
+    return Array.from(map.entries()).map(([id, entries]) => ({ id, entries }));
+  }, [pending]);
   const mutation = useMutation({
-    mutationFn: (movementId: string) => confirmStockReceipt(movementId, profile?.nome ?? "Responsável pela unidade"),
+    mutationFn: (receiptId: string) => confirmStockReceiptGroup(receiptId, profile?.nome ?? "Responsável pela unidade"),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["received-entries"] });
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
@@ -53,21 +63,38 @@ function ReceiptPage() {
     <>
       <PageHeader title="Confirmar recebimento"
         description={unit ? "Mercadorias lançadas pelo CEO para " + unit.nome + "." : "Confira as mercadorias lançadas para sua unidade."} />
-      <Panel title={pending.length + " recebimento" + (pending.length === 1 ? "" : "s") + " pendente" + (pending.length === 1 ? "" : "s")}
+      <Panel title={pendingGroups.length + " Recibo" + (pendingGroups.length === 1 ? "" : "s") + " de Produtos pendente" + (pendingGroups.length === 1 ? "" : "s")}
         description="Confira a quantidade recebida e confirme. A quantidade lançada pelo CEO não pode ser alterada nesta tela." bodyClassName="p-0">
         {pending.length === 0 ? <div className="p-4"><EmptyState title="Nenhum recebimento pendente"
           description={confirmed.length ? "Todos os lançamentos disponíveis já foram confirmados." : "Quando o CEO lançar uma mercadoria para sua unidade, ela aparecerá aqui."} /></div>
-        : <div className="overflow-x-auto"><Table className="min-w-[760px]"><TableHeader><TableRow>
-          <TableHead>Produto</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Data do lançamento</TableHead><TableHead>Responsável pelo lançamento</TableHead><TableHead className="text-right">Ação</TableHead>
-        </TableRow></TableHeader><TableBody>
-          {pending.map((entry) => <TableRow key={entry.id}>
-            <TableCell className="font-semibold">{entry.products?.nome ?? "Produto"}</TableCell>
-            <TableCell className="text-right font-bold tabular-nums">{formatQty(entry.quantidade)}<span className="ml-1 text-xs font-normal text-muted-foreground">{entry.products?.unidade_medida ?? ""}</span></TableCell>
-            <TableCell className="text-sm text-muted-foreground">{formatDate(entry.data)}</TableCell>
-            <TableCell className="text-sm text-muted-foreground">{entry.responsavel ?? "CEO/Administrador"}</TableCell>
-            <TableCell className="text-right"><Button size="sm" onClick={() => mutation.mutate(entry.id)} disabled={mutation.isPending}><CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Confirmar recebimento"}</Button></TableCell>
-          </TableRow>)}
-        </TableBody></Table></div>}
+        : <div className="space-y-4 p-4">
+          {pendingGroups.map((group) => {
+            const first = group.entries[0];
+            const receiptId = group.id;
+            return <div key={receiptId} className="rounded-lg border p-4">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="font-semibold">Recibo de Produtos {receiptId.startsWith("REC-") ? "nº " + receiptId : ""}</p>
+                  <p className="text-xs text-muted-foreground">Data do lançamento: {formatDate(first?.data ?? null)} · {group.entries.length} produto(s)</p>
+                </div>
+                <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending || !receiptId.startsWith("REC-")}>
+                  <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Confirmar recebimento"}
+                </Button>
+              </div>
+              <div className="overflow-x-auto">
+                <Table className="min-w-[620px]"><TableHeader><TableRow>
+                  <TableHead>Produto</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Unidade</TableHead>
+                </TableRow></TableHeader><TableBody>
+                  {group.entries.map((entry) => <TableRow key={entry.id}>
+                    <TableCell className="font-semibold">{entry.products?.nome ?? "Produto"}</TableCell>
+                    <TableCell className="text-right font-bold tabular-nums">{formatQty(entry.quantidade)}</TableCell>
+                    <TableCell>{entry.products?.unidade_medida ?? "—"}</TableCell>
+                  </TableRow>)}
+                </TableBody></Table>
+              </div>
+            </div>;
+          })}
+        </div>}
       </Panel>
       {confirmed.length > 0 && <Panel title="Recebimentos confirmados" description="Registro de quem confirmou e quando a confirmação foi feita." bodyClassName="p-0">
         <div className="overflow-x-auto"><Table className="min-w-[720px]"><TableHeader><TableRow>
