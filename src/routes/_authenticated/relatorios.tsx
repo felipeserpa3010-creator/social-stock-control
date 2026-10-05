@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FileDown } from "lucide-react";
 import { toast } from "sonner";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
-import { movementsOptions, productsOptions, settingsOptions, stockOptions } from "@/lib/queries";
+import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
 import { computeMediaMap, lastMonths } from "@/lib/media";
 import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
 import { PageHeader, Panel } from "@/components/ui-kit";
@@ -28,7 +28,6 @@ export const Route = createFileRoute("/_authenticated/relatorios")({
 function ReportsPage() {
   const { unitId, unit } = useUnit();
   const { data: stock = [] } = useQuery(stockOptions(unitId));
-  const { data: products = [] } = useQuery(productsOptions(false));
   const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 5000 }));
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -86,7 +85,6 @@ a.produto.localeCompare(b.produto, "pt-BR"),
     setLoading(true);
     try {
       if (from && to && from > to) throw new Error("A data inicial não pode ser maior que a data final.");
-      const categoryMap = new Map(products.map((p) => [p.id, p.categories?.nome ?? "—"]));
       const totals = new Map<string, InventoryRow>();
       periodMovements
         .filter((m) => m.tipo === "saida")
