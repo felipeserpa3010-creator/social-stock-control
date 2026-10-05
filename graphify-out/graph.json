@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T13:57:42.036603+00:00",
+  "generated_at": "2026-10-05T13:57:59.029972+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -187,7 +187,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 20516
+      "bytes": 21519
     },
     {
       "path": "src/lib/utils.ts",
@@ -459,7 +459,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 6035
+      "bytes": 7020
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -511,7 +511,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 10066
+      "bytes": 12173
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
