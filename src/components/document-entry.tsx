@@ -188,7 +188,7 @@ export function DocumentEntry() {
       const reciboId =
         !numeroReciboError && numeroRecibo
           ? String(numeroRecibo)
-          : String(Date.now()).slice(-5).padStart(5, "0");
+          : String(Date.now()).slice(-3).padStart(3, "0");
       if (numeroReciboError) {
         console.warn("Sequência do recibo indisponível; usando número temporário.", numeroReciboError);
       }
