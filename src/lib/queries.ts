@@ -271,6 +271,34 @@ export async function confirmStockReceipt(movementId: string, confirmedByName: s
   if (error) throw message(error);
 }
 
+export async function confirmStockReceiptGroup(receiptId: string, confirmedByName: string) {
+  const user_id = await currentUserId();
+  const { data: movements, error: readError } = await supabase
+    .from("stock_movements")
+    .select("id, observacao")
+    .eq("tipo", "entrada")
+    .ilike("observacao", `%RECIBO_PRODUTOS:${receiptId}%`);
+  if (readError) throw message(readError);
+  const ids = (movements ?? [])
+    .filter((m) => String(m.observacao ?? "").includes("PENDENTE_RECEBIMENTO"))
+    .map((m) => m.id);
+  if (!ids.length) throw new Error("Este recibo não possui produtos pendentes.");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: existing, error: existingError } = await (supabase as any)
+    .from("stock_receipts")
+    .select("movement_id")
+    .in("movement_id", ids);
+  if (existingError) throw message(existingError);
+  const done = new Set<string>((existing ?? []).map((r: { movement_id: string }) => r.movement_id));
+  const toInsert = ids.filter((id) => !done.has(id));
+  if (!toInsert.length) return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).from("stock_receipts").insert(
+    toInsert.map((movement_id) => ({ movement_id, confirmed_by: user_id, confirmed_by_name: confirmedByName })),
+  );
+  if (error) throw message(error);
+}
+
 export function pendingReceiptOptions(unitId: string | null, enabled = true) {
   return queryOptions({
     enabled: Boolean(unitId) && enabled,
