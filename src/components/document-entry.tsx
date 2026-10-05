@@ -141,6 +141,8 @@ export function DocumentEntry() {
 
     setSaving(true);
     try {
+      // Um único recibo identifica todos os produtos desta confirmação.
+      const reciboId = `REC-${data.replace(/-/g, "")}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
       for (const item of validItems) {
         let productId = item.productId;
         // Produto novo só é cadastrado depois da conferência e da confirmação final.
@@ -154,7 +156,7 @@ export function DocumentEntry() {
           tipo: "entrada",
           quantidade: Number(item.quantidade.replace(",", ".")),
           data,
-          observacao: "PENDENTE_RECEBIMENTO | Entrada lançada em massa pelo Administrador Principal; aguardando confirmação da unidade",
+          observacao: `PENDENTE_RECEBIMENTO | RECIBO_PRODUTOS:${reciboId} | Entrada lançada em massa pelo Administrador Principal; aguardando confirmação da unidade`,
           responsavel: null,
         });
       }
@@ -163,7 +165,7 @@ export function DocumentEntry() {
       await queryClient.invalidateQueries({ queryKey: ["stock"] });
       await queryClient.invalidateQueries({ queryKey: ["movements"] });
       setConfirmed(true);
-      toast.success(validItems.length + " produto(s) enviados para confirmação da unidade.");
+      toast.success(validItems.length + " produto(s) enviados em um Recibo de Produtos para confirmação da unidade.");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível concluir o lançamento em massa.");
     } finally {
