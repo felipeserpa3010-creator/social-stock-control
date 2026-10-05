@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T16:49:13.200606+00:00",
+  "generated_at": "2026-10-05T16:50:19.990082+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -151,7 +151,7 @@
     },
     {
       "path": "src/components/auth-layout.tsx",
-      "bytes": 3892
+      "bytes": 1665
     },
     {
       "path": "src/components/pickers.tsx",
@@ -822,14 +822,6 @@
     {
       "source": "src/components/auth-layout.tsx",
       "target": "lucide-react"
-    },
-    {
-      "source": "src/components/auth-layout.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/components/auth-layout.tsx",
-      "target": "@/lib/queries"
     },
     {
       "source": "src/components/auth-layout.tsx",
