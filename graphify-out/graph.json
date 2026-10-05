@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T16:48:09.515148+00:00",
+  "generated_at": "2026-10-05T16:48:28.193557+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -130,6 +130,10 @@
       "bytes": 860
     },
     {
+      "path": "supabase/migrations/20261005161000_corrige_acesso_visualizador.sql",
+      "bytes": 760
+    },
+    {
       "path": "supabase/functions/analyze-inventory-image/index.ts",
       "bytes": 3956
     },
@@ -195,7 +199,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 13873
+      "bytes": 17082
     },
     {
       "path": "src/lib/format.ts",
@@ -1026,6 +1030,10 @@
     {
       "source": "src/lib/admin.functions.ts",
       "target": "@/integrations/supabase/auth-middleware"
+    },
+    {
+      "source": "src/lib/admin.functions.ts",
+      "target": "@/integrations/supabase/client.server"
     },
     {
       "source": "src/lib/admin.functions.ts",
