@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T13:58:40.388100+00:00",
+  "generated_at": "2026-10-05T14:51:00.380560+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -123,7 +123,7 @@
     },
     {
       "path": "src/components/movement-form.tsx",
-      "bytes": 14215
+      "bytes": 14232
     },
     {
       "path": "src/components/auth-layout.tsx",
@@ -143,7 +143,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 14379
+      "bytes": 14396
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -187,7 +187,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 21519
+      "bytes": 22881
     },
     {
       "path": "src/lib/utils.ts",
@@ -479,7 +479,7 @@
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
-      "bytes": 7140
+      "bytes": 7144
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
