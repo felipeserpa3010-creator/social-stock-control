@@ -274,16 +274,20 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
 
       {isEntrada && isAdmin && (
         <Panel
-          title="Lançamento em massa"
-          description="Cole uma lista com nome, quantidade e unidade. Ex.: CEBOLA — 4 KG"
+          title="Lançamento de documento"
+          description="Digite ou cole a lista de produtos, com nome, quantidade e unidade."
         >
           <div className="space-y-4">
             <Textarea
-              rows={8}
+              rows={14}
+              maxLength={10000}
               value={massaTexto}
               onChange={(e) => setMassaTexto(e.target.value)}
-              placeholder={"CEBOLA — 4 KG\nLIMÃO — 3 KG\nSALSICHA — 5 PCT\nARROZ — 10 PCT"}
+              placeholder={"Digite ou cole até 10.000 caracteres, por exemplo:\nCEBOLA — 4 KG\nLIMÃO — 3 KG\nSALSICHA — 5 PCT\nARROZ — 10 PCT"}
             />
+            <div className="flex justify-end text-xs text-muted-foreground">
+              {massaTexto.length.toLocaleString("pt-BR")} / 10.000 caracteres
+            </div>
             <div className="flex flex-wrap gap-3">
               <Button type="button" variant="outline" onClick={prepararMassa} disabled={!massaTexto.trim() || massaSaving}>
                 Processar lista
