@@ -81,15 +81,15 @@ export function DocumentEntry() {
       let nome = chunk;
 
       if (quantityWithUnit) {
-        quantidade = quantityWithUnit[1].replace(",", ".");
+        quantidade = (quantityWithUnit[1] ?? "0").replace(",", ".");
         unidade = normalizeUnit(quantityWithUnit[2] || "Unidade");
         nome = chunk.slice(0, quantityWithUnit.index ?? 0) + chunk.slice((quantityWithUnit.index ?? 0) + quantityWithUnit[0].length);
       } else if (unitBeforeQuantity) {
-        quantidade = unitBeforeQuantity[2].replace(",", ".");
+        quantidade = (unitBeforeQuantity[2] ?? "0").replace(",", ".");
         unidade = normalizeUnit(unitBeforeQuantity[1] || "Unidade");
         nome = chunk.slice(0, unitBeforeQuantity.index ?? 0) + chunk.slice((unitBeforeQuantity.index ?? 0) + unitBeforeQuantity[0].length);
       } else if (quantityOnly) {
-        quantidade = quantityOnly[1].replace(",", ".");
+        quantidade = (quantityOnly[1] ?? "0").replace(",", ".");
         nome = chunk.replace(quantityOnly[0], " ");
       }
 
