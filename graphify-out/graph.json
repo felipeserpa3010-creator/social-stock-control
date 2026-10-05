@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T13:45:45.569573+00:00",
+  "generated_at": "2026-10-05T13:45:57.497936+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -187,7 +187,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 20461
+      "bytes": 20516
     },
     {
       "path": "src/lib/utils.ts",
@@ -511,7 +511,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 7557
+      "bytes": 10066
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
