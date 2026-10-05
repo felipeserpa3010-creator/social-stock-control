@@ -8,6 +8,7 @@ type CreateUserInput = {
   senha: string;
   unit_id: string | null;
   role: "admin" | "responsavel" | "visualizador";
+  viewer_unit_ids?: string[];
 };
 
 /** Público: informa se o sistema já possui um administrador cadastrado. */
@@ -168,12 +169,16 @@ export const adminCreateUser = createServerFn({ method: "POST" })
     if (d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
     if (!d.unit_id) throw new Error("Selecione a unidade.");
     if (d.role === "visualizador" && !d.unit_id) throw new Error("O Visualizador deve ser vinculado ao Gabinete SEMADS.");
+    if (d.role === "visualizador" && (!d.viewer_unit_ids || d.viewer_unit_ids.length === 0)) {
+      throw new Error("Selecione pelo menos uma unidade que o Gabinete poderá visualizar.");
+    }
     return {
       nome: d.nome.trim(),
       email: d.email.trim().toLowerCase(),
       senha: d.senha,
       unit_id: d.unit_id || null,
       role: d.role,
+      viewer_unit_ids: Array.from(new Set(d.viewer_unit_ids ?? [])),
     };
   })
   .handler(async ({ data, context }) => {
@@ -227,6 +232,31 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       await supabaseAdmin.auth.admin.deleteUser(userId);
       throw new Error(rError.message);
     }
+
+    if (data.role === "visualizador") {
+      const { data: units, error: unitsError } = await supabaseAdmin
+        .from("units")
+        .select("id")
+        .in("id", data.viewer_unit_ids ?? [])
+        .eq("ativo", true);
+      if (unitsError) throw new Error(unitsError.message);
+      if ((units?.length ?? 0) !== (data.viewer_unit_ids ?? []).length) {
+        await supabaseAdmin.from("user_roles").delete().eq("user_id", userId);
+        await supabaseAdmin.from("profiles").delete().eq("user_id", userId);
+        await supabaseAdmin.auth.admin.deleteUser(userId);
+        throw new Error("Uma ou mais unidades selecionadas são inválidas.");
+      }
+      const { error: accessError } = await supabaseAdmin.from("viewer_unit_access").insert(
+        (data.viewer_unit_ids ?? []).map((unit_id) => ({ user_id: userId, unit_id })),
+      );
+      if (accessError) {
+        await supabaseAdmin.from("user_roles").delete().eq("user_id", userId);
+        await supabaseAdmin.from("profiles").delete().eq("user_id", userId);
+        await supabaseAdmin.auth.admin.deleteUser(userId);
+        throw new Error(accessError.message);
+      }
+    }
+
     return { ok: true as const, error: null };
   });
 
@@ -271,6 +301,30 @@ export const adminSetUnit = createServerFn({ method: "POST" })
       .update({ unit_id: data.unit_id })
       .eq("user_id", data.user_id);
     if (error) throw new Error(error.message);
+    return { ok: true as const };
+  });
+
+
+/** Somente administrador: define as unidades que um Visualizador do Gabinete SEMADS pode consultar. */
+export const adminSetViewerUnits = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { user_id: string; unit_ids: string[] }) => {
+    if (!d?.user_id) throw new Error("Usuário inválido.");
+    if (!Array.isArray(d.unit_ids) || d.unit_ids.length === 0) throw new Error("Selecione pelo menos uma unidade.");
+    return { user_id: d.user_id, unit_ids: Array.from(new Set(d.unit_ids)) };
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase as any, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: role } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", data.user_id).maybeSingle();
+    if (role?.role !== "visualizador") throw new Error("As unidades autorizadas só podem ser definidas para o Visualizador do Gabinete SEMADS.");
+    const { data: units, error: unitsError } = await supabaseAdmin.from("units").select("id").in("id", data.unit_ids).eq("ativo", true);
+    if (unitsError) throw new Error(unitsError.message);
+    if ((units?.length ?? 0) !== data.unit_ids.length) throw new Error("Uma ou mais unidades selecionadas são inválidas.");
+    const { error: deleteError } = await supabaseAdmin.from("viewer_unit_access").delete().eq("user_id", data.user_id);
+    if (deleteError) throw new Error(deleteError.message);
+    const { error: insertError } = await supabaseAdmin.from("viewer_unit_access").insert(data.unit_ids.map((unit_id) => ({ user_id: data.user_id, unit_id })));
+    if (insertError) throw new Error(insertError.message);
     return { ok: true as const };
   });
 
