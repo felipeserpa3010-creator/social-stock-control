@@ -46,7 +46,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
       { to: "/estoque", label: "Estoque", icon: Boxes },
       { to: "/entrada", label: "Entrada", icon: PackagePlus, adminOnly: true },
-      { to: "/entrada-documento", label: "Lançar por documento", icon: ScanLine, adminOnly: true },
+      { to: "/entrada-documento", label: "Lançamento em massa", icon: ScanLine, adminOnly: true },
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
       { to: "/recebimento", label: "Confirmar recebimento", icon: PackageCheck, writeOnly: true },
     ],
