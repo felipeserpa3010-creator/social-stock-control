@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T13:58:22.511202+00:00",
+  "generated_at": "2026-10-05T13:58:40.388100+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -459,7 +459,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 7020
+      "bytes": 7140
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
