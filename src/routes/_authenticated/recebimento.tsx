@@ -8,6 +8,7 @@ import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, 
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
+import { buildReceiptPdf } from "@/lib/pdf";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/recebimento")({
@@ -36,6 +37,22 @@ function ReceiptPage() {
     });
     return Array.from(map.entries()).map(([id, entries]) => ({ id, entries }));
   }, [pending]);
+  const imprimirRecibo = async (receiptId: string, groupEntries: ReceivedEntryRow[]) => {
+    const first = groupEntries[0];
+    const doc = await buildReceiptPdf({
+      reciboId: receiptId,
+      unidade: unit?.nome ?? first?.units?.nome ?? "Unidade",
+      data: first?.data ?? new Date().toISOString().slice(0, 10),
+      rows: groupEntries.map((entry) => ({
+        produto: entry.products?.nome ?? "Produto",
+        quantidade: entry.quantidade,
+        medida: entry.products?.unidade_medida ?? "—",
+      })),
+    });
+    doc.autoPrint();
+    window.open(doc.output("bloburl"), "_blank");
+  };
+
   const mutation = useMutation({
     mutationFn: (receiptId: string) =>
       receiptId.startsWith("REC-")
@@ -80,9 +97,14 @@ function ReceiptPage() {
                   <p className="font-semibold">Recibo de Produtos {receiptId.startsWith("REC-") ? "nº " + receiptId : ""}</p>
                   <p className="text-xs text-muted-foreground">Data do lançamento: {formatDate(first?.data ?? null)} · {group.entries.length} produto(s)</p>
                 </div>
-                <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending}>
-                  <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Confirmar recebimento"}
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries)}>
+                    Imprimir / conferir PDF
+                  </Button>
+                  <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending}>
+                    <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Confirmar recebimento"}
+                  </Button>
+                </div>
               </div>
               <div className="overflow-x-auto">
                 <Table className="min-w-[620px]"><TableHeader><TableRow>
