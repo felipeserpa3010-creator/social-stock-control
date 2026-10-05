@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
-import { movementsOptions, stockOptions } from "@/lib/queries";
+import { movementsOptions, receivedEntriesOptions, stockOptions } from "@/lib/queries";
 import { formatDate, formatQty, stockStatus } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, StatusPill, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -39,9 +39,16 @@ type Filter = "todos" | "normal" | "baixo" | "zerado";
 function StockPage() {
   const { unitId, unit, loading } = useUnit();
   const { data: entries, isPending } = useQuery(stockOptions(unitId));
-  const { data: receivedEntries = [], isPending: receivedPending } = useQuery(
+  const { data: allReceivedEntries = [], isPending: allReceivedPending } = useQuery(
     movementsOptions({ unitId, tipo: "entrada", limit: 100 }),
   );
+  const { data: confirmedReceivedEntries = [], isPending: confirmedReceivedPending } = useQuery(
+    receivedEntriesOptions(unitId, unitId !== ALL_UNITS),
+  );
+  const receivedEntries = unitId === ALL_UNITS
+    ? allReceivedEntries
+    : confirmedReceivedEntries.filter((entry) => Boolean(entry.receipt));
+  const receivedPending = unitId === ALL_UNITS ? allReceivedPending : confirmedReceivedPending;
   const [term, setTerm] = useState("");
   const [filter, setFilter] = useState<Filter>("todos");
 
@@ -187,7 +194,7 @@ function StockPage() {
         description={
           unitId === ALL_UNITS
             ? "Entradas registradas pelo CEO/Administrador Principal nas unidades."
-            : "Confira os produtos, quantidades e a data em que foram lançados para esta unidade."
+            : "Confira os produtos, quantidades e a data em que a unidade confirmou o recebimento."
         }
         bodyClassName="p-0"
       >
@@ -199,7 +206,7 @@ function StockPage() {
           <div className="p-4">
             <EmptyState
               title="Nenhum lançamento recebido ainda"
-              description="Quando o CEO registrar uma entrada para esta unidade, ela aparecerá aqui com a data do lançamento."
+              description="Quando o CEO enviar uma mercadoria, ela aparecerá no estoque e nesta lista depois que a unidade confirmar o recebimento."
             />
           </div>
         ) : (
