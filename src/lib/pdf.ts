@@ -17,6 +17,7 @@ export type ReportOptions = {
   logoUrl?: string | null;
   unidade: string;
   dataConferencia?: string | null;
+  periodoSelecionado?: { from?: string; to?: string } | null;
   incluirMedia?: boolean;
   rows: InventoryRow[];
   assinatura?: boolean;
@@ -88,7 +89,14 @@ export async function buildInventoryPdf(opts: ReportOptions) {
     doc.setFontSize(10);
     doc.setTextColor(40);
     doc.text(`Unidade: ${opts.unidade}`, margin, 42);
-    doc.text(`Data da última conferência: ${dataConf}`, pageW - margin, 42, { align: "right" });
+    doc.text(`Data do relatório: ${dataConf}`, pageW - margin, 42, { align: "right" });
+    if (opts.periodoSelecionado?.from || opts.periodoSelecionado?.to) {
+      const from = opts.periodoSelecionado.from ? formatDate(opts.periodoSelecionado.from) : "—";
+      const to = opts.periodoSelecionado.to ? formatDate(opts.periodoSelecionado.to) : "—";
+      doc.setFontSize(8.5);
+      doc.setTextColor(90);
+      doc.text(`Período selecionado: ${from} a ${to}`, pageW - margin, 47, { align: "right" });
+    }
   };
 
   const head = ["Produto", opts.modo === "consumo" ? "Consumo no período" : "Estoque aproximado", "Unidade de medida"];
@@ -105,8 +113,8 @@ export async function buildInventoryPdf(opts: ReportOptions) {
   autoTable(doc, {
     head: [head],
     body: body.length ? body : [["Nenhum produto encontrado", "—", "—", ...(opts.incluirMedia ? ["—"] : [])]],
-    startY: 47,
-    margin: { top: 47, left: margin, right: margin, bottom: 22 },
+    startY: opts.periodoSelecionado?.from || opts.periodoSelecionado?.to ? 52 : 47,
+    margin: { top: opts.periodoSelecionado?.from || opts.periodoSelecionado?.to ? 52 : 47, left: margin, right: margin, bottom: 22 },
     styles: { fontSize: 9, cellPadding: 2.2, lineColor: [215, 220, 216], lineWidth: 0.1 },
     headStyles: { fillColor: [125, 38, 11], textColor: 255, fontStyle: "bold", fontSize: 9 },
     alternateRowStyles: { fillColor: [249, 244, 241] },
