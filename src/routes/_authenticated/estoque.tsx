@@ -5,7 +5,7 @@ import { Download } from "lucide-react";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
 import { movementsOptions, receivedEntriesOptions, stockOptions } from "@/lib/queries";
 import { formatDate, formatQty, stockStatus } from "@/lib/format";
-import { EmptyState, PageHeader, Panel, SearchInput, StatusPill, TableSkeleton } from "@/components/ui-kit";
+import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -76,15 +76,18 @@ function StockPage() {
   }, [entries]);
 
   const exportCsv = () => {
-    const header = ["Categoria", "Produto", "Unidade", "Estoque", "Minimo", "Atualizado em"];
-    const lines = rows.map((r) => [
-      r.product.categories?.nome ?? "",
-      r.product.nome,
-      r.product.unidade_medida,
-      String(r.quantity),
-      String(r.product.estoque_minimo ?? ""),
-      r.updated_at ? new Date(r.updated_at).toLocaleDateString("pt-BR") : "",
-    ]);
+    const header = ["Produto", "Estoque aproximado", "Unidade de medida", "Situação", "Atualizado em"];
+    const lines = rows.map((r) => {
+      const status = stockStatus(r.quantity, r.product.estoque_minimo);
+      const situacao = status === "zerado" ? "Zerado" : status === "baixo" ? "Quase acabando" : "Disponível";
+      return [
+        r.product.nome,
+        String(r.quantity),
+        r.product.unidade_medida,
+        situacao,
+        r.updated_at ? new Date(r.updated_at).toLocaleDateString("pt-BR") : "",
+      ];
+    });
     const csv = [header, ...lines]
       .map((cols) => cols.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(";"))
       .join("\n");
@@ -113,11 +116,11 @@ function StockPage() {
       />
 
       <Panel
-        title={`${counts.total} produtos com ficha de estoque`}
-        description={`${counts.zerado} zerados · ${counts.baixo} abaixo do mínimo`}
+        title="Estoque"
+        description={`${counts.total} produtos · ${counts.baixo} quase acabando · ${counts.zerado} zerados`}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <SearchInput value={term} onChange={setTerm} placeholder="Buscar produto..." className="w-44" />
+            <SearchInput value={term} onChange={setTerm} placeholder="Pesquisar produto..." className="w-56" />
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value as Filter)}
@@ -125,8 +128,8 @@ function StockPage() {
               aria-label="Filtrar situação"
             >
               <option value="todos">Todas as situações</option>
-              <option value="normal">Normais</option>
-              <option value="baixo">Abaixo do mínimo</option>
+              <option value="normal">Disponíveis</option>
+              <option value="baixo">Quase acabando</option>
               <option value="zerado">Zerados</option>
             </select>
           </div>
@@ -146,14 +149,13 @@ function StockPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <Table className="min-w-[680px]">
+            <Table className="min-w-[720px]">
               <TableHeader>
-                <TableRow>
+                <TableRow className="bg-muted/50">
                   {unitId === ALL_UNITS && <TableHead>Unidade</TableHead>}
-                  <TableHead>Produto</TableHead>
-                  <TableHead>Categoria</TableHead>
-                  <TableHead className="text-right">Estoque</TableHead>
-                  <TableHead className="text-right">Mínimo</TableHead>
+                  <TableHead>Nome do produto</TableHead>
+                  <TableHead className="text-right">Estoque aproximado</TableHead>
+                  <TableHead>Unidade de medida</TableHead>
                   <TableHead>Situação</TableHead>
                   <TableHead className="text-right">Atualizado</TableHead>
                 </TableRow>
@@ -162,25 +164,26 @@ function StockPage() {
                 {rows.map((r) => (
                   <TableRow key={`${r.unit_id}-${r.product.id}`}>
                     {unitId === ALL_UNITS && <TableCell className="font-medium">{r.unit?.nome ?? "—"}</TableCell>}
-                    <TableCell className="font-medium">{r.product.nome}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {r.product.categories?.nome ?? "—"}
-                    </TableCell>
-                    <TableCell className="text-right font-bold tabular-nums">
-                      {formatQty(r.quantity)}
-                      <span className="ml-1 text-[11px] font-normal text-muted-foreground">
-                        {r.product.unidade_medida}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right tabular-nums text-muted-foreground">
-                      {formatQty(r.product.estoque_minimo)}
-                    </TableCell>
+                    <TableCell className="font-semibold">{r.product.nome}</TableCell>
+                    <TableCell className="text-right font-bold tabular-nums">{formatQty(r.quantity)}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{r.product.unidade_medida}</TableCell>
                     <TableCell>
-                      <StatusPill quantity={r.quantity} min={r.product.estoque_minimo} />
+                      {(() => {
+                        const status = stockStatus(r.quantity, r.product.estoque_minimo);
+                        return (
+                          <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold ${
+                            status === "zerado"
+                              ? "border-destructive/40 bg-destructive/10 text-destructive"
+                              : status === "baixo"
+                                ? "border-amber-600/40 bg-amber-500/10 text-amber-800 dark:text-amber-300"
+                                : "border-border bg-muted text-foreground"
+                          }`}>
+                            {status === "zerado" ? "Zerado" : status === "baixo" ? "Quase acabando" : "Disponível"}
+                          </span>
+                        );
+                      })()}
                     </TableCell>
-                    <TableCell className="text-right text-xs text-muted-foreground">
-                      {formatDate(r.updated_at)}
-                    </TableCell>
+                    <TableCell className="text-right text-xs text-muted-foreground">{formatDate(r.updated_at)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
