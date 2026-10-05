@@ -225,6 +225,7 @@ export function receivedEntriesOptions(unitId: string | null, enabled = true) {
         .from("stock_movements")
         .select("*, products(*), units(nome)")
         .eq("tipo", "entrada")
+        .ilike("observacao", "%PENDENTE_RECEBIMENTO%")
         .order("data", { ascending: false })
         .order("created_at", { ascending: false });
       if (unitId !== ALL_UNITS_SCOPE) query = query.eq("unit_id", unitId as string);
