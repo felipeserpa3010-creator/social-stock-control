@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Download } from "lucide-react";
 import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
-import { movementsOptions, receivedEntriesOptions, stockOptions } from "@/lib/queries";
+import { stockOptions } from "@/lib/queries";
 import { formatDate, formatQty, stockStatus } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -39,16 +39,6 @@ type Filter = "todos" | "normal" | "baixo" | "zerado";
 function StockPage() {
   const { unitId, unit, loading } = useUnit();
   const { data: entries, isPending } = useQuery(stockOptions(unitId));
-  const { data: allReceivedEntries = [], isPending: allReceivedPending } = useQuery(
-    movementsOptions({ unitId, tipo: "entrada", limit: 100 }),
-  );
-  const { data: confirmedReceivedEntries = [], isPending: confirmedReceivedPending } = useQuery(
-    receivedEntriesOptions(unitId, unitId !== ALL_UNITS),
-  );
-  const receivedEntries = unitId === ALL_UNITS
-    ? allReceivedEntries
-    : confirmedReceivedEntries.filter((entry) => Boolean(entry.receipt));
-  const receivedPending = unitId === ALL_UNITS ? allReceivedPending : confirmedReceivedPending;
   const [term, setTerm] = useState("");
   const [filter, setFilter] = useState<Filter>("todos");
 
@@ -192,58 +182,7 @@ function StockPage() {
         )}
       </Panel>
 
-      <Panel
-        title={unitId === ALL_UNITS ? "Lançamentos de entrada" : "Lançamentos recebidos pela unidade"}
-        description={
-          unitId === ALL_UNITS
-            ? "Entradas registradas pelo CEO/Administrador Principal nas unidades."
-            : "Confira os produtos, quantidades e a data em que a unidade confirmou o recebimento."
-        }
-        bodyClassName="p-0"
-      >
-        {receivedPending ? (
-          <div className="p-4">
-            <TableSkeleton rows={5} cols={4} />
-          </div>
-        ) : receivedEntries.length === 0 ? (
-          <div className="p-4">
-            <EmptyState
-              title="Nenhum lançamento recebido ainda"
-              description="Quando o CEO enviar uma mercadoria, ela aparecerá no estoque e nesta lista depois que a unidade confirmar o recebimento."
-            />
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <Table className="min-w-[620px]">
-              <TableHeader>
-                <TableRow>
-                  {unitId === ALL_UNITS && <TableHead>Unidade</TableHead>}
-                  <TableHead>Produto</TableHead>
-                  <TableHead className="text-right">Quantidade</TableHead>
-                  <TableHead>Data do lançamento</TableHead>
-                  <TableHead>Responsável</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {receivedEntries.map((m) => (
-                  <TableRow key={m.id}>
-                    {unitId === ALL_UNITS && <TableCell className="font-medium">{m.units?.nome ?? "—"}</TableCell>}
-                    <TableCell className="font-medium">{m.products?.nome ?? "Produto"}</TableCell>
-                    <TableCell className="text-right font-semibold tabular-nums">
-                      {formatQty(m.quantidade)}
-                      <span className="ml-1 text-[11px] font-normal text-muted-foreground">
-                        {m.products?.unidade_medida ?? ""}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{formatDate(m.data)}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{m.responsavel ?? "CEO/Administrador"}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-      </Panel>
+
     </>
   );
 }
