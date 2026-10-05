@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T15:33:49.572011+00:00",
+  "generated_at": "2026-10-05T15:38:40.132445+00:00",
   "files": [
     {
       "path": "AGENTS.md",
@@ -151,7 +151,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 17357
+      "bytes": 17734
     },
     {
       "path": "src/lib/assistant-data.ts",
