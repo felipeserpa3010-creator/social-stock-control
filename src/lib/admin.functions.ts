@@ -380,7 +380,15 @@ export const adminSetAccess = createServerFn({ method: "POST" })
         supabaseAdmin.from("profiles").select("unit_id").eq("user_id", data.user_id).maybeSingle(),
         supabaseAdmin.from("user_roles").select("role").eq("user_id", data.user_id).maybeSingle(),
       ]);
-      if (!role?.role) throw new Error("Defina o perfil do usuário antes de liberar o acesso.");
+      // Cadastros públicos começam sem perfil. Ao liberar um usuário de unidade,
+      // o CEO está implicitamente aprovando-o como Responsável de unidade.
+      // Isso evita o bloqueio indevido exigindo uma ação manual separada.
+      if (!role?.role) {
+        const { error: roleError } = await supabaseAdmin
+          .from("user_roles")
+          .insert({ user_id: data.user_id, role: "responsavel" });
+        if (roleError) throw new Error(roleError.message);
+      }
       if (role.role !== "admin" && !profile?.unit_id) {
         throw new Error("Defina a unidade do usuário antes de liberar o acesso.");
       }
