@@ -246,7 +246,7 @@ export const adminCreateUser = createServerFn({ method: "POST" })
         await supabaseAdmin.auth.admin.deleteUser(userId);
         throw new Error("Uma ou mais unidades selecionadas são inválidas.");
       }
-      const { error: accessError } = await supabaseAdmin.from("viewer_unit_access").insert(
+      const { error: accessError } = await (supabaseAdmin as any).from("viewer_unit_access").insert(
         (data.viewer_unit_ids ?? []).map((unit_id) => ({ user_id: userId, unit_id })),
       );
       if (accessError) {
@@ -336,9 +336,9 @@ export const adminSetViewerUnits = createServerFn({ method: "POST" })
     const { data: units, error: unitsError } = await supabaseAdmin.from("units").select("id").in("id", data.unit_ids).eq("ativo", true);
     if (unitsError) throw new Error(unitsError.message);
     if ((units?.length ?? 0) !== data.unit_ids.length) throw new Error("Uma ou mais unidades selecionadas são inválidas.");
-    const { error: deleteError } = await supabaseAdmin.from("viewer_unit_access").delete().eq("user_id", data.user_id);
+    const { error: deleteError } = await (supabaseAdmin as any).from("viewer_unit_access").delete().eq("user_id", data.user_id);
     if (deleteError) throw new Error(deleteError.message);
-    const { error: insertError } = await supabaseAdmin.from("viewer_unit_access").insert(data.unit_ids.map((unit_id) => ({ user_id: data.user_id, unit_id })));
+    const { error: insertError } = await (supabaseAdmin as any).from("viewer_unit_access").insert(data.unit_ids.map((unit_id) => ({ user_id: data.user_id, unit_id })));
     if (insertError) throw new Error(insertError.message);
     return { ok: true as const };
   });
