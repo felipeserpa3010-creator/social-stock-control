@@ -383,13 +383,14 @@ export const adminSetAccess = createServerFn({ method: "POST" })
       // Cadastros públicos começam sem perfil. Ao liberar um usuário de unidade,
       // o CEO está implicitamente aprovando-o como Responsável de unidade.
       // Isso evita o bloqueio indevido exigindo uma ação manual separada.
+      const effectiveRole = role?.role ?? "responsavel";
       if (!role?.role) {
         const { error: roleError } = await supabaseAdmin
           .from("user_roles")
-          .insert({ user_id: data.user_id, role: "responsavel" });
+          .insert({ user_id: data.user_id, role: effectiveRole });
         if (roleError) throw new Error(roleError.message);
       }
-      if (role.role !== "admin" && !profile?.unit_id) {
+      if (effectiveRole !== "admin" && !profile?.unit_id) {
         throw new Error("Defina a unidade do usuário antes de liberar o acesso.");
       }
     }
