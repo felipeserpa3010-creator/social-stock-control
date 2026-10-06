@@ -79,7 +79,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
       {NAV.map((section) => {
         const items = section.items.filter((i) =>
           (!i.adminOnly || isAdmin) &&
-          (!i.writeOnly || !isViewer) &&
+          (!i.writeOnly || !isViewer || i.to === "/saida") &&
           (!isViewer || i.to === "/estoque" || i.to === "/recibos"),
         );
         if (!items.length) return null;
@@ -195,7 +195,7 @@ function Shell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const { isAdmin, isViewer } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const viewerAllowed = pathname === "/estoque" || pathname === "/recibos";
+  const viewerAllowed = pathname === "/estoque" || pathname === "/recibos" || pathname === "/saida";
 
   return (
     <div className="min-h-screen bg-background md:flex">
