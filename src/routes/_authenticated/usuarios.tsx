@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { KeyRound, Loader2, Plus, Settings2 } from "lucide-react";
+import { KeyRound, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -51,20 +51,6 @@ function UsersPage() {
   const queryClient = useQueryClient();
   const { data: users = [], isPending } = useQuery(usersOptions(true));
   const { data: units = [] } = useQuery(unitsOptions(true));
-  const { data: viewerAccessRows = [] } = useQuery({
-    queryKey: ["viewer-unit-access"],
-    queryFn: async () => {
-      const { data, error } = await (supabase as any)
-        .from("viewer_unit_access")
-        .select("user_id, unit_id");
-      if (error) throw new Error(error.message);
-      return (data ?? []) as Array<{ user_id: string; unit_id: string }>;
-    },
-  });
-  const accessMap = viewerAccessRows.reduce<Record<string, string[]>>((acc, row) => {
-    (acc[row.user_id] ??= []).push(row.unit_id);
-    return acc;
-  }, {});
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -77,13 +63,9 @@ function UsersPage() {
   });
   const [reset, setReset] = useState<{ id: string; nome: string } | null>(null);
   const [newPass, setNewPass] = useState("");
-  const [viewerAccess, setViewerAccess] = useState<Record<string, string[]>>({});
-  const [accessEditor, setAccessEditor] = useState<{ id: string; nome: string } | null>(null);
-  const [accessSelection, setAccessSelection] = useState<string[]>([]);
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: ["users"] });
-    queryClient.invalidateQueries({ queryKey: ["viewer-unit-access"] });
   };
 
   const create = async (e: React.FormEvent) => {
@@ -138,18 +120,6 @@ function UsersPage() {
       setNewPass("");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível redefinir a senha.");
-    }
-  };
-
-  const saveViewerAccess = async () => {
-    if (!accessEditor) return;
-    try {
-      await adminSetViewerUnits({ data: { user_id: accessEditor.id, unit_ids: accessSelection } });
-      toast.success("Unidades autorizadas atualizadas.");
-      setAccessEditor(null);
-      refresh();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Não foi possível atualizar as unidades autorizadas.");
     }
   };
 
@@ -214,9 +184,7 @@ function UsersPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {u.role === "visualizador"
-                          ? (accessMap[u.user_id] ?? []).map((id) => units.find((x) => x.id === id)?.nome).filter(Boolean).join(", ") || "Nenhuma unidade autorizada"
-                          : unit?.nome ?? "—"}
+                        {u.role === "visualizador" ? "Todas as unidades" : unit?.nome ?? "—"}
                       </TableCell>
                       <TableCell>
                         <Badge variant={u.ativo ? "secondary" : "outline"}>
@@ -244,18 +212,6 @@ function UsersPage() {
                             <option value="">Sem unidade</option>
                             {units.map((unit) => <option key={unit.id} value={unit.id}>{unit.sigla ?? unit.nome}</option>)}
                           </select>
-                          {u.role === "visualizador" && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                setAccessEditor({ id: u.user_id, nome: u.nome });
-                                setAccessSelection(accessMap[u.user_id] ?? []);
-                              }}
-                            >
-                              <Settings2 /> Unidades
-                            </Button>
-                          )}
                           <Button variant="ghost" size="sm" onClick={() => setReset({ id: u.user_id, nome: u.nome })}>
                             <KeyRound /> Senha
                           </Button>
@@ -362,36 +318,6 @@ function UsersPage() {
               </Button>
             </DialogFooter>
           </form>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={Boolean(accessEditor)} onOpenChange={(o) => !o && setAccessEditor(null)}>
-        <DialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Unidades autorizadas — {accessEditor?.nome}</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-muted-foreground">
-            O usuário do Gabinete SEMADS opera o Depósito Central, envia materiais por Recibo de Produtos e visualiza o estoque de todas as unidades.
-          </p>
-          <div className="grid max-h-72 gap-2 overflow-y-auto rounded-md border p-3">
-            {units.filter((u) => u.nome.trim().toLowerCase() !== "gabinete semads").map((u) => (
-              <label key={u.id} className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={accessSelection.includes(u.id)}
-                  onChange={(e) => setAccessSelection(e.target.checked
-                    ? [...accessSelection, u.id]
-                    : accessSelection.filter((id) => id !== u.id)
-                  )}
-                />
-                <span>{u.nome}</span>
-              </label>
-            ))}
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setAccessEditor(null)}>Cancelar</Button>
-            <Button onClick={saveViewerAccess} disabled={!accessSelection.length}>Salvar unidades</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
