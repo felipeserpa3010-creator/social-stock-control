@@ -108,7 +108,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
                     >
                       {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r bg-sidebar-primary" />}
                       <Icon className="size-[18px] shrink-0" />
-                      {!collapsed && <span className="truncate">{item.label}</span>}
+                      {!collapsed && <span className="truncate">{isViewer && item.to === "/saida" ? "Enviar materiais" : item.label}</span>}
                     </Link>
                   </li>
                 );
