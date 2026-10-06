@@ -2,6 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { CentralDispatchForm, MovementForm } from "@/components/movement-form";
 import { PageHeader } from "@/components/ui-kit";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_authenticated/saida")({
   head: () => ({
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/_authenticated/saida")({
 });
 
 function SaidaPage() {
-  const { isViewer } = require("@/hooks/useAuth").useAuth();
+  const { isViewer } = useAuth();
   return (
     <>
       <PageHeader
