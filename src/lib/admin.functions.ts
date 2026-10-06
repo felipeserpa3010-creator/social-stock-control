@@ -380,18 +380,23 @@ export const adminSetAccess = createServerFn({ method: "POST" })
         supabaseAdmin.from("profiles").select("unit_id").eq("user_id", data.user_id).maybeSingle(),
         supabaseAdmin.from("user_roles").select("role").eq("user_id", data.user_id).maybeSingle(),
       ]);
-      // Cadastros públicos começam sem perfil. Ao liberar um usuário de unidade,
-      // o CEO está implicitamente aprovando-o como Responsável de unidade.
-      // Isso evita o bloqueio indevido exigindo uma ação manual separada.
-      const effectiveRole = role?.role ?? "responsavel";
+      // Cadastros públicos começam sem perfil. Ao liberar, o perfil é definido
+      // automaticamente conforme a unidade: Gabinete SEMADS => visualizador,
+      // demais unidades => responsável.
+      if (role?.role !== "admin" && !profile?.unit_id) {
+        throw new Error("Defina a unidade do usuário antes de liberar o acesso.");
+      }
       if (!role?.role) {
+        const { data: unit } = await supabaseAdmin
+          .from("units")
+          .select("nome")
+          .eq("id", profile!.unit_id!)
+          .maybeSingle();
+        const isGabinete = unit?.nome?.trim().toLowerCase() === "gabinete semads";
         const { error: roleError } = await supabaseAdmin
           .from("user_roles")
-          .insert({ user_id: data.user_id, role: effectiveRole });
+          .insert({ user_id: data.user_id, role: isGabinete ? "visualizador" : "responsavel" });
         if (roleError) throw new Error(roleError.message);
-      }
-      if (effectiveRole !== "admin" && !profile?.unit_id) {
-        throw new Error("Defina a unidade do usuário antes de liberar o acesso.");
       }
     }
     const { error } = await supabaseAdmin
