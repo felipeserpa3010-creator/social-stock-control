@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T15:20:32.965067+00:00",
+  "generated_at": "2026-10-06T15:20:45.756088+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -199,7 +199,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 18115
+      "bytes": 18176
     },
     {
       "path": "src/lib/format.ts",
