@@ -8,6 +8,13 @@
       "when": 1791216775243,
       "tag": "0000_stock_receipts",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791302335159,
+      "tag": "0001_fix_semads_viewer_trigger",
+      "breakpoints": true
     }
   ]
 }
