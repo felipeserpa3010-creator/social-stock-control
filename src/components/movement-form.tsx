@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, PackageMinus, PackagePlus } from "lucide-react";
+import { Loader2, PackageMinus, PackagePlus, Send } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnit } from "@/hooks/useUnit";
@@ -10,6 +10,8 @@ import {
   movementsOptions,
   productsOptions,
   stockOptions,
+  unitsOptions,
+  sendFromCentralDeposit,
   type MovementType,
 } from "@/lib/queries";
 import { formatQty, formatDate, todayISO } from "@/lib/format";
@@ -357,6 +359,173 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
               ))}
             </ul>
           )}
+        </Panel>
+      </div>
+    </div>
+  );
+}
+
+
+export function CentralDispatchForm() {
+  const { profile } = useAuth();
+  const queryClient = useQueryClient();
+  const { data: products = [] } = useQuery(productsOptions(false));
+  const { data: units = [] } = useQuery(unitsOptions(false));
+  const central = units.find((u) => u.nome.trim().toLowerCase() === "gabinete semads");
+  const { data: centralStock = [], isPending: stockLoading } = useQuery(stockOptions(central?.id ?? null));
+
+  const [productId, setProductId] = useState<string | null>(null);
+  const [destinationId, setDestinationId] = useState("");
+  const [quantidade, setQuantidade] = useState("");
+  const [data, setData] = useState(todayISO());
+  const [observacao, setObservacao] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const product = products.find((p) => p.id === productId);
+  const current = centralStock.find((s) => s.product.id === productId)?.quantity ?? 0;
+  const qty = Number(quantidade.replace(",", "."));
+  const destinations = units.filter((u) => u.id !== central?.id);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!central?.id) {
+      toast.error("O Gabinete SEMADS não está cadastrado como Depósito Central.");
+      return;
+    }
+    if (!destinationId) {
+      toast.error("Selecione a unidade que receberá os materiais.");
+      return;
+    }
+    if (!productId) {
+      toast.error("Selecione o produto.");
+      return;
+    }
+    if (!quantidade.trim() || Number.isNaN(qty) || qty <= 0) {
+      toast.error("Informe uma quantidade maior que zero.");
+      return;
+    }
+    if (qty > current) {
+      toast.error(`Estoque insuficiente no Depósito Central. Disponível: ${formatQty(current)}.`);
+      return;
+    }
+
+    const destination = destinations.find((u) => u.id === destinationId);
+    if (!destination) {
+      toast.error("Unidade de destino inválida.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Enviar ${formatQty(qty)} ${product?.unidade_medida ?? ""} de ${product?.nome ?? "produto"} para ${destination.nome}?\\n\\nO estoque do Depósito Central será reduzido e será gerado um recibo para confirmação da unidade.`
+    );
+    if (!confirmed) return;
+
+    setSaving(true);
+    try {
+      const receipt = await sendFromCentralDeposit({
+        product_id: productId,
+        destination_unit_id: destinationId,
+        quantidade: qty,
+        data,
+        observacao: observacao.trim() || null,
+      });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["stock"] }),
+        queryClient.invalidateQueries({ queryKey: ["movements"] }),
+        queryClient.invalidateQueries({ queryKey: ["received-entries"] }),
+      ]);
+      toast.success(`Recibo nº ${receipt} gerado. Envio para ${destination.nome} registrado.`);
+      setProductId(null);
+      setDestinationId("");
+      setQuantidade("");
+      setObservacao("");
+      setData(todayISO());
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Não foi possível enviar os materiais.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <Panel
+        title="Enviar materiais do Depósito Central"
+        description="O Gabinete SEMADS é o Depósito Central. Selecione os materiais e a unidade que receberá o envio."
+      >
+        <form onSubmit={submit} className="space-y-4">
+          <Field label="Unidade de destino" htmlFor="destino-deposito" required>
+            <select
+              id="destino-deposito"
+              value={destinationId}
+              onChange={(e) => setDestinationId(e.target.value)}
+              className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
+            >
+              <option value="">Selecione a unidade...</option>
+              {destinations.map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
+            </select>
+          </Field>
+
+          <Field label="Produto" htmlFor="produto-deposito" required>
+            <ProductSelect
+              id="produto-deposito"
+              products={products}
+              value={productId}
+              onChange={setProductId}
+              placeholder="Buscar produto..."
+            />
+          </Field>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Quantidade" htmlFor="quantidade-deposito" required
+              hint={product ? `Unidade de medida: ${product.unidade_medida}` : "Ex.: 12 ou 3,5"}>
+              <Input
+                id="quantidade-deposito"
+                inputMode="decimal"
+                value={quantidade}
+                onChange={(e) => setQuantidade(e.target.value)}
+                placeholder="0"
+              />
+            </Field>
+            <Field label="Data do envio" htmlFor="data-deposito" required>
+              <Input id="data-deposito" type="date" value={data} max={todayISO()} onChange={(e) => setData(e.target.value)} />
+            </Field>
+          </div>
+
+          <Field label="Observação" htmlFor="observacao-deposito" hint="Opcional. Ex.: solicitação da unidade.">
+            <Textarea
+              id="observacao-deposito"
+              rows={3}
+              value={observacao}
+              onChange={(e) => setObservacao(e.target.value)}
+              placeholder="Ex.: reposição do estoque da unidade"
+            />
+          </Field>
+
+          <Button type="submit" disabled={saving || stockLoading || !central?.id}>
+            {saving ? <Loader2 className="animate-spin" /> : <Send />}
+            {saving ? "Enviando..." : "Enviar e gerar recibo"}
+          </Button>
+        </form>
+      </Panel>
+
+      <div className="space-y-5">
+        <StatCard
+          label="Disponível no Depósito Central"
+          value={`${formatQty(current)} ${product?.unidade_medida ?? ""}`}
+          hint={product ? product.nome : "Selecione um produto para consultar o saldo."}
+          tone={current <= 0 ? "danger" : "neutral"}
+        />
+        <Panel title="Fluxo do envio">
+          <ol className="space-y-2 text-sm text-muted-foreground">
+            <li>1. O material sai do estoque do Depósito Central.</li>
+            <li>2. Um Recibo de Produtos é gerado automaticamente.</li>
+            <li>3. A unidade recebe o recibo e confirma o recebimento.</li>
+            <li>4. O material só entra no estoque da unidade após a confirmação.</li>
+          </ol>
+          <p className="mt-4 text-xs text-muted-foreground">
+            O cadastro de produtos continua sendo exclusivo do CEO.
+          </p>
         </Panel>
       </div>
     </div>
