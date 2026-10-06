@@ -210,7 +210,7 @@ function UsersPage() {
                       <TableCell className="text-muted-foreground">{u.email}</TableCell>
                       <TableCell>
                         <Badge variant={u.role === "admin" ? "default" : "secondary"}>
-                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : u.role === "responsavel" ? "Responsável" : "Pendente"}
+                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Depósito Central — Gabinete SEMADS" : u.role === "responsavel" ? "Responsável" : "Pendente"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
@@ -327,7 +327,7 @@ function UsersPage() {
                   className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
                 >
                   <option value="responsavel">Responsável de unidade</option>
-                  <option value="visualizador">Visualizador — Gabinete SEMADS</option>
+                  <option value="visualizador">Depósito Central — Gabinete SEMADS</option>
                 </select>
               </Field>
               <Field
@@ -352,31 +352,6 @@ function UsersPage() {
                 </select>
               </Field>
             </div>
-            {form.role === "visualizador" && (
-              <Field
-                label="Unidades autorizadas"
-                hint="O usuário do Gabinete poderá somente visualizar estoque e Recibos de Produtos dessas unidades."
-                required
-              >
-                <div className="grid max-h-48 gap-2 overflow-y-auto rounded-md border p-3">
-                  {units.filter((u) => u.nome.trim().toLowerCase() !== "gabinete semads").map((u) => (
-                    <label key={u.id} className="flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        checked={form.viewer_unit_ids.includes(u.id)}
-                        onChange={(e) => setForm({
-                          ...form,
-                          viewer_unit_ids: e.target.checked
-                            ? [...form.viewer_unit_ids, u.id]
-                            : form.viewer_unit_ids.filter((id) => id !== u.id),
-                        })}
-                      />
-                      <span>{u.nome}</span>
-                    </label>
-                  ))}
-                </div>
-              </Field>
-            )}
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
                 Cancelar
@@ -396,7 +371,7 @@ function UsersPage() {
             <DialogTitle>Unidades autorizadas — {accessEditor?.nome}</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            O Visualizador do Gabinete SEMADS terá somente acesso de leitura ao estoque e aos Recibos de Produtos das unidades marcadas.
+            O usuário do Gabinete SEMADS opera o Depósito Central, envia materiais por Recibo de Produtos e visualiza o estoque de todas as unidades.
           </p>
           <div className="grid max-h-72 gap-2 overflow-y-auto rounded-md border p-3">
             {units.filter((u) => u.nome.trim().toLowerCase() !== "gabinete semads").map((u) => (
