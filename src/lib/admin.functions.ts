@@ -169,9 +169,6 @@ export const adminCreateUser = createServerFn({ method: "POST" })
     if (d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
     if (!d.unit_id) throw new Error("Selecione a unidade.");
     if (d.role === "visualizador" && !d.unit_id) throw new Error("O Visualizador deve ser vinculado ao Gabinete SEMADS.");
-    if (d.role === "visualizador" && (!d.viewer_unit_ids || d.viewer_unit_ids.length === 0)) {
-      throw new Error("Selecione pelo menos uma unidade que o Gabinete poderá visualizar.");
-    }
     return {
       nome: d.nome.trim(),
       email: d.email.trim().toLowerCase(),
@@ -198,7 +195,7 @@ export const adminCreateUser = createServerFn({ method: "POST" })
         throw new Error("Usuários do Gabinete SEMADS devem ser cadastrados como Visualizador.");
       }
       if (!isSemads && data.role === "visualizador") {
-        throw new Error("O perfil Visualizador é exclusivo do Gabinete SEMADS.");
+        throw new Error("O perfil do Depósito Central é exclusivo do Gabinete SEMADS.");
       }
     }
 
