@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T15:59:22.309829+00:00",
+  "generated_at": "2026-10-06T19:05:28.495916+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -547,7 +547,7 @@
     },
     {
       "path": "src/routes/_authenticated/produtos.tsx",
-      "bytes": 17635
+      "bytes": 18122
     },
     {
       "path": "drizzle/migrations/0000_stock_receipts.sql",
