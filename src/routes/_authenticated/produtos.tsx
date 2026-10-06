@@ -66,6 +66,19 @@ function ProductsPage() {
   const [saving, setSaving] = useState(false);
   const [confirm, setConfirm] = useState<Product | null>(null);
 
+  if (!isAdmin) {
+    return (
+      <Panel title="Acesso restrito">
+        <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-6 text-center">
+          <p className="font-semibold">Somente o CEO pode cadastrar produtos</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            O cadastro, edição e exclusão de produtos e categorias são exclusivos do Administrador Principal (CEO).
+          </p>
+        </div>
+      </Panel>
+    );
+  }
+
   const rows = useMemo(
     () =>
       products.filter((p) => {
