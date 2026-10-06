@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T19:05:28.495916+00:00",
+  "generated_at": "2026-10-06T19:08:48.786378+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -104,6 +104,10 @@
     {
       "path": "supabase/migrations/20260928020000_deposito_semads_logo.sql",
       "bytes": 271
+    },
+    {
+      "path": "supabase/migrations/20261006170000_deposito_central_semads.sql",
+      "bytes": 5028
     },
     {
       "path": "supabase/migrations/20261003150000_excluir_lancamento_estoque.sql",
@@ -211,7 +215,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 23102
+      "bytes": 23621
     },
     {
       "path": "src/lib/utils.ts",
