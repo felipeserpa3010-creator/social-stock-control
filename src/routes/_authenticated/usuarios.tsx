@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { unitsOptions, usersOptions, type AppRole } from "@/lib/queries";
-import { adminCreateUser, adminResetPassword, adminSetAccess, adminSetRole, adminSetUnit, adminSetViewerUnits } from "@/lib/admin.functions";
+import { adminCreateUser, adminResetPassword, adminSetAccess, adminSetRole, adminSetUnit } from "@/lib/admin.functions";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
