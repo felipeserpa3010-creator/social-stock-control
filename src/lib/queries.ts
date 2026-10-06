@@ -446,6 +446,24 @@ export async function removeMovement(id: string) {
   if (error) throw message(error);
 }
 
+export async function sendFromCentralDeposit(input: {
+  product_id: string;
+  destination_unit_id: string;
+  quantidade: number;
+  data: string;
+  observacao?: string | null;
+}) {
+  const { data, error } = await (supabase as any).rpc("send_from_central_deposit", {
+    _product_id: input.product_id,
+    _destination_unit_id: input.destination_unit_id,
+    _quantity: input.quantidade,
+    _data: input.data,
+    _observacao: input.observacao ?? null,
+  });
+  if (error) throw message(error);
+  return String(data);
+}
+
 export async function addMovement(input: MovementInput) {
   const user_id = await currentUserId();
   const { error } = await supabase.from("stock_movements").insert({ ...input, user_id });
