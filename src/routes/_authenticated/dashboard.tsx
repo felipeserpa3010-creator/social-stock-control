@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   movementsOptions,
   productsOptions,
+  receivedEntriesOptions,
   stockOptions,
   pendingReceiptOptions,
   removePendingReceipt,
@@ -44,6 +45,7 @@ function DashboardPage() {
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 400 }));
   const { data: pendingReceipts = [] } = useQuery(pendingReceiptOptions(unitId, isAdmin));
+  const { data: viewerReceipts = [] } = useQuery(receivedEntriesOptions(ALL_UNITS, isViewer));
   const deletePending = useMutation({
     mutationFn: removePendingReceipt,
 
@@ -92,7 +94,7 @@ function DashboardPage() {
         }
       />
 
-      {isAdmin && (
+      {isViewer && (\n        <div className="mb-5">\n          <Panel\n            title="Recibos de produtos enviados"\n            description="Os recibos mais recentes aparecem separados por unidade. O visualizador pode consultar os detalhes, mas não pode alterar ou confirmar recebimentos."\n            bodyClassName="p-0"\n          >\n            {viewerReceipts.length === 0 ? (\n              <div className="p-4">\n                <EmptyState title="Nenhum recibo de produtos encontrado" description="Quando o Centro de Distribuição enviar materiais, os recibos aparecerão aqui." />\n              </div>\n            ) : (\n              <div className="divide-y divide-border/70">\n                {(() => {\n                  const groups = new Map<string, typeof viewerReceipts>();\n                  viewerReceipts.forEach((entry) => {\n                    const name = entry.units?.nome ?? "Unidade";\n                    const list = groups.get(name) ?? [];\n                    list.push(entry);\n                    groups.set(name, list);\n                  });\n                  return Array.from(groups.entries()).map(([unitName, entries]) => {\n                    const receipts = new Map<string, typeof entries>();\n                    entries.forEach((entry) => {\n                      const id = receiptIdFromObservation(entry.observacao) ?? entry.id;\n                      const list = receipts.get(id) ?? [];\n                      list.push(entry);\n                      receipts.set(id, list);\n                    });\n                    return (\n                      <div key={unitName} className="p-4">\n                        <div className="mb-3 flex items-center justify-between gap-3">\n                          <div>\n                            <p className="font-semibold">{unitName}</p>\n                            <p className="text-xs text-muted-foreground">{receipts.size} recibo(s) mais recente(s)</p>\n                          </div>\n                        </div>\n                        <div className="space-y-2">\n                          {Array.from(receipts.entries()).slice(0, 5).map(([receiptId, items]) => (\n                            <div key={receiptId} className="rounded-md border border-border/70 p-3">\n                              <div className="flex flex-wrap items-center justify-between gap-2">\n                                <span className="font-medium">Recibo de Produtos nº {receiptIdFromObservation(items[0]?.observacao) ?? receiptId}</span>\n                                <span className="text-xs text-muted-foreground">{formatDate(items[0]?.data ?? null)}</span>\n                              </div>\n                              <p className="mt-1 text-xs text-muted-foreground">{items.length} produto(s) · {items.every((item) => Boolean(item.receipt)) ? "Recebido" : "Pendente"}</p>\n                            </div>\n                          ))}\n                        </div>\n                      </div>\n                    );\n                  });\n                })()}\n              </div>\n            )}\n          </Panel>\n        </div>\n      )}\n\n      {isAdmin && (
         <div className="mb-5">
           <Panel
             title="Lançamentos pendentes de recebimento"
