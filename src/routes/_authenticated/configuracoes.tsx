@@ -13,9 +13,9 @@ import { semadsLogoUrl } from "@/lib/brand";
 export const Route = createFileRoute("/_authenticated/configuracoes")({
   head: () => ({
     meta: [
-      { title: "Configurações — Controle de Inventário" },
+      { title: "Configurações — Controle de Estoque" },
       { name: "description", content: "Nome da instituição, secretaria e logotipo usados nos relatórios." },
-      { property: "og:title", content: "Configurações — Controle de Inventário" },
+      { property: "og:title", content: "Configurações — Controle de Estoque" },
       { property: "og:description", content: "Dados institucionais exibidos nos relatórios PDF." },
     ],
   }),
