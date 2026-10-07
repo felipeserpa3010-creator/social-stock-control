@@ -8,8 +8,6 @@ export type Category = Database["public"]["Tables"]["categories"]["Row"];
 export type Product = Database["public"]["Tables"]["products"]["Row"];
 export type StockRow = Database["public"]["Tables"]["stock"]["Row"];
 export type Movement = Database["public"]["Tables"]["stock_movements"]["Row"];
-export type StockCheck = Database["public"]["Tables"]["stock_checks"]["Row"];
-export type CheckItem = Database["public"]["Tables"]["stock_check_items"]["Row"];
 export type SettingsRow = Database["public"]["Tables"]["settings"]["Row"];
 export type MovementType = Database["public"]["Enums"]["movement_type"];
 export type AppRole = Database["public"]["Enums"]["app_role"];
@@ -46,10 +44,6 @@ export function receiptIdFromObservation(observacao: string | null | undefined) 
   const match = String(observacao ?? "").match(/RECIBO_PRODUTOS:([^|\s]+)/);
   return match?.[1] ?? null;
 }
-export type CheckRow = StockCheck & {
-  units: { nome: string } | null;
-  profiles: { nome: string } | null;
-};
 export type UserRow = {
   id: string;
   user_id: string;
@@ -322,40 +316,6 @@ export async function removePendingReceipt(movementId: string) {
   if (error) throw message(error);
 }
 
-export function checksOptions(unitId: string | null) {
-  return queryOptions({
-    enabled: Boolean(unitId),
-    queryKey: ["checks", unitId],
-    queryFn: async () => {
-      let query = supabase
-        .from("stock_checks")
-        .select("*, units(nome), profiles(nome)")
-        .order("data_conferencia", { ascending: false })
-        .order("created_at", { ascending: false });
-      if (unitId !== ALL_UNITS_SCOPE) query = query.eq("unit_id", unitId as string);
-      const { data, error } = await query.limit(120);
-      if (error) throw message(error);
-      return (data ?? []) as unknown as CheckRow[];
-    },
-  });
-}
-
-export function checkItemsOptions(checkId: string | null) {
-  return queryOptions({
-    enabled: Boolean(checkId),
-    queryKey: ["check-items", checkId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("stock_check_items")
-        .select("*, products(*)")
-        .eq("stock_check_id", checkId as string)
-        .order("created_at");
-      if (error) throw message(error);
-      return (data ?? []) as unknown as Array<CheckItem & { products: Product | null }>;
-    },
-  });
-}
-
 export function settingsOptions() {
   return queryOptions({
     queryKey: ["settings"],
@@ -429,40 +389,6 @@ export async function addMovement(input: MovementInput) {
   const user_id = await currentUserId();
   const { error } = await supabase.from("stock_movements").insert({ ...input, user_id });
   if (error) throw message(error);
-}
-
-export type CheckInput = {
-  unit_id: string;
-  data_conferencia: string;
-  observacao?: string | null;
-  responsavel?: string | null;
-  items: Array<{ product_id: string; quantidade_conferida: number }>;
-};
-
-export async function createStockCheck(input: CheckInput) {
-  const user_id = await currentUserId();
-  const { data, error } = await supabase
-    .from("stock_checks")
-    .insert({
-      unit_id: input.unit_id,
-      data_conferencia: input.data_conferencia,
-      observacao: input.observacao ?? null,
-      responsavel: input.responsavel ?? null,
-      user_id,
-    })
-    .select("id")
-    .single();
-  if (error || !data) throw message(error) ?? new Error("Não foi possível abrir a conferência.");
-
-  const { error: itemsError } = await supabase.from("stock_check_items").insert(
-    input.items.map((i) => ({
-      stock_check_id: data.id,
-      product_id: i.product_id,
-      quantidade_conferida: i.quantidade_conferida,
-    })),
-  );
-  if (itemsError) throw message(itemsError);
-  return data.id as string;
 }
 
 export type UnitInput = {
