@@ -22,7 +22,7 @@ export type ReportOptions = {
   rows: InventoryRow[];
   assinatura?: boolean;
   modo?: "estoque" | "consumo";
-  colunasExtras?: { header: string; key: keyof InventoryRow }[];
+  colunasExtras?: { header: string; key: keyof InventoryRow }[];\n  categorySummary?: { categoria: string; total: number; mediaMensal: number }[];
 };
 
 async function loadLogo(url: string): Promise<{ data: string; w: number; h: number } | null> {
