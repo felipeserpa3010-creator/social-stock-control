@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { unitsOptions, type Unit } from "@/lib/queries";
 
 const STORAGE_KEY = "inventario:unit";
-export const ALL_UNITS = "__all__";
 
 type UnitState = {
   units: Unit[];
@@ -38,7 +37,7 @@ export function UnitProvider({ children }: { children: ReactNode }) {
   const unitId = useMemo(() => {
     if (viewer) {
       if (stored && units.some((u) => u.id === stored)) return stored;
-      return ALL_UNITS;
+      return units[0]?.id ?? null;
     }
     if (locked && profile?.unit_id) return profile.unit_id;
     if (stored && units.some((u) => u.id === stored)) return stored;
