@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Plus, Trash2 } from "lucide-react";
@@ -20,6 +21,12 @@ import {
 } from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/unidades")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" });
+    if (isAdmin !== true) throw redirect({ to: "/dashboard" });
+  },
   head: () => ({
     meta: [
       { title: "Unidades — Controle de Estoque" },
@@ -30,7 +37,7 @@ export const Route = createFileRoute("/_authenticated/unidades")({
       { property: "og:title", content: "Unidades — Controle de Estoque" },
       {
         property: "og:description",
-        content: "Gerencie as unidades atendidas pelo controle de inventário.",
+        content: "Gerencie as unidades atendidas pelo Controle de Estoque.",
       },
     ],
   }),
