@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Boxes, PackageMinus, PackagePlus, TrendingUp, Trash2 } from "lucide-react";
-import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
+import { useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
 import {
   movementsOptions,
@@ -45,7 +45,7 @@ function DashboardPage() {
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 400 }));
   const { data: pendingReceipts = [] } = useQuery(pendingReceiptOptions(unitId, isAdmin));
-  const { data: viewerReceipts = [] } = useQuery(receivedEntriesOptions(ALL_UNITS, isViewer));
+  const { data: viewerReceipts = [] } = useQuery(receivedEntriesOptions(unitId, isViewer));
   const deletePending = useMutation({
     mutationFn: removePendingReceipt,
 
@@ -75,7 +75,7 @@ function DashboardPage() {
   return (
     <>
       <PageHeader
-        title={unitId === ALL_UNITS ? "Painel geral" : "Painel da unidade"}
+        title="Painel da unidade"
         description={
           unit
             ? `Resumo de ${unit.nome}${unit.sigla ? ` (${unit.sigla})` : ""}.`
