@@ -80,15 +80,21 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
   const { isAdmin, isViewer } = useAuth();
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isCentralUser = !isAdmin && !isViewer && isCentroDistribuicao(unit?.nome);
+  const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
+  const isCentralViewer = isViewer && isCentroDistribuicao(unit?.nome);
 
   return (
     <nav className="flex flex-col gap-5">
       {NAV.map((section) => {
         const items = section.items.filter((i) => {
-          if (isAdmin) return !i.writeOnly || true;
+          if (isAdmin) return true;
           if (isViewer) {
-            return i.to === "/dashboard" || i.to === "/estoque" || i.to === "/recibos";
+            return (
+              i.to === "/dashboard" ||
+              i.to === "/estoque" ||
+              i.to === "/recibos" ||
+              (isCentralViewer && i.to === "/saida")
+            );
           }
           if (isCentralUser) {
             return (
@@ -101,8 +107,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
           return (
             !i.adminOnly &&
             i.to !== "/entrada" &&
-            i.to !== "/entrada-documento" &&
-            i.to !== "/recebimento"
+            i.to !== "/entrada-documento"
           );
         });
         if (!items.length) return null;
@@ -166,7 +171,7 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
   const { unit } = useUnit();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const centralUser = role === "responsavel" && isCentroDistribuicao(unit?.nome);
+  const centralUser = isCentroDistribuicao(unit?.nome);
 
   const handleSignOut = async () => {
     queryClient.cancelQueries();
@@ -178,9 +183,11 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
   const roleLabel =
     role === "admin"
       ? "Administrador Principal"
-      : role === "visualizador"
-        ? "Visualizador"
-        : centralUser
+      : centralUser
+        ? "Centro de Distribuição — Gabinete SEMADS"
+        : role === "visualizador"
+          ? "Visualizador"
+          : role === "responsavel"
           ? "Centro de Distribuição — Gabinete SEMADS"
           : "Responsável pela unidade";
 
@@ -227,8 +234,9 @@ function Shell({ children }: { children: ReactNode }) {
   const { isAdmin, isViewer } = useAuth();
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos";
-  const isCentralUser = !isAdmin && !isViewer && isCentroDistribuicao(unit?.nome);
+  const isCentralViewer = isViewer && isCentroDistribuicao(unit?.nome);
+  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || (isCentralViewer && pathname === "/saida");
+  const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
 
   return (
     <div className="min-h-screen bg-background md:flex">
@@ -261,7 +269,7 @@ function Shell({ children }: { children: ReactNode }) {
           <div className="flex-1" />
           <UnitSwitcher />
           {isAdmin && <Badge variant="outline" className="hidden gap-1 border-primary/40 text-primary sm:inline-flex"><ShieldCheck className="size-3" />Administrador</Badge>}
-          {isViewer && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Somente leitura</Badge>}
+          {isViewer && !isCentralViewer && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Somente leitura</Badge>}
           {isCentralUser && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Centro de Distribuição</Badge>}
         </header>
         <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-6 sm:px-6 lg:px-8">
@@ -269,7 +277,7 @@ function Shell({ children }: { children: ReactNode }) {
             <div className="rounded-lg border border-border bg-card p-8 text-center">
               <h1 className="text-lg font-semibold">Acesso somente para consulta</h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                O usuário visualizador tem acesso somente à consulta dos estoques de todas as unidades, incluindo o Centro de Distribuição, e aos recibos de produtos enviados.
+                Este usuário tem acesso somente à consulta dos estoques e aos recibos de produtos enviados.
               </p>
             </div>
           ) : children}
