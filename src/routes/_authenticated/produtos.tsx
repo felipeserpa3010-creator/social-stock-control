@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,12 +16,18 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/produtos")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" });
+    if (isAdmin !== true) throw redirect({ to: "/dashboard" });
+  },
   head: () => ({
     meta: [
-      { title: "Produtos e categorias — Controle de Inventário" },
+      { title: "Produtos e categorias — Controle de Estoque" },
       { name: "description", content: "Cadastro de produtos da dispensa, unidades de medida, mínimos e categorias." },
       { property: "og:title", content: "Produtos e categorias — Controle de Inventário" },
-      { property: "og:description", content: "Gerencie os produtos controlados no inventário e suas categorias." },
+      { property: "og:description", content: "Gerencie os produtos controlados no estoque e suas categorias." },
     ],
   }),
   component: ProductsPage,
