@@ -38,7 +38,7 @@ export function UnitProvider({ children }: { children: ReactNode }) {
   const unitId = useMemo(() => {
     if (viewer) {
       if (stored && units.some((u) => u.id === stored)) return stored;
-      return units[0]?.id ?? null;
+      return ALL_UNITS;
     }
     if (locked && profile?.unit_id) return profile.unit_id;
     if (stored && units.some((u) => u.id === stored)) return stored;
