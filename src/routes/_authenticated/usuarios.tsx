@@ -180,7 +180,7 @@ function UsersPage() {
                       <TableCell className="text-muted-foreground">{u.email}</TableCell>
                       <TableCell>
                         <Badge variant={u.role === "admin" ? "default" : "secondary"}>
-                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Depósito Central — Gabinete SEMADS" : u.role === "responsavel" ? "Responsável" : "Pendente"}
+                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Centro de Distribuição — Gabinete SEMADS" : u.role === "responsavel" ? "Responsável" : "Pendente"}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-muted-foreground">
@@ -283,7 +283,7 @@ function UsersPage() {
                   className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
                 >
                   <option value="responsavel">Responsável de unidade</option>
-                  <option value="visualizador">Depósito Central — Gabinete SEMADS</option>
+                  <option value="visualizador">Depósito Central — Centro de Distribuição — Gabinete SEMADS</option>
                 </select>
               </Field>
               <Field
