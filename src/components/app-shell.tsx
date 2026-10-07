@@ -79,8 +79,8 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
       {NAV.map((section) => {
         const items = section.items.filter((i) =>
           (!i.adminOnly || isAdmin) &&
-          (!i.writeOnly || !isViewer || i.to === "/saida") &&
-          (!isViewer || i.to === "/estoque" || i.to === "/recibos"),
+          (!i.writeOnly || !isViewer) &&
+          (!isViewer || i.to === "/dashboard" || i.to === "/estoque" || i.to === "/recibos"),
         );
         if (!items.length) return null;
         return (
@@ -183,6 +183,7 @@ function UnitSwitcher() {
         <Badge variant="secondary" className="max-w-[220px] truncate">{unitId === ALL_UNITS ? "Todas as unidades" : units.find((u) => u.id === unitId)?.nome ?? "—"}</Badge>
       ) : (
         <select id="unit-switch" value={unitId ?? ""} onChange={(e) => setUnitId(e.target.value)} className="h-8 max-w-[240px] truncate rounded-md border border-input bg-background px-2 text-sm font-medium outline-none focus-visible:ring-1 focus-visible:ring-ring">
+          {isViewer && <option value={ALL_UNITS}>Todas as unidades</option>}
           {units.map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
         </select>
       )}
@@ -195,7 +196,7 @@ function Shell({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const { isAdmin, isViewer } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const viewerAllowed = pathname === "/estoque" || pathname === "/recibos" || pathname === "/saida";
+  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos";
 
   return (
     <div className="min-h-screen bg-background md:flex">
@@ -235,7 +236,7 @@ function Shell({ children }: { children: ReactNode }) {
             <div className="rounded-lg border border-border bg-card p-8 text-center">
               <h1 className="text-lg font-semibold">Acesso somente para consulta</h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                O Centro de Distribuição — Gabinete SEMADS controla o estoque central e envia materiais para as unidades autorizadas pelo CEO.
+                O usuário visualizador tem acesso somente à consulta dos estoques de todas as unidades, incluindo o Centro de Distribuição, e aos recibos de produtos enviados.
               </p>
             </div>
           ) : children}
