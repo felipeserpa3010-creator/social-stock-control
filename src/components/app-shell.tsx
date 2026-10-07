@@ -14,7 +14,6 @@ import {
   Settings,
   ScanLine,
   ShieldCheck,
-  TrendingUp,
   Warehouse,
   X,
 } from "lucide-react";
@@ -55,7 +54,6 @@ const NAV: { group: string; items: NavItem[] }[] = [
   {
     group: "Análise e relatórios",
     items: [
-      { to: "/medias", label: "Média de consumo", icon: TrendingUp },
       { to: "/relatorios", label: "Relatórios PDF", icon: FileDown },
     ],
   },
