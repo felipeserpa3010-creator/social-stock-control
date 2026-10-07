@@ -21,7 +21,7 @@ export type StockEntry = {
   unit: { nome: string; sigla: string | null } | null;
 };
 export type MovementRow = Movement & {
-  products: Product | null;
+  products: ProductWithCategory | null;
   units: { nome: string } | null;
 };
 export type StockReceipt = {
@@ -65,7 +65,8 @@ async function currentUserId() {
   return id;
 }
 
-const ALL_UNITS_SCOPE = "__all__";
+export const ALL_UNITS = "__all__";
+const ALL_UNITS_SCOPE = ALL_UNITS;
 
 /* ------------------------------------------------------------------ *
  * Leituras
