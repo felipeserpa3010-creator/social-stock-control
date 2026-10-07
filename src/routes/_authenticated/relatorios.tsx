@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileDown } from "lucide-react";
 import { toast } from "sonner";
-import { ALL_UNITS, useUnit } from "@/hooks/useUnit";
+import { useUnit } from "@/hooks/useUnit";
 import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
 import { computeMediaMap, lastMonths } from "@/lib/media";
 import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
@@ -39,6 +39,12 @@ function ReportsPage() {
   const [loading, setLoading] = useState(false);
   const series = useMemo(() => lastMonths(12), []);
   const media = useMemo(() => computeMediaMap(movements, series), [movements, series]);
+  const selectedMonths = useMemo(() => {
+    const start = from ? new Date(`${from}T12:00:00`) : null;
+    const end = to ? new Date(`${to}T12:00:00`) : null;
+    if (!start || !end) return 1;
+    return Math.max(1, (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth() + 1);
+  }, [from, to]);
 
   const generate = async () => {
     setLoading(true);
@@ -67,7 +73,7 @@ a.produto.localeCompare(b.produto, "pt-BR"),
         instituicao: settings?.nome_instituicao ?? "Assistência Social",
         secretaria: settings?.nome_secretaria ?? "",
         logoUrl: settings?.logo_url ?? null,
-        unidade: unit?.nome ?? (unitId === ALL_UNITS ? "Todas as unidades" : "Unidade"),
+        unidade: unit?.nome ?? "Unidade",
         dataConferencia: today,
         incluirMedia: withMedia,
         rows,
@@ -86,11 +92,16 @@ a.produto.localeCompare(b.produto, "pt-BR"),
     try {
       if (from && to && from > to) throw new Error("A data inicial não pode ser maior que a data final.");
       const totals = new Map<string, InventoryRow>();
+      const categoryTotals = new Map<string, { total: number; monthlyAverage: number }>();
       periodMovements
         .filter((m) => m.tipo === "saida")
         .forEach((m) => {
           const product = m.products;
           if (!product) return;
+          const category = product.categories?.nome ?? "Sem categoria";
+          const categoryCurrent = categoryTotals.get(category) ?? { total: 0, monthlyAverage: 0 };
+          categoryCurrent.total += Number(m.quantidade);
+          categoryTotals.set(category, categoryCurrent);
           const current = totals.get(product.id);
           if (current) current.estoque += Number(m.quantidade);
           else {
@@ -102,6 +113,7 @@ a.produto.localeCompare(b.produto, "pt-BR"),
           }
         });
 
+      const categorySummary = Array.from(categoryTotals.entries()).map(([categoria, values]) => ({ categoria, total: values.total, mediaMensal: values.total / selectedMonths })).sort((a,b) => b.total-a.total);
       const rows = Array.from(totals.values()).sort((a, b) =>
         a.produto.localeCompare(b.produto, "pt-BR"),
       );
@@ -119,7 +131,7 @@ a.produto.localeCompare(b.produto, "pt-BR"),
         rows,
         assinatura: false,
       });
-      doc.save(reportFileName("Consumo", unit?.nome ?? "Todas-as-unidades", to || today));
+      doc.save(reportFileName("Consumo", unit?.nome ?? "Unidade", to || today));
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Não foi possível gerar o relatório de consumo.");
     } finally {
@@ -129,7 +141,7 @@ a.produto.localeCompare(b.produto, "pt-BR"),
 
   return (
     <>
-      <PageHeader title="Relatórios" description={unitId === ALL_UNITS ? "Gere um PDF consolidado com o estoque de todas as unidades." : "Gere o PDF do estoque atual da unidade para impressão e arquivamento."} />
+      <PageHeader title="Relatórios" description="Consumo, média mensal e estoque da unidade selecionada." />
       <Panel title="Relatório de consumo por período" description="Selecione as datas para apurar as saídas registradas e gerar um PDF.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid gap-3 sm:grid-cols-2">
@@ -142,7 +154,7 @@ a.produto.localeCompare(b.produto, "pt-BR"),
         </div>
       </Panel>
 
-      <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} registros de estoque${unitId === ALL_UNITS ? " — todas as unidades" : ""}.`}>
+      <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} registros de estoque.`}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <Checkbox id="with-media" checked={withMedia} onCheckedChange={(v) => setWithMedia(v === true)} />
