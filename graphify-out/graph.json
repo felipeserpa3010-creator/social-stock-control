@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T03:47:29.668594+00:00",
+  "generated_at": "2026-10-07T03:48:16.606836+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -498,8 +498,16 @@
       "bytes": 7220
     },
     {
+      "path": "src/routes/_authenticated/historico.tsx",
+      "bytes": 284
+    },
+    {
       "path": "src/routes/_authenticated/saida.tsx",
       "bytes": 1469
+    },
+    {
+      "path": "src/routes/_authenticated/conferencias.tsx",
+      "bytes": 287
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
@@ -518,6 +526,10 @@
       "bytes": 4159
     },
     {
+      "path": "src/routes/_authenticated/conferencia.tsx",
+      "bytes": 286
+    },
+    {
       "path": "src/routes/_authenticated/entrada.tsx",
       "bytes": 1365
     },
@@ -528,6 +540,10 @@
     {
       "path": "src/routes/_authenticated/route.tsx",
       "bytes": 722
+    },
+    {
+      "path": "src/routes/_authenticated/medias.tsx",
+      "bytes": 281
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
@@ -2192,6 +2208,10 @@
       "target": "@/components/ui/table"
     },
     {
+      "source": "src/routes/_authenticated/historico.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
       "source": "src/routes/_authenticated/saida.tsx",
       "target": "@tanstack/react-router"
     },
@@ -2210,6 +2230,10 @@
     {
       "source": "src/routes/_authenticated/saida.tsx",
       "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/conferencias.tsx",
+      "target": "@tanstack/react-router"
     },
     {
       "source": "src/routes/_authenticated/recibos.tsx",
@@ -2424,6 +2448,10 @@
       "target": "@/lib/brand"
     },
     {
+      "source": "src/routes/_authenticated/conferencia.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
       "source": "src/routes/_authenticated/entrada.tsx",
       "target": "@tanstack/react-router"
     },
@@ -2506,6 +2534,10 @@
     {
       "source": "src/routes/_authenticated/route.tsx",
       "target": "@/components/app-shell"
+    },
+    {
+      "source": "src/routes/_authenticated/medias.tsx",
+      "target": "@tanstack/react-router"
     },
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
