@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T03:48:45.562647+00:00",
+  "generated_at": "2026-10-07T13:16:48.994430+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -219,7 +219,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 19108
+      "bytes": 19156
     },
     {
       "path": "src/lib/utils.ts",
@@ -511,7 +511,7 @@
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
-      "bytes": 8094
+      "bytes": 8060
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
@@ -2254,10 +2254,6 @@
     {
       "source": "src/routes/_authenticated/recibos.tsx",
       "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/hooks/useUnit"
     },
     {
       "source": "src/routes/_authenticated/recibos.tsx",
