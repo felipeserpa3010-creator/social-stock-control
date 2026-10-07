@@ -72,6 +72,8 @@ function ProductsPage() {
   const [form, setForm] = useState(emptyProduct);
   const [saving, setSaving] = useState(false);
   const [confirm, setConfirm] = useState<Product | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   if (!isAdmin) {
     return (
@@ -153,11 +155,24 @@ function ProductsPage() {
     }
   };
 
+  const toggleSelected = (id: string) => {
+    setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
+  };
+
+  const allRowsSelected = rows.length > 0 && rows.every((p) => selectedIds.includes(p.id));
+
+  const toggleSelectAll = () => {
+    setSelectedIds((current) => allRowsSelected
+      ? current.filter((id) => !rows.some((p) => p.id === id))
+      : Array.from(new Set([...current, ...rows.map((p) => p.id)])));
+  };
+
   const doDelete = async () => {
     if (!confirm) return;
     try {
       await removeProduct(confirm.id);
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      setSelectedIds((current) => current.filter((id) => id !== confirm.id));
       toast.success("Produto excluído.");
     } catch {
       toast.error("Não foi possível excluir este produto. Verifique os dados e tente novamente.");
@@ -197,6 +212,15 @@ function ProductsPage() {
             actions={
               <div className="flex flex-wrap items-center gap-2">
                 <SearchInput value={term} onChange={setTerm} placeholder="Buscar produto..." className="w-44" />
+                <Button size="sm" variant="outline" onClick={toggleSelectAll} disabled={!rows.length || bulkDeleting}>
+                  {allRowsSelected ? "Desmarcar todos" : "Selecionar todos"}
+                </Button>
+                {selectedIds.length > 0 && (
+                  <Button size="sm" variant="destructive" onClick={doBulkDelete} disabled={bulkDeleting}>
+                    {bulkDeleting && <Loader2 className="animate-spin" />}
+                    <Trash2 /> Excluir selecionados ({selectedIds.length})
+                  </Button>
+                )}
                 <select value={catFilter} onChange={(e) => setCatFilter(e.target.value)} aria-label="Filtrar categoria" className="h-9 rounded-md border border-input bg-background px-2 text-sm">
                   <option value="">Todas as categorias</option>
                   {categories.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
@@ -215,7 +239,7 @@ function ProductsPage() {
                 <Table className="min-w-[760px]">
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Produto</TableHead>
+                      <TableHead className="w-10"><input type="checkbox" className="size-4 accent-primary" checked={allRowsSelected} onChange={toggleSelectAll} aria-label="Selecionar todos os produtos" /></TableHead>\n                      <TableHead>Produto</TableHead>
                       <TableHead>Categoria</TableHead>
                       <TableHead>Medida</TableHead>
                       <TableHead className="text-right">Mínimo</TableHead>
