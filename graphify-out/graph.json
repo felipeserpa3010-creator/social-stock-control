@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T19:10:42.405214+00:00",
+  "generated_at": "2026-10-07T02:43:23.517174+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -163,7 +163,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 11685
+      "bytes": 11726
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -203,7 +203,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 18199
+      "bytes": 18250
     },
     {
       "path": "src/lib/format.ts",
@@ -515,7 +515,7 @@
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 14339
+      "bytes": 14353
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
