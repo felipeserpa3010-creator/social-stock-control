@@ -187,8 +187,6 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
         ? "Centro de Distribuição — Gabinete SEMADS"
         : role === "visualizador"
           ? "Visualizador"
-          : role === "responsavel"
-          ? "Centro de Distribuição — Gabinete SEMADS"
           : "Responsável pela unidade";
 
   return (
