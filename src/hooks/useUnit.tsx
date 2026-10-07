@@ -42,7 +42,7 @@ export function UnitProvider({ children }: { children: ReactNode }) {
     if (locked && profile?.unit_id) return profile.unit_id;
     if (stored && units.some((u) => u.id === stored)) return stored;
     return units[0]?.id ?? null;
-  }, [locked, profile?.unit_id, stored, units]);
+  }, [locked, profile?.unit_id, stored, units, viewer]);
 
   const setUnitId = (id: string) => {
     if (locked || (viewer && !units.some((u) => u.id === id))) return;
