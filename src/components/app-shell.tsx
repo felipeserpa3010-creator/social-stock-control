@@ -29,8 +29,8 @@ import { VirtualAssistant } from "@/components/virtual-assistant";
 import { semadsLogoUrl } from "@/lib/brand";
 
 type NavItem = {
-  to: "/dashboard" | "/estoque" | "/entrada" | "/saida" | "/conferencia" | "/medias" |
-    "/relatorios" | "/historico" | "/conferencias" | "/recibos" | "/unidades" | "/produtos" |
+  to: "/dashboard" | "/estoque" | "/entrada" | "/saida" |
+    "/relatorios" | "/recibos" | "/unidades" | "/produtos" |
     "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento";
   label: string;
   icon: typeof Boxes;
