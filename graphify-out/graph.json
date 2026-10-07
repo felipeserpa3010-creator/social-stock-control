@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T03:47:15.019113+00:00",
+  "generated_at": "2026-10-07T03:47:29.668594+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -219,7 +219,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 21563
+      "bytes": 19108
     },
     {
       "path": "src/lib/utils.ts",
