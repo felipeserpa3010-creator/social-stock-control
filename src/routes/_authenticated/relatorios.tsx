@@ -98,7 +98,10 @@ a.produto.localeCompare(b.produto, "pt-BR"),
         .forEach((m) => {
           const product = m.products;
           if (!product) return;
-          const category = product.categories?.nome ?? "Sem categoria";
+          const rawCategory = product.categories?.nome?.trim() ?? "Sem categoria";
+          const normalized = rawCategory.toLowerCase();
+          if (normalized === "grãos" || normalized === "graos") return;
+          const category = normalized.includes("higiene") || normalized.includes("limpeza") ? "Materiais de Higiene e Limpeza" : rawCategory;
           const categoryCurrent = categoryTotals.get(category) ?? { total: 0, monthlyAverage: 0 };
           categoryCurrent.total += Number(m.quantidade);
           categoryTotals.set(category, categoryCurrent);
@@ -123,12 +126,13 @@ a.produto.localeCompare(b.produto, "pt-BR"),
         instituicao: settings?.nome_instituicao ?? "Assistência Social",
         secretaria: settings?.nome_secretaria ?? "",
         logoUrl: settings?.logo_url ?? null,
-        unidade: unit?.nome ?? (unitId === ALL_UNITS ? "Todas as unidades" : "Unidade"),
+        unidade: unit?.nome ?? "Unidade",
         dataConferencia: today,
         periodoSelecionado: { ...(from ? { from } : {}), ...(to ? { to } : {}) },
         incluirMedia: false,
         modo: "consumo",
         rows,
+        categorySummary,
         assinatura: false,
       });
       doc.save(reportFileName("Consumo", unit?.nome ?? "Unidade", to || today));
