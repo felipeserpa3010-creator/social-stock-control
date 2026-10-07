@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileDown } from "lucide-react";
 import { toast } from "sonner";
 import { useUnit } from "@/hooks/useUnit";
+import { supabase } from "@/integrations/supabase/client";
 import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
 import { computeMediaMap, lastMonths } from "@/lib/media";
 import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
@@ -14,6 +15,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/_authenticated/relatorios")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" });
+    const { data: isResponsible } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "responsavel" });
+    if (isAdmin !== true && isResponsible !== true) throw redirect({ to: "/dashboard" });
+  },
   head: () => ({
     meta: [
       { title: "Relatórios — Controle de Estoque" },
