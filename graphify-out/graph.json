@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T03:48:16.606836+00:00",
+  "generated_at": "2026-10-07T03:48:36.775023+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -491,7 +491,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 8411
+      "bytes": 8806
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -503,7 +503,7 @@
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
-      "bytes": 1469
+      "bytes": 2216
     },
     {
       "path": "src/routes/_authenticated/conferencias.tsx",
@@ -2134,6 +2134,10 @@
     {
       "source": "src/routes/_authenticated/recebimento.tsx",
       "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/recebimento.tsx",
