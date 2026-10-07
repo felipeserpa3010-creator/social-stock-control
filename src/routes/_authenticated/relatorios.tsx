@@ -52,9 +52,8 @@ function ReportsPage() {
       const byProduct = new Map<string, InventoryRow>();
       stock.forEach((s) => {
         const current = byProduct.get(s.product.id);
-        if (current) {
-          current.estoque += s.quantity;
-        } else {
+        if (current) current.estoque += s.quantity;
+        else {
           byProduct.set(s.product.id, {
             produto: s.product.nome,
             medida: s.product.unidade_medida,
@@ -63,9 +62,8 @@ function ReportsPage() {
           });
         }
       });
-      const rows: InventoryRow[] = Array.from(byProduct.values()).sort(
-        (a, b) =>
-a.produto.localeCompare(b.produto, "pt-BR"),
+      const rows: InventoryRow[] = Array.from(byProduct.values()).sort((a, b) =>
+        a.produto.localeCompare(b.produto, "pt-BR"),
       );
       const today = new Date().toISOString().slice(0, 10);
       const doc = await buildInventoryPdf({
@@ -100,8 +98,20 @@ a.produto.localeCompare(b.produto, "pt-BR"),
           if (!product) return;
           const rawCategory = product.categories?.nome?.trim() ?? "Sem categoria";
           const normalized = rawCategory.toLowerCase();
-          if (normalized === "grãos" || normalized === "graos") return;
-          const category = normalized.includes("higiene") || normalized.includes("limpeza") ? "Materiais de Higiene e Limpeza" : rawCategory;
+
+          let category = rawCategory;
+          if (normalized === "grãos" || normalized === "graos" || normalized === "grãos e cereais" || normalized === "graos e cereais") {
+            category = "Grãos e Cereais";
+          } else if (normalized.includes("higiene") || normalized.includes("limpeza")) {
+            category = "Materiais de Higiene e Limpeza";
+          } else if (normalized === "óleo" || normalized === "oleo" || normalized === "óleos e gorduras" || normalized === "oleos e gorduras") {
+            category = "Óleos e Gorduras";
+          } else if (normalized === "açúcar" || normalized === "acucar" || normalized === "açúcares e adoçantes" || normalized === "acucares e adoçantes") {
+            category = "Açúcares e Adoçantes";
+          } else if (normalized === "leite" || normalized === "laticínios" || normalized === "laticinios") {
+            category = "Laticínios";
+          }
+
           const categoryCurrent = categoryTotals.get(category) ?? { total: 0, monthlyAverage: 0 };
           categoryCurrent.total += Number(m.quantidade);
           categoryTotals.set(category, categoryCurrent);
@@ -109,14 +119,16 @@ a.produto.localeCompare(b.produto, "pt-BR"),
           if (current) current.estoque += Number(m.quantidade);
           else {
             totals.set(product.id, {
-                produto: product.nome,
+              produto: product.nome,
               medida: product.unidade_medida,
               estoque: Number(m.quantidade),
             });
           }
         });
 
-      const categorySummary = Array.from(categoryTotals.entries()).map(([categoria, values]) => ({ categoria, total: values.total, mediaMensal: values.total / selectedMonths })).sort((a,b) => b.total-a.total);
+      const categorySummary = Array.from(categoryTotals.entries())
+        .map(([categoria, values]) => ({ categoria, total: values.total, mediaMensal: values.total / selectedMonths }))
+        .sort((a, b) => b.total - a.total);
       const rows = Array.from(totals.values()).sort((a, b) =>
         a.produto.localeCompare(b.produto, "pt-BR"),
       );
