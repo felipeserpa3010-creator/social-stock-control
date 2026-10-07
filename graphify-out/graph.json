@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T02:43:23.517174+00:00",
+  "generated_at": "2026-10-07T02:49:07.472180+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -163,7 +163,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 11726
+      "bytes": 11844
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -271,7 +271,7 @@
     },
     {
       "path": "src/hooks/useUnit.tsx",
-      "bytes": 2438
+      "bytes": 2427
     },
     {
       "path": "src/integrations/supabase/cron-auth.ts",
@@ -543,7 +543,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 14684
+      "bytes": 17980
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
