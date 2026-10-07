@@ -168,7 +168,7 @@ export const adminCreateUser = createServerFn({ method: "POST" })
     if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
     if (d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
     if (!d.unit_id) throw new Error("Selecione a unidade.");
-    if (d.role === "visualizador" && !d.unit_id) throw new Error("O Visualizador deve ser vinculado ao Gabinete SEMADS.");
+    if (d.role === "visualizador" && !d.unit_id) throw new Error("O Centro de Distribuição deve ser vinculado ao Gabinete SEMADS.");
     return {
       nome: d.nome.trim(),
       email: d.email.trim().toLowerCase(),
@@ -192,10 +192,10 @@ export const adminCreateUser = createServerFn({ method: "POST" })
       if (unitError) throw new Error(unitError.message);
       const isSemads = unit?.nome?.toLowerCase() === "gabinete semads";
       if (isSemads && data.role !== "visualizador") {
-        throw new Error("Usuários do Gabinete SEMADS devem ser cadastrados como Visualizador.");
+        throw new Error("Usuários do Gabinete SEMADS devem ser cadastrados no perfil do Centro de Distribuição.");
       }
       if (!isSemads && data.role === "visualizador") {
-        throw new Error("O perfil do Depósito Central é exclusivo do Gabinete SEMADS.");
+        throw new Error("O perfil do Centro de Distribuição é exclusivo do Gabinete SEMADS.");
       }
     }
 
@@ -329,7 +329,7 @@ export const adminSetViewerUnits = createServerFn({ method: "POST" })
     await assertAdmin(context.supabase as any, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: role } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", data.user_id).maybeSingle();
-    if (role?.role !== "visualizador") throw new Error("As unidades autorizadas só podem ser definidas para o Visualizador do Gabinete SEMADS.");
+    if (role?.role !== "visualizador") throw new Error("As unidades autorizadas só podem ser definidas para o Centro de Distribuição do Gabinete SEMADS.");
     const { data: units, error: unitsError } = await supabaseAdmin.from("units").select("id").in("id", data.unit_ids).eq("ativo", true);
     if (unitsError) throw new Error(unitsError.message);
     if ((units?.length ?? 0) !== data.unit_ids.length) throw new Error("Uma ou mais unidades selecionadas são inválidas.");
