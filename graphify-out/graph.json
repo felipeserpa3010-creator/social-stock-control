@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T03:41:27.287409+00:00",
+  "generated_at": "2026-10-07T03:47:06.230590+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -167,7 +167,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 12943
+      "bytes": 12881
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -498,16 +498,8 @@
       "bytes": 7220
     },
     {
-      "path": "src/routes/_authenticated/historico.tsx",
-      "bytes": 10591
-    },
-    {
       "path": "src/routes/_authenticated/saida.tsx",
       "bytes": 1469
-    },
-    {
-      "path": "src/routes/_authenticated/conferencias.tsx",
-      "bytes": 7478
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
@@ -515,7 +507,7 @@
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
-      "bytes": 8809
+      "bytes": 9330
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
@@ -523,11 +515,7 @@
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
-      "bytes": 4167
-    },
-    {
-      "path": "src/routes/_authenticated/conferencia.tsx",
-      "bytes": 10346
+      "bytes": 4159
     },
     {
       "path": "src/routes/_authenticated/entrada.tsx",
@@ -535,15 +523,11 @@
     },
     {
       "path": "src/routes/_authenticated/unidades.tsx",
-      "bytes": 10431
+      "bytes": 10804
     },
     {
       "path": "src/routes/_authenticated/route.tsx",
       "bytes": 722
-    },
-    {
-      "path": "src/routes/_authenticated/medias.tsx",
-      "bytes": 9527
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
@@ -555,7 +539,7 @@
     },
     {
       "path": "src/routes/_authenticated/produtos.tsx",
-      "bytes": 18122
+      "bytes": 18491
     },
     {
       "path": "drizzle/migrations/0000_stock_receipts.sql",
@@ -2208,62 +2192,6 @@
       "target": "@/components/ui/table"
     },
     {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/hooks/useAuth"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@/components/ui/table"
-    },
-    {
       "source": "src/routes/_authenticated/saida.tsx",
       "target": "@tanstack/react-router"
     },
@@ -2284,50 +2212,6 @@
       "target": "@/hooks/useAuth"
     },
     {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@/lib/pdf"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
       "source": "src/routes/_authenticated/recibos.tsx",
       "target": "@tanstack/react-router"
     },
@@ -2394,6 +2278,10 @@
     {
       "source": "src/routes/_authenticated/relatorios.tsx",
       "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/relatorios.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/relatorios.tsx",
@@ -2536,62 +2424,6 @@
       "target": "@/lib/brand"
     },
     {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/hooks/useAuth"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/components/ui/textarea"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencia.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
       "source": "src/routes/_authenticated/entrada.tsx",
       "target": "@tanstack/react-router"
     },
@@ -2610,6 +2442,10 @@
     {
       "source": "src/routes/_authenticated/unidades.tsx",
       "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/unidades.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/unidades.tsx",
@@ -2670,50 +2506,6 @@
     {
       "source": "src/routes/_authenticated/route.tsx",
       "target": "@/components/app-shell"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@/lib/media"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/medias.tsx",
-      "target": "@/components/ui/table"
     },
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
@@ -2778,6 +2570,10 @@
     {
       "source": "src/routes/_authenticated/produtos.tsx",
       "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/produtos.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/produtos.tsx",
