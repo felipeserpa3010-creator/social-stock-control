@@ -139,54 +139,15 @@ export function stockOptions(unitId: string | null) {
         products: ProductWithCategory | null;
       }>;
 
-      // Entradas do CEO ficam pendentes até o responsável confirmar.
-      let pendingQuery = supabase
-        .from("stock_movements")
-        .select("id, product_id, unit_id, quantidade")
-        .eq("tipo", "entrada")
-        .ilike("observacao", "%PENDENTE_RECEBIMENTO%");
-      if (unitId !== ALL_UNITS_SCOPE) pendingQuery = pendingQuery.eq("unit_id", unitId as string);
-      const { data: pendingMovements, error: pendingError } = await pendingQuery.limit(5000);
-      if (pendingError) throw message(pendingError);
-      const pending = (pendingMovements ?? []) as Array<{ id: string; product_id: string; unit_id: string; quantidade: number }>;
-      const confirmedIds = new Set<string>();
-      if (pending.length) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data: receipts, error: receiptError } = await (supabase as any)
-          .from("stock_receipts")
-          .select("movement_id")
-          .in("movement_id", pending.map((m) => m.id));
-        if (receiptError) throw message(receiptError);
-        (receipts ?? []).forEach((r: { movement_id: string }) => confirmedIds.add(r.movement_id));
-      }
-      const pendingByStock = new Map<string, number>();
-      pending.forEach((m) => {
-        if (confirmedIds.has(m.id)) return;
-        const key = m.product_id + ":" + m.unit_id;
-        pendingByStock.set(key, (pendingByStock.get(key) ?? 0) + Number(m.quantidade));
-      });
-
       return rows
-        .filter((r) => {
-          if (!r.products) return false;
-          const key = r.product_id + ":" + r.unit_id;
-          const pendingQty = pendingByStock.get(key) ?? 0;
-          // Uma entrada pendente não pode aparecer no estoque da unidade.
-          // Se todo o saldo atual veio de lançamentos ainda não confirmados,
-          // ocultamos a ficha até o responsável confirmar o recebimento.
-          return Number(r.quantidade) > pendingQty;
-        })
-        .map<StockEntry>((r) => {
-          const key = r.product_id + ":" + r.unit_id;
-          const pendingQty = pendingByStock.get(key) ?? 0;
-          return {
-            product: r.products as ProductWithCategory,
-            quantity: Math.max(0, Number(r.quantidade) - pendingQty),
-            updated_at: r.updated_at,
-            unit_id: r.unit_id,
-            unit: r.units,
-          };
-        });
+        .filter((r) => Boolean(r.products))
+        .map<StockEntry>((r) => ({
+          product: r.products as ProductWithCategory,
+          quantity: Number(r.quantidade),
+          updated_at: r.updated_at,
+          unit_id: r.unit_id,
+          unit: r.units,
+        }));
     },
   });
 }
