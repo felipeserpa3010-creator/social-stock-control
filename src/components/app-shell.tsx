@@ -160,7 +160,7 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
           <span className="min-w-0 flex-1">
             <span className="block truncate text-[13px] font-semibold text-sidebar-foreground">{profile?.nome ?? "Usuário"}</span>
             <span className="block truncate text-[11px] text-sidebar-foreground/60">
-              {role === "admin" ? "Administrador Principal" : role === "visualizador" ? "Visualizador — SEMADS" : "Responsável pela unidade"}
+              {role === "admin" ? "Administrador Principal" : role === "visualizador" ? "Centro de Distribuição — Gabinete SEMADS" : "Responsável pela unidade"}
             </span>
           </span>
         )}
@@ -235,7 +235,7 @@ function Shell({ children }: { children: ReactNode }) {
             <div className="rounded-lg border border-border bg-card p-8 text-center">
               <h1 className="text-lg font-semibold">Acesso somente para consulta</h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                O Gabinete SEMADS pode visualizar apenas o estoque e os Recibos de Produtos das unidades autorizadas pelo CEO.
+                O Centro de Distribuição — Gabinete SEMADS controla o estoque central e envia materiais para as unidades autorizadas pelo CEO.
               </p>
             </div>
           ) : children}
