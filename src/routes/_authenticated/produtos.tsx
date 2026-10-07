@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/produtos")({
     meta: [
       { title: "Produtos e categorias — Controle de Estoque" },
       { name: "description", content: "Cadastro de produtos da dispensa, unidades de medida, mínimos e categorias." },
-      { property: "og:title", content: "Produtos e categorias — Controle de Inventário" },
+      { property: "og:title", content: "Produtos e categorias — Controle de Estoque" },
       { property: "og:description", content: "Gerencie os produtos controlados no estoque e suas categorias." },
     ],
   }),
