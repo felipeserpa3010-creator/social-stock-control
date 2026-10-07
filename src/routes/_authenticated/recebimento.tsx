@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Clock3 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { useUnit } from "@/hooks/useUnit";
 import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
 import { formatDate, formatQty } from "@/lib/format";
@@ -13,6 +14,12 @@ import { buildReceiptPdf } from "@/lib/pdf";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/recebimento")({
+  beforeLoad: async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) throw redirect({ to: "/auth" });
+    const { data: isResponsible } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "responsavel" });
+    if (isResponsible !== true) throw redirect({ to: "/dashboard" });
+  },
   head: () => ({ meta: [
     { title: "Confirmar recebimento — Controle de Estoque" },
     { name: "description", content: "Confirme o recebimento das mercadorias lançadas pelo CEO." },
