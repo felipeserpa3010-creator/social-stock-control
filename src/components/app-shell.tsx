@@ -19,7 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { ALL_UNITS, useUnit, UnitProvider } from "@/hooks/useUnit";
+import { useUnit, UnitProvider } from "@/hooks/useUnit";
 import { settingsOptions } from "@/lib/queries";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
@@ -180,10 +180,9 @@ function UnitSwitcher() {
     <div className="flex items-center gap-2">
       <label htmlFor="unit-switch" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Unidade</label>
       {locked ? (
-        <Badge variant="secondary" className="max-w-[220px] truncate">{unitId === ALL_UNITS ? "Todas as unidades" : units.find((u) => u.id === unitId)?.nome ?? "—"}</Badge>
+        <Badge variant="secondary" className="max-w-[220px] truncate">{units.find((u) => u.id === unitId)?.nome ?? "—"}</Badge>
       ) : (
         <select id="unit-switch" value={unitId ?? ""} onChange={(e) => setUnitId(e.target.value)} className="h-8 max-w-[240px] truncate rounded-md border border-input bg-background px-2 text-sm font-medium outline-none focus-visible:ring-1 focus-visible:ring-ring">
-          {isViewer && <option value={ALL_UNITS}>Todas as unidades</option>}
           {units.map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
         </select>
       )}
