@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T03:19:20.441472+00:00",
+  "generated_at": "2026-10-07T03:41:27.287409+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -122,6 +122,10 @@
       "bytes": 5877
     },
     {
+      "path": "supabase/migrations/20261007003500_corrige_reversao_pendente.sql",
+      "bytes": 1952
+    },
+    {
       "path": "supabase/migrations/20261002093000_confirmacao_recebimento.sql",
       "bytes": 1280
     },
@@ -163,7 +167,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 12796
+      "bytes": 12943
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -215,7 +219,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 23621
+      "bytes": 21563
     },
     {
       "path": "src/lib/utils.ts",
@@ -271,7 +275,7 @@
     },
     {
       "path": "src/hooks/useUnit.tsx",
-      "bytes": 2402
+      "bytes": 2410
     },
     {
       "path": "src/integrations/supabase/cron-auth.ts",
