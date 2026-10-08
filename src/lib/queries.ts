@@ -385,6 +385,7 @@ export async function sendFromCentralDeposit(input: {
   quantidade: number;
   data: string;
   observacao?: string | null;
+  receipt_number?: string | null;
 }) {
   const { data, error } = await (supabase as any).rpc("send_from_central_deposit", {
     _product_id: input.product_id,
@@ -392,6 +393,7 @@ export async function sendFromCentralDeposit(input: {
     _quantity: input.quantidade,
     _data: input.data,
     _observacao: input.observacao ?? null,
+    _receipt_number: input.receipt_number ?? null,
   });
   if (error) throw message(error);
   return String(data);
