@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T13:39:55.222450+00:00",
+  "generated_at": "2026-10-08T13:51:28.932188+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -155,7 +155,7 @@
     },
     {
       "path": "src/components/movement-form.tsx",
-      "bytes": 20934
+      "bytes": 21650
     },
     {
       "path": "src/components/auth-layout.tsx",
@@ -219,7 +219,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 19685
+      "bytes": 19770
     },
     {
       "path": "src/lib/utils.ts",
@@ -291,7 +291,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 16716
+      "bytes": 16997
     },
     {
       "path": "src/integrations/supabase/client.ts",
@@ -570,12 +570,16 @@
       "bytes": 538
     },
     {
+      "path": "drizzle/migrations/0003_receipt_custom_order_number.sql",
+      "bytes": 3677
+    },
+    {
       "path": "drizzle/migrations/meta/0000_snapshot.json",
       "bytes": 336
     },
     {
       "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 517
+      "bytes": 672
     },
     {
       "path": "drizzle/migrations/meta/0001_snapshot.json",
@@ -583,6 +587,10 @@
     },
     {
       "path": "drizzle/migrations/meta/0002_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0003_snapshot.json",
       "bytes": 336
     }
   ],
