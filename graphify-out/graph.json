@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T16:46:30.131189+00:00",
+  "generated_at": "2026-10-08T16:46:47.156311+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -507,7 +507,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 9086
+      "bytes": 11296
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
