@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T13:51:28.932188+00:00",
+  "generated_at": "2026-10-08T14:14:34.879283+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -175,7 +175,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 17734
+      "bytes": 18311
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -191,7 +191,7 @@
     },
     {
       "path": "src/lib/pdf.ts",
-      "bytes": 11842
+      "bytes": 12365
     },
     {
       "path": "src/lib/lovable-error-reporting.ts",
