@@ -495,6 +495,21 @@ export function CentralDispatchForm() {
             </Field>
           </div>
 
+          <Field
+            label="Número da ordem de fornecimento"
+            htmlFor="ordem-fornecimento"
+            hint="Opcional. Se preenchido, será o número do recibo; se deixar em branco, o número é gerado automaticamente."
+          >
+            <Input
+              id="ordem-fornecimento"
+              autoComplete="off"
+              value={ordemFornecimento}
+              onChange={(e) => setOrdemFornecimento(e.target.value)}
+              placeholder="Ex.: OF-2026/015"
+              maxLength={60}
+            />
+          </Field>
+
           <Field label="Observação" htmlFor="observacao-deposito" hint="Opcional. Ex.: solicitação da unidade.">
             <Textarea
               id="observacao-deposito"
