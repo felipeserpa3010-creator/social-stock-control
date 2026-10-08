@@ -27,6 +27,7 @@ type ReceiptGroup = {
   unitName: string;
   date: string;
   confirmed: boolean;
+  numeroOrdemFornecimento: string | null;
 };
 
 function displayReceiptNumber(id: string) {
@@ -58,12 +59,14 @@ function ReceiptsPage() {
         unitName: groupEntries[0]?.units?.nome ?? "Unidade",
         date: groupEntries[0]?.data ?? "",
         confirmed: groupEntries.every((entry) => Boolean(entry.receipt)),
+        numeroOrdemFornecimento: orderNumberFromObservation(groupEntries[0]?.observacao),
       }))
       .filter((group) => {
         if (!term.trim()) return true;
         const q = term.trim().toLowerCase();
         return (
           displayReceiptNumber(group.id).toLowerCase().includes(q) ||
+          (group.numeroOrdemFornecimento ?? "").toLowerCase().includes(q) ||
           group.unitName.toLowerCase().includes(q) ||
           group.entries.some((entry) => (entry.products?.nome ?? "").toLowerCase().includes(q))
         );
@@ -133,7 +136,7 @@ function ReceiptsPage() {
           <SearchInput
             value={term}
             onChange={setTerm}
-            placeholder="Pesquisar recibo, unidade ou produto..."
+            placeholder="Pesquisar recibo, ordem de fornecimento, unidade ou produto..."
             className="w-72"
           />
         }
@@ -154,6 +157,7 @@ function ReceiptsPage() {
               <TableHeader>
                 <TableRow className="bg-muted/50">
                   <TableHead>Recibo</TableHead>
+                  <TableHead>Ordem de fornecimento</TableHead>
                   <TableHead>Unidade de destino</TableHead>
                   <TableHead>Data do lançamento</TableHead>
                   <TableHead>Produtos</TableHead>
@@ -165,6 +169,7 @@ function ReceiptsPage() {
                 {groups.map((group) => (
                   <TableRow key={group.id}>
                     <TableCell className="font-bold tabular-nums">Nº {displayReceiptNumber(group.id)}</TableCell>
+                    <TableCell className="font-semibold">{group.numeroOrdemFornecimento ?? "—"}</TableCell>
                     <TableCell className="font-medium">{group.unitName}</TableCell>
                     <TableCell>{formatDate(group.date)}</TableCell>
                     <TableCell>{group.entries.length}</TableCell>
@@ -209,6 +214,7 @@ function ReceiptsPage() {
                     <p className="font-semibold">Recibo de Produtos nº {displayReceiptNumber(group.id)}</p>
                     <p className="text-xs text-muted-foreground">
                       {group.unitName} · {formatDate(group.date)} · {group.confirmed ? "Recebido" : "Pendente"}
+                      {group.numeroOrdemFornecimento ? ` · OF: ${group.numeroOrdemFornecimento}` : ""}
                     </p>
                   </div>
                   <div className="flex gap-2">
