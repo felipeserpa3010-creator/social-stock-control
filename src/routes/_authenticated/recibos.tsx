@@ -173,9 +173,22 @@ function ReceiptsPage() {
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
-                        <Printer /> Imprimir
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
+                          <Printer /> Imprimir
+                        </Button>
+                        {isAdmin && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive hover:text-destructive"
+                            disabled={deleting}
+                            onClick={() => excluirRecibo(group)}
+                          >
+                            <Trash2 /> Excluir
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -197,9 +210,22 @@ function ReceiptsPage() {
                       {group.unitName} · {formatDate(group.date)} · {group.confirmed ? "Recebido" : "Pendente"}
                     </p>
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
-                    <FileText /> Consultar / imprimir
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
+                      <FileText /> Consultar / imprimir
+                    </Button>
+                    {isAdmin && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-destructive hover:text-destructive"
+                        disabled={deleting}
+                        onClick={() => excluirRecibo(group)}
+                      >
+                        <Trash2 /> Excluir
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <div className="overflow-x-auto">
                   <Table className="min-w-[620px]">
