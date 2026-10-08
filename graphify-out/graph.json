@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T14:14:43.100314+00:00",
+  "generated_at": "2026-10-08T14:15:04.887896+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -175,7 +175,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 18311
+      "bytes": 18428
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -219,7 +219,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 19770
+      "bytes": 19966
     },
     {
       "path": "src/lib/utils.ts",
@@ -491,7 +491,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 8806
+      "bytes": 8912
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -511,7 +511,7 @@
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
-      "bytes": 10268
+      "bytes": 10385
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
