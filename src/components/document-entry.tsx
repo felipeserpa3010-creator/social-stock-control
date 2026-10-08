@@ -124,7 +124,7 @@ export function DocumentEntry() {
     }
     setItems(parsed);
     setReciboId(null);
-    setNumeroOrdemFornecimento("");
+    // Preserve a ordem de fornecimento já informada; preparar a lista não pode apagar esse dado.
     setConfirmed(false);
     toast.success(parsed.length + " produto(s) preparados para conferência.");
   };
