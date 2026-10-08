@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T13:40:21.573043+00:00",
+  "generated_at": "2026-10-08T13:39:55.222450+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -219,7 +219,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 19156
+      "bytes": 19685
     },
     {
       "path": "src/lib/utils.ts",
@@ -511,7 +511,7 @@
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
-      "bytes": 8060
+      "bytes": 10268
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
@@ -555,7 +555,7 @@
     },
     {
       "path": "src/routes/_authenticated/produtos.tsx",
-      "bytes": 19953
+      "bytes": 20469
     },
     {
       "path": "drizzle/migrations/0000_stock_receipts.sql",
@@ -566,15 +566,23 @@
       "bytes": 747
     },
     {
+      "path": "drizzle/migrations/0002_allow_admin_delete_receipts.sql",
+      "bytes": 538
+    },
+    {
       "path": "drizzle/migrations/meta/0000_snapshot.json",
       "bytes": 336
     },
     {
       "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 362
+      "bytes": 517
     },
     {
       "path": "drizzle/migrations/meta/0001_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0002_snapshot.json",
       "bytes": 336
     }
   ],
@@ -2253,11 +2261,19 @@
     },
     {
       "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
       "target": "lucide-react"
     },
     {
       "source": "src/routes/_authenticated/recibos.tsx",
       "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/hooks/useAuth"
     },
     {
       "source": "src/routes/_authenticated/recibos.tsx",
