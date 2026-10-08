@@ -44,6 +44,11 @@ export function receiptIdFromObservation(observacao: string | null | undefined) 
   const match = String(observacao ?? "").match(/RECIBO_PRODUTOS:([^|\s]+)/);
   return match?.[1] ?? null;
 }
+
+export function orderNumberFromObservation(observacao: string | null | undefined) {
+  const match = String(observacao ?? "").match(/ORDEM_FORNECIMENTO:([^|\s]+)/);
+  return match?.[1] ?? null;
+}
 export type UserRow = {
   id: string;
   user_id: string;
