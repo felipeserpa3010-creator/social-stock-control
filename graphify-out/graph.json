@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T15:48:28.736271+00:00",
+  "generated_at": "2026-10-08T16:09:50.020545+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -191,7 +191,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 19196
+      "bytes": 19188
     },
     {
       "path": "src/lib/assistant-data.ts",
