@@ -285,6 +285,15 @@ export function pendingReceiptOptions(unitId: string | null, enabled = true) {
   });
 }
 
+async function deleteReceiptsForMovements(ids: string[]) {
+  if (!ids.length) return;
+  // A confirmação de recebimento referencia o lançamento; remova-a antes
+  // para não violar a chave estrangeira ao excluir o recibo.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase as any).from("stock_receipts").delete().in("movement_id", ids);
+  if (error) throw message(error);
+}
+
 export async function removePendingReceiptGroup(receiptId: string) {
   const { data: movements, error: readError } = await supabase
     .from("stock_movements")
@@ -296,6 +305,7 @@ export async function removePendingReceiptGroup(receiptId: string) {
     .filter((m) => String(m.observacao ?? "").includes("PENDENTE_RECEBIMENTO"))
     .map((m) => m.id);
   if (!pendingIds.length) throw new Error("Este recibo não possui produtos pendentes.");
+  await deleteReceiptsForMovements(pendingIds);
   const { error } = await supabase.from("stock_movements").delete().in("id", pendingIds);
   if (error) throw message(error);
 }
@@ -311,7 +321,8 @@ export async function removePendingReceipt(movementId: string) {
     throw new Error("Este lançamento não está pendente de recebimento.");
   }
 
-  // Só o CEO deve ter permissão para excluir. A política do banco continua
+  await deleteReceiptsForMovements([movementId]);
+  // Só o admin deve ter permissão para excluir. A política do banco continua
   // sendo a autoridade final sobre a operação.
   const { error } = await supabase.from("stock_movements").delete().eq("id", movementId);
   if (error) throw message(error);
