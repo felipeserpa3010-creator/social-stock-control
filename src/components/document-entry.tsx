@@ -182,18 +182,20 @@ export function DocumentEntry() {
 
     setSaving(true);
     try {
-      // Um único recibo identifica todos os produtos desta confirmação.
-      const { data: numeroRecibo, error: numeroReciboError } = await (supabase as any).rpc("next_stock_receipt_number");
-      // Se a migration do sequenciador ainda não tiver sido aplicada no Supabase,
-      // não bloqueamos o lançamento: usamos um identificador numérico temporário
-      // único para que o Recibo de Produtos seja gerado normalmente.
-      const reciboId =
-        !numeroReciboError && numeroRecibo
-          ? String(numeroRecibo)
-          : String(Date.now()).slice(-3).padStart(3, "0");
-      if (numeroReciboError) {
-        console.warn("Sequência do recibo indisponível; usando número temporário.", numeroReciboError);
+      const destinationUnit = activeUnits.find((unit) => unit.id === destination);
+      const isCentral = destinationUnit?.nome.trim().toLowerCase() === "gabinete semads";
+
+      // Unidades recebem um recibo pendente. O Depósito Central recebe
+      // diretamente no estoque, sem confirmação.
+      let reciboId: string | null = null;
+      if (!isCentral) {
+        const { data: numeroRecibo, error: numeroReciboError } = await (supabase as any).rpc("next_stock_receipt_number");
+        if (numeroReciboError || !numeroRecibo) {
+          throw new Error("Não foi possível gerar o número do recibo.");
+        }
+        reciboId = String(numeroRecibo);
       }
+
       for (const item of validItems) {
         let productId = item.productId;
         // Produto novo só é cadastrado depois da conferência e da confirmação final.
@@ -201,13 +203,25 @@ export function DocumentEntry() {
           const created = await ensureUncategorizedProduct(item.nome.trim(), item.unidade || "Unidade");
           productId = created.id;
         }
+
+        const observacao = isCentral
+          ? "Lançamento em massa no Depósito Central"
+          : [
+              "PENDENTE_RECEBIMENTO",
+              "RECIBO_PRODUTOS:" + reciboId,
+              numeroOrdemFornecimento.trim()
+                ? "ORDEM_FORNECIMENTO:" + numeroOrdemFornecimento.trim().replace(/\|/g, "")
+                : "",
+              "Entrada lançada em massa pelo CEO; aguardando confirmação da unidade",
+            ].filter(Boolean).join(" | ");
+
         await addMovement({
           unit_id: destination,
           product_id: productId,
           tipo: "entrada",
           quantidade: Number(item.quantidade.replace(",", ".")),
           data,
-          observacao: `PENDENTE_RECEBIMENTO | RECIBO_PRODUTOS:${reciboId}${numeroOrdemFornecimento.trim() ? ` | ORDEM_FORNECIMENTO:${numeroOrdemFornecimento.trim().replace(/\|/g, "")}` : ""} | Entrada lançada em massa pelo Administrador Principal; aguardando confirmação da unidade`,
+          observacao,
           responsavel: null,
         });
       }
@@ -217,7 +231,11 @@ export function DocumentEntry() {
       await queryClient.invalidateQueries({ queryKey: ["movements"] });
       setReciboId(reciboId);
       setConfirmed(true);
-      toast.success(validItems.length + " produto(s) enviados em um Recibo de Produtos para confirmação da unidade.");
+      toast.success(
+        isCentral
+          ? validItems.length + " produto(s) lançados diretamente no estoque do Depósito Central."
+          : validItems.length + " produto(s) enviados no Recibo nº " + reciboId + " para confirmação da unidade.",
+      );
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Não foi possível concluir o lançamento em massa.");
     } finally {
@@ -391,7 +409,7 @@ export function DocumentEntry() {
             </div>
 
             <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">
-              <strong>Importante:</strong> o sistema sempre para nesta tela de conferência. Produtos novos só serão cadastrados e as quantidades só serão lançadas no estoque quando você clicar em <strong>Confirmar lançamento</strong>.
+              <strong>Importante:</strong> o lançamento para uma unidade gera um recibo pendente e só entra no estoque depois da confirmação do usuário da própria unidade. Se o destino for o Depósito Central SEMADS, a entrada é contabilizada diretamente no estoque central.
             </div>
           </>
         )}
