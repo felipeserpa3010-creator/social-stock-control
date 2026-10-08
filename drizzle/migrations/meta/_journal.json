@@ -22,6 +22,13 @@
       "when": 1791466702792,
       "tag": "0002_allow_admin_delete_receipts",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791467405958,
+      "tag": "0003_receipt_custom_order_number",
+      "breakpoints": true
     }
   ]
 }

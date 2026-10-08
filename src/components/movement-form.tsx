@@ -379,6 +379,7 @@ export function CentralDispatchForm() {
   const [quantidade, setQuantidade] = useState("");
   const [data, setData] = useState(todayISO());
   const [observacao, setObservacao] = useState("");
+  const [ordemFornecimento, setOrdemFornecimento] = useState("");
   const [saving, setSaving] = useState(false);
 
   const product = products.find((p) => p.id === productId);
@@ -428,6 +429,7 @@ export function CentralDispatchForm() {
         quantidade: qty,
         data,
         observacao: observacao.trim() || null,
+        receipt_number: ordemFornecimento.trim() || null,
       });
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["stock"] }),
@@ -439,6 +441,7 @@ export function CentralDispatchForm() {
       setDestinationId("");
       setQuantidade("");
       setObservacao("");
+      setOrdemFornecimento("");
       setData(todayISO());
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível enviar os materiais.");
@@ -491,6 +494,21 @@ export function CentralDispatchForm() {
               <Input id="data-deposito" type="date" value={data} max={todayISO()} onChange={(e) => setData(e.target.value)} />
             </Field>
           </div>
+
+          <Field
+            label="Número da ordem de fornecimento"
+            htmlFor="ordem-fornecimento"
+            hint="Opcional. Se preenchido, será o número do recibo; se deixar em branco, o número é gerado automaticamente."
+          >
+            <Input
+              id="ordem-fornecimento"
+              autoComplete="off"
+              value={ordemFornecimento}
+              onChange={(e) => setOrdemFornecimento(e.target.value)}
+              placeholder="Ex.: OF-2026/015"
+              maxLength={60}
+            />
+          </Field>
 
           <Field label="Observação" htmlFor="observacao-deposito" hint="Opcional. Ex.: solicitação da unidade.">
             <Textarea
