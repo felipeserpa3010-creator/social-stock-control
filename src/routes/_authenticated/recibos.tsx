@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { FileText, Printer, Trash2 } from "lucide-react";
-import { ALL_UNITS, receivedEntriesOptions, receiptIdFromObservation, removePendingReceipt, removePendingReceiptGroup, type ReceivedEntryRow } from "@/lib/queries";
+import { ALL_UNITS, receivedEntriesOptions, receiptIdFromObservation, orderNumberFromObservation, removePendingReceipt, removePendingReceiptGroup, type ReceivedEntryRow } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton } from "@/components/ui-kit";
@@ -79,6 +79,7 @@ function ReceiptsPage() {
   const imprimirRecibo = async (group: ReceiptGroup) => {
     const doc = await buildReceiptPdf({
       reciboId: displayReceiptNumber(group.id),
+      numeroOrdemFornecimento: orderNumberFromObservation(group.entries[0]?.observacao),
       unidade: group.unitName,
       data: group.date || new Date().toISOString().slice(0, 10),
       rows: group.entries.map((entry) => ({
