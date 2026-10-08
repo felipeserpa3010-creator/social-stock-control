@@ -17,7 +17,7 @@ type DraftItem = { id: string; productId: string; nome: string; quantidade: stri
 const normalizeName = (value: string) =>
   value.toLocaleLowerCase("pt-BR").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
 
-const normalizeUnit = (value: string) => {
+const MASS_UNITS = ["Pacote", "Unidade", "Kg", "Saco", "Caixa"] as const;\n\nconst normalizeUnit = (value: string) => {
   const raw = value.toLocaleLowerCase("pt-BR").trim();
   if (/^kg$/.test(raw)) return "Kg";
   if (/^(g|gramas?)$/.test(raw)) return "g";
@@ -354,7 +354,7 @@ export function DocumentEntry() {
                           <Input inputMode="decimal" value={item.quantidade} onChange={(e) => updateItem(item.id, { quantidade: e.target.value })} placeholder="0" />
                         </td>
                         <td className="px-3 py-2">
-                          <Input value={item.unidade} onChange={(e) => updateItem(item.id, { unidade: e.target.value })} placeholder="Kg, unidade, litro..." />
+                          <select\n                            value={item.unidade}\n                            onChange={(e) => updateItem(item.id, { unidade: e.target.value })}\n                            className="h-9 w-full rounded-md border border-input bg-background px-2"\n                          >\n                            {MASS_UNITS.map((unit) => <option key={unit} value={unit}>{unit}</option>)}\n                          </select>
                         </td>
                         <td className="px-3 py-2">
                           <span className={isNew ? "text-xs font-medium text-warning" : "text-xs font-medium text-success"}>
