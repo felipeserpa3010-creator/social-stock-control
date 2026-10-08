@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { FileText, Printer } from "lucide-react";
-import { ALL_UNITS, receivedEntriesOptions, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { FileText, Printer, Trash2 } from "lucide-react";
+import { ALL_UNITS, receivedEntriesOptions, receiptIdFromObservation, removePendingReceipt, removePendingReceiptGroup, type ReceivedEntryRow } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -35,6 +37,9 @@ function displayReceiptNumber(id: string) {
 function ReceiptsPage() {
   const { data: entries = [], isPending } = useQuery(receivedEntriesOptions(ALL_UNITS, true));
   const [term, setTerm] = useState("");
+  const { isAdmin } = useAuth();
+  const queryClient = useQueryClient();
+  const [deleting, setDeleting] = useState(false);
 
   const groups = useMemo<ReceiptGroup[]>(() => {
     const map = new Map<string, ReceivedEntryRow[]>();
@@ -84,6 +89,29 @@ function ReceiptsPage() {
     });
     doc.autoPrint();
     window.open(doc.output("bloburl"), "_blank");
+  };
+
+  const excluirRecibo = async (group: ReceiptGroup) => {
+    const confirmed = window.confirm(
+      `Excluir o recibo nº ${displayReceiptNumber(group.id)} da ${group.unitName}? Esta ação não pode ser desfeita.`,
+    );
+    if (!confirmed) return;
+    setDeleting(true);
+    try {
+      if (group.id.startsWith("INDIVIDUAL-")) {
+        const entry = group.entries[0];
+        if (!entry) return;
+        await removePendingReceipt(entry.id);
+      } else {
+        await removePendingReceiptGroup(group.id);
+      }
+      toast.success("Recibo excluído com sucesso.");
+      await queryClient.invalidateQueries({ queryKey: ["received-entries"] });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível excluir o recibo.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const total = groups.length;
@@ -145,9 +173,22 @@ function ReceiptsPage() {
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
-                        <Printer /> Imprimir
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
+                          <Printer /> Imprimir
+                        </Button>
+                        {isAdmin && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive hover:text-destructive"
+                            disabled={deleting}
+                            onClick={() => excluirRecibo(group)}
+                          >
+                            <Trash2 /> Excluir
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -169,9 +210,22 @@ function ReceiptsPage() {
                       {group.unitName} · {formatDate(group.date)} · {group.confirmed ? "Recebido" : "Pendente"}
                     </p>
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
-                    <FileText /> Consultar / imprimir
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
+                      <FileText /> Consultar / imprimir
+                    </Button>
+                    {isAdmin && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-destructive hover:text-destructive"
+                        disabled={deleting}
+                        onClick={() => excluirRecibo(group)}
+                      >
+                        <Trash2 /> Excluir
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <div className="overflow-x-auto">
                   <Table className="min-w-[620px]">
