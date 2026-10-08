@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useUnit } from "@/hooks/useUnit";
-import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, receiptIdFromObservation, orderNumberFromObservation, type ReceivedEntryRow } from "@/lib/queries";
+import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, markReceiptNotReceived, receiptIdFromObservation, orderNumberFromObservation, type ReceivedEntryRow } from "@/lib/queries";
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,7 @@ function ReceiptPage() {
   const canConfirm = role === "responsavel" && Boolean(profile?.unit_id);
   const { data: entries = [], isPending } = useQuery(receivedEntriesOptions(unitId, canConfirm));
   const pending = useMemo(() => entries.filter((e) => !e.receipt), [entries]);
+  const notReceived = useMemo(() => entries.filter((e) => !e.receipt && String(e.observacao ?? "").includes("NAO_RECEBIDO")), [entries]);
   const confirmed = useMemo(() => entries.filter((e) => e.receipt), [entries]);
   const pendingGroups = useMemo(() => {
     const map = new Map<string, ReceivedEntryRow[]>();
@@ -61,6 +62,20 @@ function ReceiptPage() {
     doc.autoPrint();
     window.open(doc.output("bloburl"), "_blank");
   };
+
+  const notReceivedMutation = useMutation({
+    mutationFn: (receiptId: string) => markReceiptNotReceived(receiptId),
+    onSuccess: async () => {
+      toast.success("Recibo marcado como não recebido. Nada foi adicionado ao estoque.");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["received-entries"] }),
+        queryClient.invalidateQueries({ queryKey: ["pending-receipts"] }),
+        queryClient.invalidateQueries({ queryKey: ["stock"] }),
+        queryClient.invalidateQueries({ queryKey: ["movements"] }),
+      ]);
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Não foi possível registrar o não recebimento."),
+  });
 
   const mutation = useMutation({
     mutationFn: (receiptId: string) =>
@@ -119,8 +134,11 @@ function ReceiptPage() {
                   <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries)}>
                     Imprimir
                   </Button>
-                  <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending}>
-                    <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Confirmar recebimento"}
+                  <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending || notReceivedMutation.isPending}>
+                    <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Recebi"}
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => notReceivedMutation.mutate(receiptId)} disabled={mutation.isPending || notReceivedMutation.isPending}>
+                    <XCircle />{notReceivedMutation.isPending ? "Registrando..." : "Não recebi"}
                   </Button>
                 </div>
               </div>
@@ -139,6 +157,18 @@ function ReceiptPage() {
           })}
         </div>}
       </Panel>
+      {notReceived.length > 0 && <Panel title="Recibos não recebidos" description="Esses recibos não geraram entrada no estoque." bodyClassName="p-0">
+        <div className="overflow-x-auto"><Table className="min-w-[620px]"><TableHeader><TableRow>
+          <TableHead>Produto</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Data do lançamento</TableHead><TableHead>Status</TableHead>
+        </TableRow></TableHeader><TableBody>
+          {notReceived.map((entry) => <TableRow key={entry.id}>
+            <TableCell className="font-medium">{entry.products?.nome ?? "Produto"}</TableCell>
+            <TableCell className="text-right tabular-nums">{formatQty(entry.quantidade)} {entry.products?.unidade_medida ?? ""}</TableCell>
+            <TableCell className="text-sm text-muted-foreground">{formatDate(entry.data)}</TableCell>
+            <TableCell className="text-sm font-medium text-destructive">Não recebido</TableCell>
+          </TableRow>)}
+        </TableBody></Table></div>
+      </Panel>}
       {confirmed.length > 0 && <Panel title="Recebimentos confirmados" description="Registro de quem confirmou e quando a confirmação foi feita." bodyClassName="p-0">
         <div className="overflow-x-auto"><Table className="min-w-[720px]"><TableHeader><TableRow>
           <TableHead>Produto</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Data do lançamento</TableHead><TableHead>Confirmado por</TableHead><TableHead>Data da confirmação</TableHead>
