@@ -308,16 +308,20 @@ export async function confirmStockReceiptGroup(receiptId: string, confirmedByNam
   if (error) throw message(error);
 }
 
-export async function markReceiptGroupNotReceived(receiptId: string) {
-  const { data: movements, error: readError } = await supabase
+export async function markReceiptNotReceived(receiptId: string) {
+  const isGroup = receiptId.startsWith("REC-");
+  let query = supabase
     .from("stock_movements")
     .select("id, observacao")
     .eq("tipo", "entrada")
-    .ilike("observacao", `%RECIBO_PRODUTOS:${receiptId}%`)
     .ilike("observacao", "%PENDENTE_RECEBIMENTO%");
+  query = isGroup
+    ? query.ilike("observacao", `%RECIBO_PRODUTOS:${receiptId}%`)
+    : query.eq("id", receiptId);
+  const { data: movements, error: readError } = await query;
   if (readError) throw message(readError);
-  const ids = (movements ?? []).map((m) => m.id);
-  if (!ids.length) throw new Error("Este recibo não possui produtos pendentes.");
+  if (!(movements ?? []).length) throw new Error("Este recibo não possui produtos pendentes.");
+
   for (const movement of movements ?? []) {
     const observacao = String(movement.observacao ?? "");
     if (observacao.includes("NAO_RECEBIDO")) continue;
