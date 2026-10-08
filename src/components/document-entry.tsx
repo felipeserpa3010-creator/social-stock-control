@@ -48,6 +48,7 @@ export function DocumentEntry() {
   const [confirmed, setConfirmed] = useState(false);
   const [textoMassa, setTextoMassa] = useState("");
   const [reciboId, setReciboId] = useState<string | null>(null);
+  const [numeroOrdemFornecimento, setNumeroOrdemFornecimento] = useState("");
 
   const activeUnits = useMemo(() => units.filter((u) => u.ativo), [units]);
   const activeProducts = useMemo(
@@ -123,6 +124,7 @@ export function DocumentEntry() {
     }
     setItems(parsed);
     setReciboId(null);
+    setNumeroOrdemFornecimento("");
     setConfirmed(false);
     toast.success(parsed.length + " produto(s) preparados para conferência.");
   };
@@ -230,6 +232,7 @@ export function DocumentEntry() {
       reciboId,
       unidade: unidadeNome,
       data,
+      numeroOrdemFornecimento: numeroOrdemFornecimento.trim() || null,
       rows: items.filter((item) => Number(item.quantidade.replace(",", ".")) > 0).map((item) => ({
         produto: item.nome,
         quantidade: item.quantidade.replace(",", "."),
@@ -281,6 +284,14 @@ export function DocumentEntry() {
               <option value="">Selecione...</option>
               {activeUnits.map((unit) => <option key={unit.id} value={unit.id}>{unit.nome}</option>)}
             </select>
+          </Field>
+          <Field label="Número da ordem de fornecimento (opcional)" htmlFor="mass-order">
+            <Input
+              id="mass-order"
+              value={numeroOrdemFornecimento}
+              onChange={(e) => { setNumeroOrdemFornecimento(e.target.value); setConfirmed(false); }}
+              placeholder="Digite somente se quiser colocar no recibo"
+            />
           </Field>
           <Field label="Data do lançamento" htmlFor="mass-date" required>
             <Input
