@@ -15,6 +15,13 @@
       "when": 1791302335159,
       "tag": "0001_fix_semads_viewer_trigger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791466702792,
+      "tag": "0002_allow_admin_delete_receipts",
+      "breakpoints": true
     }
   ]
 }
