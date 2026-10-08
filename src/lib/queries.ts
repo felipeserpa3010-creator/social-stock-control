@@ -46,7 +46,7 @@ export function receiptIdFromObservation(observacao: string | null | undefined) 
 }
 
 export function orderNumberFromObservation(observacao: string | null | undefined) {
-  const match = String(observacao ?? "").match(/ORDEM_FORNECIMENTO:([^|\s]+)/);
+  const match = String(observacao ?? "").match(/ORDEM_FORNECIMENTO:([^|]+)/);
   return match?.[1] ?? null;
 }
 export type UserRow = {
