@@ -7,7 +7,7 @@ export const Route = createFileRoute("/_authenticated/entrada-documento")({
   head: () => ({
     meta: [
       { title: "Lançamento em massa — Controle de Estoque" },
-      { name: "description", content: "Leitura gratuita de documentos para lançamento de entradas pelo Administrador Principal." },
+      { name: "description", content: "Lançamento em massa de produtos pelo CEO, com recibo pendente até a confirmação da unidade." },
     ],
   }),
   beforeLoad: async () => {
