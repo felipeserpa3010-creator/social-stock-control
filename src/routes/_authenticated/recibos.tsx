@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { FileText, Printer } from "lucide-react";
-import { ALL_UNITS, receivedEntriesOptions, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { FileText, Printer, Trash2 } from "lucide-react";
+import { ALL_UNITS, receivedEntriesOptions, receiptIdFromObservation, removePendingReceipt, removePendingReceiptGroup, type ReceivedEntryRow } from "@/lib/queries";
+import { useAuth } from "@/hooks/useAuth";
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, SearchInput, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -35,6 +37,9 @@ function displayReceiptNumber(id: string) {
 function ReceiptsPage() {
   const { data: entries = [], isPending } = useQuery(receivedEntriesOptions(ALL_UNITS, true));
   const [term, setTerm] = useState("");
+  const { isAdmin } = useAuth();
+  const queryClient = useQueryClient();
+  const [deleting, setDeleting] = useState(false);
 
   const groups = useMemo<ReceiptGroup[]>(() => {
     const map = new Map<string, ReceivedEntryRow[]>();
