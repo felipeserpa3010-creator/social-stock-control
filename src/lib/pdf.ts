@@ -255,6 +255,7 @@ export type ReceiptPdfOptions = {
   unidade: string;
   data: string;
   rows: { produto: string; quantidade: number | string; medida: string }[];
+  numeroOrdemFornecimento?: string | null;
 };
 
 export async function buildReceiptPdf(opts: ReceiptPdfOptions) {
@@ -292,13 +293,20 @@ export async function buildReceiptPdf(opts: ReceiptPdfOptions) {
   doc.setFontSize(10);
   doc.setTextColor(40);
   doc.text(`Recibo: ${opts.reciboId}`, margin, 51);
-  doc.text(`Unidade de destino: ${opts.unidade}`, margin, 58);
+  if (opts.numeroOrdemFornecimento?.trim()) {
+    doc.text(`Número da ordem de fornecimento: ${opts.numeroOrdemFornecimento.trim()}`, margin, 58);
+    doc.text(`Unidade de destino: ${opts.unidade}`, margin, 65);
+    doc.text(`Data do lançamento: ${formatDate(opts.data)}`, pageW - margin, 65, { align: "right" });
+  } else {
+    doc.text(`Unidade de destino: ${opts.unidade}`, margin, 58);
+    doc.text(`Data do lançamento: ${formatDate(opts.data)}`, pageW - margin, 58, { align: "right" });
+  }
   doc.text(`Data do lançamento: ${formatDate(opts.data)}`, pageW - margin, 58, { align: "right" });
 
   autoTable(doc, {
     head: [["Produto", "Quantidade", "Unidade de medida"]],
     body: opts.rows.map((r) => [r.produto, formatQty(Number(r.quantidade)), r.medida || "—"]),
-    startY: 66,
+    startY: opts.numeroOrdemFornecimento?.trim() ? 73 : 66,
     margin: { left: margin, right: margin, bottom: 30 },
     styles: { fontSize: 10, cellPadding: 3, lineColor: [215, 220, 216], lineWidth: 0.1 },
     headStyles: { fillColor: [125, 38, 11], textColor: 255, fontStyle: "bold" },
