@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T15:02:29.134182+00:00",
+  "generated_at": "2026-10-08T15:47:26.668266+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -167,7 +167,7 @@
     },
     {
       "path": "src/components/movement-form.tsx",
-      "bytes": 21650
+      "bytes": 23615
     },
     {
       "path": "src/components/auth-layout.tsx",
@@ -854,6 +854,10 @@
     {
       "source": "src/components/movement-form.tsx",
       "target": "@/components/pickers"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/components/auth-layout.tsx",
