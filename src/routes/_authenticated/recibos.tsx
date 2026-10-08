@@ -91,6 +91,29 @@ function ReceiptsPage() {
     window.open(doc.output("bloburl"), "_blank");
   };
 
+  const excluirRecibo = async (group: ReceiptGroup) => {
+    const confirmed = window.confirm(
+      `Excluir o recibo nº ${displayReceiptNumber(group.id)} da ${group.unitName}? Esta ação não pode ser desfeita.`,
+    );
+    if (!confirmed) return;
+    setDeleting(true);
+    try {
+      if (group.id.startsWith("INDIVIDUAL-")) {
+        const entry = group.entries[0];
+        if (!entry) return;
+        await removePendingReceipt(entry.id);
+      } else {
+        await removePendingReceiptGroup(group.id);
+      }
+      toast.success("Recibo excluído com sucesso.");
+      await queryClient.invalidateQueries({ queryKey: ["received-entries"] });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível excluir o recibo.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const total = groups.length;
   const recebidos = groups.filter((group) => group.confirmed).length;
   const pendentes = total - recebidos;
