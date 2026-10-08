@@ -306,13 +306,11 @@ export async function removePendingReceiptGroup(receiptId: string) {
     .eq("tipo", "entrada")
     .ilike("observacao", `%RECIBO_PRODUTOS:${receiptId}%`);
   if (readError) throw message(readError);
-  const pendingIds = (movements ?? [])
-    .filter((m) => String(m.observacao ?? "").includes("PENDENTE_RECEBIMENTO"))
-    .map((m) => m.id);
-  if (!pendingIds.length) throw new Error("Este recibo não possui produtos pendentes.");
+  const movementIds = (movements ?? []).map((m) => m.id);
+  if (!movementIds.length) throw new Error("Este recibo não possui produtos.");
   // O trigger BEFORE DELETE reverte o estoque quando o recibo já foi confirmado
   // e não altera o saldo quando a entrada ainda está pendente.
-  const { error } = await supabase.from("stock_movements").delete().in("id", pendingIds);
+  const { error } = await supabase.from("stock_movements").delete().in("id", movementIds);
   if (error) throw message(error);
 }
 
