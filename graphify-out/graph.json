@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T15:47:47.868811+00:00",
+  "generated_at": "2026-10-08T15:48:28.736271+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -76,6 +76,10 @@
     {
       "path": "supabase/migrations/20260928161332_ad16cb3c-5662-4329-aadb-3c2d8953c854.sql",
       "bytes": 422
+    },
+    {
+      "path": "supabase/migrations/20261008124500_regra_entrada_unidade_confirmacao.sql",
+      "bytes": 2683
     },
     {
       "path": "supabase/migrations/20260928161520_14a2a83a-7a67-4a0b-86fb-2742dbc80f42.sql",
