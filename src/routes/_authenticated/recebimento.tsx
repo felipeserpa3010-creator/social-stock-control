@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useUnit } from "@/hooks/useUnit";
-import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, receiptIdFromObservation, type ReceivedEntryRow } from "@/lib/queries";
+import { receivedEntriesOptions, confirmStockReceipt, confirmStockReceiptGroup, receiptIdFromObservation, orderNumberFromObservation, type ReceivedEntryRow } from "@/lib/queries";
 import { formatDate, formatQty } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,7 @@ function ReceiptPage() {
     const first = groupEntries[0];
     const doc = await buildReceiptPdf({
       reciboId: receiptId,
+      numeroOrdemFornecimento: orderNumberFromObservation(first?.observacao),
       unidade: unit?.nome ?? first?.units?.nome ?? "Unidade",
       data: first?.data ?? new Date().toISOString().slice(0, 10),
       rows: groupEntries.map((entry) => ({
