@@ -308,6 +308,27 @@ export async function confirmStockReceiptGroup(receiptId: string, confirmedByNam
   if (error) throw message(error);
 }
 
+export async function markReceiptGroupNotReceived(receiptId: string) {
+  const { data: movements, error: readError } = await supabase
+    .from("stock_movements")
+    .select("id, observacao")
+    .eq("tipo", "entrada")
+    .ilike("observacao", `%RECIBO_PRODUTOS:${receiptId}%`)
+    .ilike("observacao", "%PENDENTE_RECEBIMENTO%");
+  if (readError) throw message(readError);
+  const ids = (movements ?? []).map((m) => m.id);
+  if (!ids.length) throw new Error("Este recibo não possui produtos pendentes.");
+  for (const movement of movements ?? []) {
+    const observacao = String(movement.observacao ?? "");
+    if (observacao.includes("NAO_RECEBIDO")) continue;
+    const { error } = await supabase
+      .from("stock_movements")
+      .update({ observacao: observacao + " | NAO_RECEBIDO" })
+      .eq("id", movement.id);
+    if (error) throw message(error);
+  }
+}
+
 export function pendingReceiptOptions(unitId: string | null, enabled = true) {
   return queryOptions({
     enabled: Boolean(unitId) && enabled,
