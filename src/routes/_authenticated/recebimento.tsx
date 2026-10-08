@@ -110,7 +110,10 @@ function ReceiptPage() {
               <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="font-semibold">Recibo de Produtos nº {receiptId}</p>
-                  <p className="text-xs text-muted-foreground">Data do lançamento: {formatDate(first?.data ?? null)} · {group.entries.length} produto(s)</p>
+                  <p className="text-xs text-muted-foreground">
+                    Data do lançamento: {formatDate(first?.data ?? null)} · {group.entries.length} produto(s)
+                    {orderNumberFromObservation(first?.observacao) ? ` · OF: ${orderNumberFromObservation(first?.observacao)}` : ""}
+                  </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries)}>
