@@ -207,7 +207,7 @@ export function DocumentEntry() {
           tipo: "entrada",
           quantidade: Number(item.quantidade.replace(",", ".")),
           data,
-          observacao: `PENDENTE_RECEBIMENTO | RECIBO_PRODUTOS:${reciboId} | Entrada lançada em massa pelo Administrador Principal; aguardando confirmação da unidade`,
+          observacao: `PENDENTE_RECEBIMENTO | RECIBO_PRODUTOS:${reciboId}${numeroOrdemFornecimento.trim() ? ` | ORDEM_FORNECIMENTO:${numeroOrdemFornecimento.trim().replace(/\|/g, "")}` : ""} | Entrada lançada em massa pelo Administrador Principal; aguardando confirmação da unidade`,
           responsavel: null,
         });
       }
