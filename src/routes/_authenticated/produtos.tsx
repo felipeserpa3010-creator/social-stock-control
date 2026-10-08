@@ -167,6 +167,23 @@ function ProductsPage() {
       : Array.from(new Set([...current, ...rows.map((p) => p.id)])));
   };
 
+  const doBulkDelete = async () => {
+    if (!selectedIds.length) return;
+    setBulkDeleting(true);
+    try {
+      for (const id of selectedIds) {
+        await removeProduct(id);
+      }
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(`${selectedIds.length} produto(s) excluído(s).`);
+      setSelectedIds([]);
+    } catch {
+      toast.error("Não foi possível excluir os produtos selecionados. Tente novamente.");
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
   const doDelete = async () => {
     if (!confirm) return;
     try {
