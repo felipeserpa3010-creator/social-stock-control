@@ -443,6 +443,17 @@ export type Database = {
       is_viewer: { Args: never; Returns: boolean }
       my_unit: { Args: never; Returns: string }
       next_stock_receipt_number: { Args: never; Returns: string }
+      send_from_central_deposit: {
+        Args: {
+          _data?: string
+          _destination_unit_id: string
+          _observacao?: string
+          _product_id: string
+          _quantity: number
+          _receipt_number?: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "responsavel" | "visualizador"
