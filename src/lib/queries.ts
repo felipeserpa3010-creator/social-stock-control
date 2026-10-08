@@ -139,15 +139,63 @@ export function stockOptions(unitId: string | null) {
         products: ProductWithCategory | null;
       }>;
 
+      // Entradas enviadas para uma unidade ficam registradas em stock_movements
+      // antes da confirmação, mas NÃO podem aparecer como estoque disponível.
+      // O saldo exibido aqui desconta somente os itens ainda pendentes.
+      let pendingQuery = supabase
+        .from("stock_movements")
+        .select("id, product_id, unit_id, quantidade, observacao")
+        .eq("tipo", "entrada")
+        .ilike("observacao", "%PENDENTE_RECEBIMENTO%");
+      if (unitId !== ALL_UNITS_SCOPE) pendingQuery = pendingQuery.eq("unit_id", unitId as string);
+
+      const { data: pendingMovements, error: pendingError } = await pendingQuery.limit(10000);
+      if (pendingError) throw message(pendingError);
+
+      const pendingRows = (pendingMovements ?? []) as Array<{
+        id: string;
+        product_id: string;
+        unit_id: string;
+        quantidade: number;
+        observacao: string | null;
+      }>;
+
+      const pendingIds = pendingRows.map((movement) => movement.id);
+      const confirmedIds = new Set<string>();
+
+      if (pendingIds.length) {
+        // A confirmação é a única coisa que libera a entrada para o estoque.
+        // Se a tabela de confirmações ainda não existir, todos continuam pendentes.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: receipts, error: receiptError } = await (supabase as any)
+          .from("stock_receipts")
+          .select("movement_id")
+          .in("movement_id", pendingIds);
+
+        if (!receiptError) {
+          ((receipts ?? []) as Array<{ movement_id: string }>).forEach((receipt) => {
+            confirmedIds.add(receipt.movement_id);
+          });
+        }
+      }
+
+      const pendingByStockKey = new Map<string, number>();
+      for (const movement of pendingRows) {
+        if (confirmedIds.has(movement.id)) continue;
+        const key = movement.unit_id + ":" + movement.product_id;
+        pendingByStockKey.set(key, (pendingByStockKey.get(key) ?? 0) + Number(movement.quantidade));
+      }
+
       return rows
         .filter((r) => Boolean(r.products))
         .map<StockEntry>((r) => ({
           product: r.products as ProductWithCategory,
-          quantity: Number(r.quantidade),
+          quantity: Math.max(0, Number(r.quantidade) - (pendingByStockKey.get(r.unit_id + ":" + r.product_id) ?? 0)),
           updated_at: r.updated_at,
           unit_id: r.unit_id,
           unit: r.units,
-        }));
+        }))
+        .filter((r) => r.quantity > 0);
     },
   });
 }
