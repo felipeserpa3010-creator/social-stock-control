@@ -379,6 +379,7 @@ export function CentralDispatchForm() {
   const [quantidade, setQuantidade] = useState("");
   const [data, setData] = useState(todayISO());
   const [observacao, setObservacao] = useState("");
+  const [ordemFornecimento, setOrdemFornecimento] = useState("");
   const [saving, setSaving] = useState(false);
 
   const product = products.find((p) => p.id === productId);
@@ -428,6 +429,7 @@ export function CentralDispatchForm() {
         quantidade: qty,
         data,
         observacao: observacao.trim() || null,
+        receipt_number: ordemFornecimento.trim() || null,
       });
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["stock"] }),
@@ -439,6 +441,7 @@ export function CentralDispatchForm() {
       setDestinationId("");
       setQuantidade("");
       setObservacao("");
+      setOrdemFornecimento("");
       setData(todayISO());
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível enviar os materiais.");
