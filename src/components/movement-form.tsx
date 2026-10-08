@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { EmptyState, Field, Panel, StatCard, TypeBadge } from "@/components/ui-kit";
 import { ProductSelect } from "@/components/pickers";
+import { supabase } from "@/integrations/supabase/client";
 
 export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" | "saida"> }) {
   const { unitId, unit } = useUnit();
@@ -38,6 +39,7 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
   const [massaTexto, setMassaTexto] = useState("");
   const [massaItens, setMassaItens] = useState<Array<{ nome: string; quantidade: number; unidade: string }>>([]);
   const [massaSaving, setMassaSaving] = useState(false);
+  const isCentralUnit = unit?.nome.trim().toLowerCase() === "gabinete semads";
 
   const parseMassa = (texto: string) => {
     const unidades = ["KG", "PCT", "UND", "UN", "L", "LT", "CX", "FD", "SC", "DZ", "G", "ML"];
@@ -99,6 +101,15 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
 
     setMassaSaving(true);
     try {
+      // Entradas para unidades ficam pendentes até a confirmação do usuário.
+      // O Depósito Central recebe lançamentos diretamente no próprio estoque.
+      let receiptId: string | null = null;
+      if (!isCentralUnit) {
+        const { data: nextReceipt, error: receiptError } = await (supabase as any).rpc("next_stock_receipt_number");
+        if (receiptError || !nextReceipt) throw new Error("Não foi possível gerar o número do recibo.");
+        receiptId = String(nextReceipt);
+      }
+
       const produtosCriados = new Map<string, { id: string; unidade_medida: string }>();
       for (const item of massaItens) {
         const key = item.nome.toLocaleLowerCase("pt-BR");
@@ -125,14 +136,18 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
           tipo: "entrada",
           quantidade: item.quantidade,
           data,
-          observacao: "Lançamento em massa",
+          observacao: isCentralUnit
+            ? "Lançamento em massa no Depósito Central"
+            : "PENDENTE_RECEBIMENTO | RECIBO_PRODUTOS:" + receiptId + " | Lançamento em massa pelo CEO; aguardando confirmação da unidade",
           responsavel: profile?.nome ?? null,
         });
       }
 
       await queryClient.invalidateQueries({ queryKey: ["stock", unitId] });
       await queryClient.invalidateQueries({ queryKey: ["movements"] });
-      toast.success(`${massaItens.length} produto(s) lançados no estoque.`);
+      toast.success(isCentralUnit
+        ? `${massaItens.length} produto(s) lançados diretamente no estoque do Depósito Central.`
+        : `Recibo nº ${receiptId} criado. A unidade precisa confirmar para contabilizar o estoque.`);
       setMassaTexto("");
       setMassaItens([]);
     } catch (err) {
@@ -171,22 +186,40 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
     }
     setSaving(true);
     try {
+      let movementObservation = observacao.trim() || null;
+      let receiptId: string | null = null;
+
+      if (isEntrada && !isCentralUnit) {
+        const { data: nextReceipt, error: receiptError } = await (supabase as any).rpc("next_stock_receipt_number");
+        if (receiptError || !nextReceipt) throw new Error("Não foi possível gerar o número do recibo.");
+        receiptId = String(nextReceipt);
+        movementObservation = [
+          "PENDENTE_RECEBIMENTO",
+          "RECIBO_PRODUTOS:" + receiptId,
+          observacao.trim(),
+        ].filter(Boolean).join(" | ");
+      }
+
       await addMovement({
         unit_id: unitId,
         product_id: productId,
         tipo,
         quantidade: qty,
         data,
-        observacao: observacao.trim() || null,
+        observacao: movementObservation,
         responsavel: profile?.nome ?? null,
       });
       queryClient.invalidateQueries({ queryKey: ["stock", unitId] });
+      queryClient.invalidateQueries({ queryKey: ["received-entries", unitId] });
+      queryClient.invalidateQueries({ queryKey: ["pending-receipts", unitId] });
       queryClient.invalidateQueries({ queryKey: ["movements"] });
       queryClient.invalidateQueries({ queryKey: ["checks"] });
       toast.success(
         isEntrada
-          ? `Entrada de ${formatQty(qty)} ${product?.unidade_medida ?? ""} registrada.`
-          : `Saída de ${formatQty(qty)} ${product?.unidade_medida ?? ""} registrada.`,
+          ? isCentralUnit
+            ? "Entrada de " + formatQty(qty) + " " + (product?.unidade_medida ?? "") + " registrada diretamente no estoque do Depósito Central."
+            : "Recibo nº " + receiptId + " criado. A entrada só será contabilizada após a confirmação da unidade."
+          : "Saída de " + formatQty(qty) + " " + (product?.unidade_medida ?? "") + " registrada.",
       );
       setQuantidade("");
       setObservacao("");
