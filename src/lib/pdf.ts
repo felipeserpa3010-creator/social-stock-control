@@ -292,21 +292,30 @@ export async function buildReceiptPdf(opts: ReceiptPdfOptions) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(40);
-  doc.text(`Recibo: ${opts.reciboId}`, margin, 51);
-  if (opts.numeroOrdemFornecimento?.trim()) {
-    doc.text(`Número da ordem de fornecimento: ${opts.numeroOrdemFornecimento.trim()}`, margin, 58);
-    doc.text(`Unidade de destino: ${opts.unidade}`, margin, 65);
-    doc.text(`Data do lançamento: ${formatDate(opts.data)}`, pageW - margin, 65, { align: "right" });
+  const hasOrdemFornecimento = Boolean(opts.numeroOrdemFornecimento?.trim());
+  doc.setFillColor(249, 244, 241);
+  doc.setDrawColor(125, 38, 11);
+  doc.roundedRect(margin, 47, pageW - margin * 2, hasOrdemFornecimento ? 24 : 14, 2, 2, "FD");
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(125, 38, 11);
+  doc.text(`RECIBO Nº ${opts.reciboId}`, margin + 4, 54);
+  if (hasOrdemFornecimento) {
+    doc.text(`ORDEM DE FORNECIMENTO Nº ${opts.numeroOrdemFornecimento!.trim()}`, margin + 4, 62);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(40);
+    doc.text(`Unidade de destino: ${opts.unidade}`, margin + 4, 68);
+    doc.text(`Data: ${formatDate(opts.data)}`, pageW - margin - 4, 68, { align: "right" });
   } else {
-    doc.text(`Unidade de destino: ${opts.unidade}`, margin, 58);
-    doc.text(`Data do lançamento: ${formatDate(opts.data)}`, pageW - margin, 58, { align: "right" });
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(40);
+    doc.text(`Unidade de destino: ${opts.unidade}`, margin + 4, 58);
+    doc.text(`Data: ${formatDate(opts.data)}`, pageW - margin - 4, 58, { align: "right" });
   }
-  doc.text(`Data do lançamento: ${formatDate(opts.data)}`, pageW - margin, 58, { align: "right" });
 
   autoTable(doc, {
     head: [["Produto", "Quantidade", "Unidade de medida"]],
     body: opts.rows.map((r) => [r.produto, formatQty(Number(r.quantidade)), r.medida || "—"]),
-    startY: opts.numeroOrdemFornecimento?.trim() ? 73 : 66,
+    startY: hasOrdemFornecimento ? 77 : 66,
     margin: { left: margin, right: margin, bottom: 30 },
     styles: { fontSize: 10, cellPadding: 3, lineColor: [215, 220, 216], lineWidth: 0.1 },
     headStyles: { fillColor: [125, 38, 11], textColor: 255, fontStyle: "bold" },
