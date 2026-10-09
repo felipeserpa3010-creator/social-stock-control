@@ -29,6 +29,13 @@
       "when": 1791467405958,
       "tag": "0003_receipt_custom_order_number",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791548282182,
+      "tag": "0004_estoque_so_na_confirmacao",
+      "breakpoints": true
     }
   ]
 }
