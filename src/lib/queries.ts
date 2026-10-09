@@ -264,7 +264,7 @@ export async function confirmStockReceiptGroup(receiptId: string, confirmedByNam
 }
 
 export async function markReceiptNotReceived(receiptId: string) {
-  const isGroup = receiptId.startsWith("REC-");
+  const isGroup = !/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(receiptId);
   let query = supabase
     .from("stock_movements")
     .select("id, observacao")

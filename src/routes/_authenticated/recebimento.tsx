@@ -79,7 +79,7 @@ function ReceiptPage() {
 
   const mutation = useMutation({
     mutationFn: (receiptId: string) =>
-      receiptId.startsWith("REC-")
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(receiptId)
         ? confirmStockReceiptGroup(receiptId, profile?.nome ?? "Responsável pela unidade")
         : confirmStockReceipt(receiptId, profile?.nome ?? "Responsável pela unidade"),
     onSuccess: async () => {
