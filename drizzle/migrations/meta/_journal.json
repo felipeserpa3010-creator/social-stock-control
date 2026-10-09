@@ -36,6 +36,13 @@
       "when": 1791548282182,
       "tag": "0004_estoque_so_na_confirmacao",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791552541231,
+      "tag": "0005_recibo_numeracao_reaproveita",
+      "breakpoints": true
     }
   ]
 }
