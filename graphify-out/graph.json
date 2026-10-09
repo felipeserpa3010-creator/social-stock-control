@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T12:15:33.409325+00:00",
+  "generated_at": "2026-10-09T12:15:45.583921+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -136,6 +136,10 @@
     {
       "path": "supabase/migrations/20261002090000_estoque_permissoes_definitivas.sql",
       "bytes": 5877
+    },
+    {
+      "path": "supabase/migrations/20261009100000_corrige_estoque_pendente_ceo.sql",
+      "bytes": 3288
     },
     {
       "path": "supabase/migrations/20261007003500_corrige_reversao_pendente.sql",
