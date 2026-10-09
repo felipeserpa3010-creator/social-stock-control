@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T12:15:45.583921+00:00",
+  "generated_at": "2026-10-09T12:18:45.236086+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -136,10 +136,6 @@
     {
       "path": "supabase/migrations/20261002090000_estoque_permissoes_definitivas.sql",
       "bytes": 5877
-    },
-    {
-      "path": "supabase/migrations/20261009100000_corrige_estoque_pendente_ceo.sql",
-      "bytes": 3288
     },
     {
       "path": "supabase/migrations/20261007003500_corrige_reversao_pendente.sql",
@@ -511,7 +507,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 11296
+      "bytes": 11305
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -578,6 +574,10 @@
       "bytes": 20469
     },
     {
+      "path": "drizzle/migrations/0004_estoque_so_na_confirmacao.sql",
+      "bytes": 3936
+    },
+    {
       "path": "drizzle/migrations/0000_stock_receipts.sql",
       "bytes": 1561
     },
@@ -594,12 +594,16 @@
       "bytes": 3677
     },
     {
+      "path": "drizzle/migrations/meta/0004_snapshot.json",
+      "bytes": 336
+    },
+    {
       "path": "drizzle/migrations/meta/0000_snapshot.json",
       "bytes": 336
     },
     {
       "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 672
+      "bytes": 825
     },
     {
       "path": "drizzle/migrations/meta/0001_snapshot.json",
