@@ -266,6 +266,7 @@ function ExpedientePage() {
       <PageHeader title="Materiais de Expediente" description="Registro dos materiais enviados, confirmação de recebimento e consulta dos recibos por unidade. Este módulo não movimenta o estoque." />
 
       {canDispatch && (
+        <div id="expediente-lancamento" className="scroll-mt-20">
         <Panel title="Registrar envio de materiais" description="O CEO e o Centro de Distribuição podem registrar os envios. Cada lançamento gera um recibo independente do estoque.">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); launchMutation.mutate(); }}>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -313,6 +314,7 @@ function ExpedientePage() {
             </Button>
           </form>
         </Panel>
+        </div>
       )}
 
       {canConfirm && (
@@ -339,6 +341,7 @@ function ExpedientePage() {
         </Panel>
       )}
 
+      <div id="expediente-recibos" className="scroll-mt-20">
       <Panel title="Consultar recibos de materiais de expediente" description="Os recibos ficam registrados após a confirmação para consulta futura." actions={
         canDispatch ? (
           <select aria-label="Filtrar por unidade" value={filterUnit} onChange={(e) => setFilterUnit(e.target.value)} className="h-9 max-w-[220px] rounded-md border border-input bg-background px-2 text-sm">
@@ -364,6 +367,9 @@ function ExpedientePage() {
           </TableBody></Table></div>}
       </Panel>
 
+      </div>
+
+      <div id="expediente-relatorio" className="scroll-mt-20">
       <Panel title="Relatório de recebimento por período" description="O PDF inclui somente recibos confirmados cuja data de recebimento esteja no período selecionado.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2">
@@ -377,6 +383,7 @@ function ExpedientePage() {
           <Button onClick={generateReport} disabled={reportLoading || !from || !to}><FileDown className="size-4" />{reportLoading ? "Gerando PDF..." : "Gerar relatório PDF"}</Button>
         </div>
       </Panel>
+      </div>
     </>
   );
 }
