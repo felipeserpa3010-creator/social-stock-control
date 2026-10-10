@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T18:43:39.948281+00:00",
+  "generated_at": "2026-10-10T18:44:07.505261+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -135,7 +135,7 @@
     },
     {
       "path": "supabase/migrations/20261010120000_materiais_expediente_recibos_relatorios.sql",
-      "bytes": 8005
+      "bytes": 8320
     },
     {
       "path": "supabase/migrations/20261003120000_logo_semads_4k.sql",
