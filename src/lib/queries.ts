@@ -471,19 +471,24 @@ export type ProductInput = {
   ativo: boolean;
 };
 
-export async function ensureUncategorizedProduct(nome: string, unidade_medida = "unidade") {
-  const normalized = nome.trim();
-  if (!normalized) throw new Error("Nome do produto vazio.");
-
-  const searchableName = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR");
-  const expedienteKeywords = [
+export function isExpedienteMaterialName(nome: string) {
+  const searchableName = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR");
+  const keywords = [
     "papel a4", "resma", "caneta", "lapis", "borracha", "apontador", "grampeador",
     "grampos", "pasta arquivo", "pasta suspensa", "pasta catalogo", "pasta plastica",
     "envelope", "clipe", "clips", "corretivo", "marcador", "marca texto", "toner",
     "cartucho", "impressora", "caderno", "bloco de notas", "papel oficio", "papel sulfite",
     "fita adesiva", "cola branca", "tesoura",
   ];
-  if (expedienteKeywords.some((keyword) => searchableName.includes(keyword))) {
+  return keywords.some((keyword) => searchableName.includes(keyword));
+}
+
+export async function ensureUncategorizedProduct(nome: string, unidade_medida = "unidade") {
+  const normalized = nome.trim();
+  if (!normalized) throw new Error("Nome do produto vazio.");
+
+  const searchableName = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR");
+  if (isExpedienteMaterialName(normalized)) {
     throw new Error(`"${normalized}" parece ser material de expediente. Use o módulo Materiais de Expediente para registrar o envio sem movimentar o estoque.`);
   }
 
