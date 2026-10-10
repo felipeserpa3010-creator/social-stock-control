@@ -7,6 +7,7 @@ import { useUnit } from "@/hooks/useUnit";
 import {
   addMovement,
   ensureUncategorizedProduct,
+  isExpedienteMaterialName,
   movementsOptions,
   productsOptions,
   stockOptions,
@@ -27,6 +28,7 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
   const { profile, isAdmin, isViewer } = useAuth();
   const queryClient = useQueryClient();
   const { data: products = [] } = useQuery(productsOptions(false));
+  const selectableProducts = tipo === "entrada" ? products.filter((p) => !isExpedienteMaterialName(p.nome)) : products;
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: recent = [] } = useQuery(movementsOptions({ unitId, tipo, limit: 8 }));
 
@@ -242,7 +244,7 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
           <Field label="Produto" htmlFor="produto" required>
             <ProductSelect
               id="produto"
-              products={products}
+              products={selectableProducts}
               value={productId}
               onChange={setProductId}
               placeholder="Buscar produto..."
@@ -403,6 +405,7 @@ export function CentralDispatchForm() {
   const { profile } = useAuth();
   const queryClient = useQueryClient();
   const { data: products = [] } = useQuery(productsOptions(false));
+  const centralProducts = products.filter((p) => !isExpedienteMaterialName(p.nome));
   const { data: units = [] } = useQuery(unitsOptions(false));
   const central = units.find((u) => u.nome.trim().toLowerCase() === "gabinete semads");
   const { data: centralStock = [], isPending: stockLoading } = useQuery(stockOptions(central?.id ?? null));
@@ -505,7 +508,7 @@ export function CentralDispatchForm() {
           <Field label="Produto" htmlFor="produto-deposito" required>
             <ProductSelect
               id="produto-deposito"
-              products={products}
+              products={centralProducts}
               value={productId}
               onChange={setProductId}
               placeholder="Buscar produto..."
