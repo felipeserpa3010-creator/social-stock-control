@@ -484,7 +484,7 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
   if (existingError) throw message(existingError);
   if (existing) return existing as Pick<Product, "id" | "nome" | "unidade_medida">;
 
-  const searchableName = normalized.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLocaleLowerCase("pt-BR");
+  const searchableName = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR");
   const expedienteKeywords = [
     "papel a4", "resma", "caneta", "lapis", "borracha", "apontador", "grampeador",
     "grampos", "pasta", "envelope", "clipe", "clips", "corretivo", "marcador",
