@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T18:39:47.414179+00:00",
+  "generated_at": "2026-10-10T18:39:58.724976+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -539,7 +539,7 @@
     },
     {
       "path": "src/routes/_authenticated/expediente.tsx",
-      "bytes": 19284
+      "bytes": 19307
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
@@ -2414,10 +2414,6 @@
     {
       "source": "src/routes/_authenticated/expediente.tsx",
       "target": "@/components/ui/textarea"
-    },
-    {
-      "source": "src/routes/_authenticated/expediente.tsx",
-      "target": "@/components/ui-kit"
     },
     {
       "source": "src/routes/_authenticated/expediente.tsx",
