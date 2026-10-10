@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T18:52:20.220425+00:00",
+  "generated_at": "2026-10-10T19:04:57.351128+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -319,7 +319,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 16997
+      "bytes": 19976
     },
     {
       "path": "src/integrations/supabase/client.ts",
@@ -610,8 +610,20 @@
       "bytes": 538
     },
     {
+      "path": "drizzle/migrations/0007_ceo_delete_expediente_receipts.sql",
+      "bytes": 897
+    },
+    {
       "path": "drizzle/migrations/0003_receipt_custom_order_number.sql",
       "bytes": 3677
+    },
+    {
+      "path": "drizzle/migrations/0006_materiais_expediente_recibos_relatorios.sql",
+      "bytes": 8320
+    },
+    {
+      "path": "drizzle/migrations/meta/0006_snapshot.json",
+      "bytes": 336
     },
     {
       "path": "drizzle/migrations/meta/0004_snapshot.json",
@@ -623,7 +635,7 @@
     },
     {
       "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 981
+      "bytes": 1306
     },
     {
       "path": "drizzle/migrations/meta/0001_snapshot.json",
@@ -631,6 +643,10 @@
     },
     {
       "path": "drizzle/migrations/meta/0002_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0007_snapshot.json",
       "bytes": 336
     },
     {
