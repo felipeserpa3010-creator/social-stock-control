@@ -149,8 +149,7 @@ export function stockOptions(unitId: string | null) {
           updated_at: r.updated_at,
           unit_id: r.unit_id,
           unit: r.units,
-        }))
-        .filter((r) => r.quantity > 0);
+        }));
     },
   });
 }
