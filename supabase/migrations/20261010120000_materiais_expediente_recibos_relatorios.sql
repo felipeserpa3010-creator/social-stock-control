@@ -164,6 +164,12 @@ BEGIN
 END;
 $$;
 
+-- Dispatchers must be able to choose any active destination unit, even when their role is responsible.
+DROP POLICY IF EXISTS units_select_expediente_dispatcher ON public.units;
+CREATE POLICY units_select_expediente_dispatcher ON public.units
+FOR SELECT TO authenticated
+USING (public.is_expediente_dispatcher());
+
 ALTER TABLE public.expediente_receipts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.expediente_receipt_items ENABLE ROW LEVEL SECURITY;
 
