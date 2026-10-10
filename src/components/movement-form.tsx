@@ -190,6 +190,11 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
     try {
       let movementObservation = observacao.trim() || null;
       let receiptId: string | null = null;
+      let movementProductId = productId;
+      if (isEntrada && product) {
+        const classifiedProduct = await ensureUncategorizedProduct(product.nome, product.unidade_medida);
+        movementProductId = classifiedProduct.id;
+      }
 
       if (isEntrada && !isCentralUnit) {
         const { data: nextReceipt, error: receiptError } = await (supabase as any).rpc("next_stock_receipt_number");
@@ -204,7 +209,7 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
 
       await addMovement({
         unit_id: unitId,
-        product_id: productId,
+        product_id: movementProductId,
         tipo,
         quantidade: qty,
         data,
