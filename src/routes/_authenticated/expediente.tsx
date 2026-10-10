@@ -153,6 +153,42 @@ function ExpedientePage() {
     onError: (e) => toast.error(e instanceof Error ? e.message : "Não foi possível confirmar o recebimento."),
   });
 
+  const printReceipt = (receipt: ReceiptWithItems) => {
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    doc.setFillColor(139, 107, 69);
+    doc.rect(0, 0, 210, 28, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(15);
+    doc.text("SEMADS — RECIBO DE MATERIAIS DE EXPEDIENTE", 12, 12);
+    doc.setFontSize(10);
+    doc.text(`Recibo nº ${receipt.receipt_number}`, 12, 21);
+    doc.setTextColor(40, 40, 40);
+    doc.setFontSize(10);
+    doc.text(`Unidade destinatária: ${receipt.unitName}`, 12, 38);
+    doc.text(`Data do envio: ${formatDate(receipt.sent_at)}`, 12, 45);
+    doc.text(`Enviado por: ${receipt.sent_by_name}`, 12, 52);
+    doc.text(`Situação: ${receipt.status === "confirmed" ? "Recebimento confirmado" : "Pendente de confirmação"}`, 12, 59);
+    if (receipt.confirmed_at) {
+      doc.text(`Recebido por: ${receipt.confirmed_by_name ?? "—"}`, 12, 66);
+      doc.text(`Data do recebimento: ${formatDate(receipt.confirmed_at)}`, 12, 73);
+    }
+    autoTable(doc, {
+      startY: receipt.confirmed_at ? 80 : 66,
+      head: [["Material", "Quantidade", "Unidade"]],
+      body: receipt.items.map((item) => [item.material_name, formatQty(item.quantity), item.unit_measure]),
+      theme: "grid",
+      headStyles: { fillColor: [139, 107, 69], textColor: [255, 255, 255] },
+      styles: { fontSize: 9, cellPadding: 3 },
+      margin: { left: 12, right: 12 },
+    });
+    if (receipt.note) {
+      const y = ((doc as any).lastAutoTable?.finalY ?? 80) + 8;
+      doc.setFontSize(9);
+      doc.text(`Observação: ${receipt.note}`, 12, y, { maxWidth: 185 });
+    }
+    doc.save(`recibo-expediente-${receipt.receipt_number}.pdf`);
+  };
+
   const generateReport = async () => {
     if (!from || !to) {
       toast.error("Selecione a data inicial e a data final do relatório.");
@@ -301,16 +337,16 @@ function ExpedientePage() {
         {isPending ? <div className="p-5 text-sm text-muted-foreground">Carregando recibos...</div>
           : isError ? <div className="p-5 text-sm text-destructive">{error instanceof Error ? error.message : "Erro ao consultar recibos."}</div>
           : visibleReceipts.length === 0 ? <div className="p-4"><EmptyState title="Nenhum recibo encontrado" description="Os recibos registrados para esta unidade aparecerão aqui." /></div>
-          : <div className="overflow-x-auto"><Table className="min-w-[800px]"><TableHeader><TableRow className="bg-muted/50">
-            <TableHead>Recibo</TableHead><TableHead>Unidade</TableHead><TableHead>Data do envio</TableHead><TableHead>Materiais</TableHead><TableHead>Data do recebimento</TableHead><TableHead>Situação</TableHead>
+          : <div className="overflow-x-auto"><Table className="min-w-[1050px]"><TableHeader><TableRow className="bg-muted/50">
+            <TableHead>Recibo</TableHead><TableHead>Unidade</TableHead><TableHead>Data do envio</TableHead><TableHead>Materiais</TableHead><TableHead>Data do recebimento</TableHead><TableHead>Situação</TableHead><TableHead>Ação</TableHead>
           </TableRow></TableHeader><TableBody>
             {visibleReceipts.map((r) => <TableRow key={r.id}>
               <TableCell className="font-bold">Nº {r.receipt_number}</TableCell>
               <TableCell>{r.unitName}</TableCell>
               <TableCell>{formatDate(r.sent_at)}</TableCell>
-              <TableCell>{r.items.length} item(ns)</TableCell>
+              <TableCell className="max-w-[360px] whitespace-normal">{r.items.map((item) => `${item.material_name}: ${formatQty(item.quantity)} ${item.unit_measure}`).join("; ") || "—"}</TableCell>
               <TableCell>{r.confirmed_at ? formatDate(r.confirmed_at) : "—"}</TableCell>
-              <TableCell><span className={r.status === "confirmed" ? "rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800" : "rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800"}>{r.status === "confirmed" ? "Recebido" : "Pendente"}</span></TableCell>
+              <TableCell><span className={r.status === "confirmed" ? "rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800" : "rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800"}>{r.status === "confirmed" ? "Recebido" : "Pendente"}</span></TableCell><TableCell><Button size="sm" variant="outline" onClick={() => printReceipt(r)}><FileDown className="size-4" /> PDF</Button></TableCell>
             </TableRow>)}
           </TableBody></Table></div>}
       </Panel>
