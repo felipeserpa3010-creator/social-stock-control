@@ -484,10 +484,42 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
   if (existingError) throw message(existingError);
   if (existing) return existing as Pick<Product, "id" | "nome" | "unidade_medida">;
 
+  const searchableName = normalized.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").toLocaleLowerCase("pt-BR");
+  const expedienteKeywords = [
+    "papel a4", "resma", "caneta", "lapis", "borracha", "apontador", "grampeador",
+    "grampos", "pasta", "envelope", "clipe", "clips", "corretivo", "marcador",
+    "marca texto", "toner", "cartucho", "impressora", "caderno", "bloco de notas",
+    "papel oficio", "papel sulfite", "fita adesiva", "cola branca", "tesoura",
+  ];
+  if (expedienteKeywords.some((keyword) => searchableName.includes(keyword))) {
+    throw new Error(`"${normalized}" parece ser material de expediente. Use o módulo Materiais de Expediente para registrar o envio sem movimentar o estoque.`);
+  }
+
+  const foodKeywords = [
+    "arroz", "feijao", "acucar", "trigo", "flocao", "farinha", "macarrao", "massa",
+    "oleo", "manteiga", "margarina", "leite", "carne", "frango", "peixe", "figado",
+    "salsicha", "cebola", "tomate", "limao", "verdura", "legume", "batata", "cenoura",
+    "repolho", "alface", "cheiro verde", "coentro", "pimentao", "alho", "ovo", "sal",
+    "cafe", "biscoito", "bolacha", "pao", "polpa", "suco", "fruta", "banana", "maca",
+    "laranja", "farofa", "fuba", "milho", "aveia", "massa de tomate",
+  ];
+  const cleaningKeywords = [
+    "detergente", "agua sanitaria", "desinfetante", "sabao", "papel higienico",
+    "papel toalha", "vassoura", "rodo", "pano", "esponja", "saco de lixo", "alcool",
+    "sabonete", "shampoo", "creme dental", "pasta de dente", "higiene", "limpeza",
+    "fralda", "absorvente", "desodorante", "escova de dente", "luva", "mascara",
+    "touca", "amaciantes", "amaciante", "inseticida",
+  ];
+  const categoryName = foodKeywords.some((keyword) => searchableName.includes(keyword))
+    ? "Alimentos"
+    : cleaningKeywords.some((keyword) => searchableName.includes(keyword))
+      ? "Materiais de Higiene e Limpeza"
+      : "Não categorizado";
+
   let { data: category, error: categoryError } = await supabase
     .from("categories")
     .select("id")
-    .eq("nome", "Não categorizado")
+    .eq("nome", categoryName)
     .limit(1)
     .maybeSingle();
   if (categoryError) throw message(categoryError);
@@ -495,7 +527,7 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
   if (!category) {
     const created = await supabase
       .from("categories")
-      .insert({ nome: "Não categorizado", ativo: true, demo: false })
+      .insert({ nome: categoryName, ativo: true, demo: false })
       .select("id")
       .single();
     if (created.error) throw message(created.error);
