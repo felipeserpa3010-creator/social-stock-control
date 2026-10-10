@@ -50,6 +50,13 @@
       "when": 1791659052569,
       "tag": "0006_materiais_expediente_recibos_relatorios",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791659071808,
+      "tag": "0007_ceo_delete_expediente_receipts",
+      "breakpoints": true
     }
   ]
 }

@@ -532,6 +532,10 @@ export type Database = {
         }
         Returns: string
       }
+      delete_expediente_receipt: {
+        Args: { _receipt_id: string }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
