@@ -45,7 +45,7 @@ AS $$
       JOIN public.units u ON u.id = p.unit_id
       WHERE p.user_id = auth.uid()
         AND p.ativo = true
-        AND lower(unaccent(trim(u.nome))) LIKE '%gabinete semads%'
+        AND lower(trim(u.nome)) LIKE '%gabinete semads%'
         AND EXISTS (
           SELECT 1 FROM public.user_roles ur
           WHERE ur.user_id = auth.uid() AND ur.role IN ('visualizador', 'responsavel')
@@ -57,7 +57,7 @@ AS $$
       JOIN public.units u ON u.id = p.unit_id
       WHERE p.user_id = auth.uid()
         AND p.ativo = true
-        AND lower(unaccent(trim(u.nome))) LIKE '%centro de distribuicao%'
+        AND lower(trim(u.nome)) LIKE '%centro de distribui%' OR lower(trim(u.nome)) LIKE '%centro de distribuição%'
         AND EXISTS (
           SELECT 1 FROM public.user_roles ur
           WHERE ur.user_id = auth.uid() AND ur.role IN ('visualizador', 'responsavel')
