@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T18:42:30.015043+00:00",
+  "generated_at": "2026-10-10T18:42:43.609077+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -179,7 +179,7 @@
     },
     {
       "path": "src/components/movement-form.tsx",
-      "bytes": 23615
+      "bytes": 23865
     },
     {
       "path": "src/components/auth-layout.tsx",
