@@ -95,7 +95,7 @@ function ExpedientePage() {
         current.push(item);
         byReceipt.set(item.receipt_id, current);
       });
-      const unitNames = new Map(units.map((u) => [u.id, u.nome]));
+      const unitNames = new Map<string, string>(units.map((u) => [u.id, u.nome] as const));
       return rows.map((r) => ({
         ...r,
         items: byReceipt.get(r.id) ?? [],
