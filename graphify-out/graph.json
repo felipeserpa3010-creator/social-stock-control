@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T13:30:02.199965+00:00",
+  "generated_at": "2026-10-10T18:37:46.216970+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -132,6 +132,10 @@
     {
       "path": "supabase/migrations/20261003150000_excluir_lancamento_estoque.sql",
       "bytes": 1664
+    },
+    {
+      "path": "supabase/migrations/20261010120000_materiais_expediente_recibos_relatorios.sql",
+      "bytes": 7969
     },
     {
       "path": "supabase/migrations/20261003120000_logo_semads_4k.sql",
