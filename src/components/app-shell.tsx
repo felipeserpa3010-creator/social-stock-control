@@ -37,6 +37,7 @@ type NavItem = {
   icon: typeof Boxes;
   adminOnly?: boolean;
   writeOnly?: boolean;
+  hash?: "expediente-lancamento" | "expediente-recibos" | "expediente-relatorio";
 };
 
 const NAV: { group: string; items: NavItem[] }[] = [
@@ -50,7 +51,9 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
       { to: "/recebimento", label: "Confirmar recebimento", icon: PackageCheck, writeOnly: true },
       { to: "/recibos", label: "Recibos", icon: FileDown },
-      { to: "/expediente", label: "Materiais de Expediente", icon: NotebookText },
+      { to: "/expediente", hash: "expediente-lancamento", label: "Lançar material de expediente", icon: NotebookText },
+      { to: "/expediente", hash: "expediente-recibos", label: "Recibos de expediente", icon: FileDown },
+      { to: "/expediente", hash: "expediente-relatorio", label: "Relatório de expediente", icon: FileDown },
     ],
   },
   {
@@ -127,6 +130,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
                   <li key={item.to}>
                     <Link
                       to={item.to}
+                      hash={item.hash}
                       onClick={onNavigate}
                       title={item.label}
                       className={cn(
