@@ -539,8 +539,7 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
   }
 
   if (existing) {
-    const existingCategory = (existing as unknown as { categories?: { nome?: string } | null }).categories;
-    if (categoryName !== "Não categorizado" && existingCategory?.nome === "Não categorizado") {
+    if (categoryName !== "Não categorizado" && existing.category_id !== category.id) {
       const { error } = await supabase.from("products").update({ category_id: category.id }).eq("id", existing.id);
       if (error) throw message(error);
     }
