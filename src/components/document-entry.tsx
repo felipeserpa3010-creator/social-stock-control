@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
-import { addMovement, ensureUncategorizedProduct, productsOptions, unitsOptions, type Product } from "@/lib/queries";
+import { addMovement, ensureUncategorizedProduct, isExpedienteMaterialName, productsOptions, unitsOptions, type Product } from "@/lib/queries";
 import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,7 +54,7 @@ export function DocumentEntry() {
 
   const activeUnits = useMemo(() => units.filter((u) => u.ativo), [units]);
   const activeProducts = useMemo(
-    () => products.filter((p) => p.ativo).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")),
+    () => products.filter((p) => p.ativo && !isExpedienteMaterialName(p.nome)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")),
     [products],
   );
 
