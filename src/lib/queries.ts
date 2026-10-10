@@ -475,21 +475,13 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
   const normalized = nome.trim();
   if (!normalized) throw new Error("Nome do produto vazio.");
 
-  const { data: existing, error: existingError } = await supabase
-    .from("products")
-    .select("id, nome, unidade_medida")
-    .ilike("nome", normalized)
-    .limit(1)
-    .maybeSingle();
-  if (existingError) throw message(existingError);
-  if (existing) return existing as Pick<Product, "id" | "nome" | "unidade_medida">;
-
   const searchableName = normalized.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR");
   const expedienteKeywords = [
     "papel a4", "resma", "caneta", "lapis", "borracha", "apontador", "grampeador",
-    "grampos", "pasta", "envelope", "clipe", "clips", "corretivo", "marcador",
-    "marca texto", "toner", "cartucho", "impressora", "caderno", "bloco de notas",
-    "papel oficio", "papel sulfite", "fita adesiva", "cola branca", "tesoura",
+    "grampos", "pasta arquivo", "pasta suspensa", "pasta catalogo", "pasta plastica",
+    "envelope", "clipe", "clips", "corretivo", "marcador", "marca texto", "toner",
+    "cartucho", "impressora", "caderno", "bloco de notas", "papel oficio", "papel sulfite",
+    "fita adesiva", "cola branca", "tesoura",
   ];
   if (expedienteKeywords.some((keyword) => searchableName.includes(keyword))) {
     throw new Error(`"${normalized}" parece ser material de expediente. Use o módulo Materiais de Expediente para registrar o envio sem movimentar o estoque.`);
@@ -516,6 +508,14 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
       ? "Materiais de Higiene e Limpeza"
       : "Não categorizado";
 
+  const { data: existing, error: existingError } = await supabase
+    .from("products")
+    .select("id, nome, unidade_medida, category_id, categories(nome)")
+    .ilike("nome", normalized)
+    .limit(1)
+    .maybeSingle();
+  if (existingError) throw message(existingError);
+
   let { data: category, error: categoryError } = await supabase
     .from("categories")
     .select("id")
@@ -534,6 +534,15 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
     category = created.data;
   }
 
+  if (existing) {
+    const existingCategory = (existing as unknown as { categories?: { nome?: string } | null }).categories;
+    if (categoryName !== "Não categorizado" && existingCategory?.nome === "Não categorizado") {
+      const { error } = await supabase.from("products").update({ category_id: category.id }).eq("id", existing.id);
+      if (error) throw message(error);
+    }
+    return existing as Pick<Product, "id" | "nome" | "unidade_medida">;
+  }
+
   const { data: product, error } = await supabase
     .from("products")
     .insert({
@@ -542,14 +551,13 @@ export async function ensureUncategorizedProduct(nome: string, unidade_medida = 
       unidade_medida,
       ativo: true,
       demo: false,
-      observacao: "Cadastrado automaticamente a partir de documento lido por OCR.",
+      observacao: "Cadastrado automaticamente a partir de lançamento em massa.",
     })
     .select("id, nome, unidade_medida")
     .single();
   if (error) throw message(error);
   return product as Pick<Product, "id" | "nome" | "unidade_medida">;
 }
-
 export async function saveProduct(id: string | null, input: ProductInput) {
   if (id) {
     const { error } = await supabase.from("products").update(input).eq("id", id);
