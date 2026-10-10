@@ -202,7 +202,7 @@ export function DocumentEntry() {
         // Classifica automaticamente o produto pelo nome no momento do lançamento.
         // Produtos novos só são cadastrados depois da conferência e confirmação final.
         const resolvedProduct = await ensureUncategorizedProduct(item.nome.trim(), item.unidade || "Unidade");
-        const productId = item.productId || resolvedProduct.id;
+        const productId = resolvedProduct.id;
 
         const observacao = isCentral
           ? "Lançamento em massa no Depósito Central"
