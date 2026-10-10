@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T13:30:02.199965+00:00",
+  "generated_at": "2026-10-10T18:49:28.079478+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -134,6 +134,10 @@
       "bytes": 1664
     },
     {
+      "path": "supabase/migrations/20261010120000_materiais_expediente_recibos_relatorios.sql",
+      "bytes": 8320
+    },
+    {
       "path": "supabase/migrations/20261003120000_logo_semads_4k.sql",
       "bytes": 216
     },
@@ -175,7 +179,7 @@
     },
     {
       "path": "src/components/movement-form.tsx",
-      "bytes": 23615
+      "bytes": 24112
     },
     {
       "path": "src/components/auth-layout.tsx",
@@ -187,7 +191,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 12881
+      "bytes": 13096
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -195,7 +199,7 @@
     },
     {
       "path": "src/components/document-entry.tsx",
-      "bytes": 19188
+      "bytes": 19280
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -239,7 +243,7 @@
     },
     {
       "path": "src/lib/queries.ts",
-      "bytes": 21155
+      "bytes": 23566
     },
     {
       "path": "src/lib/utils.ts",
@@ -515,7 +519,7 @@
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
-      "bytes": 7220
+      "bytes": 8829
     },
     {
       "path": "src/routes/_authenticated/historico.tsx",
@@ -532,6 +536,10 @@
     {
       "path": "src/routes/_authenticated/recibos.tsx",
       "bytes": 10894
+    },
+    {
+      "path": "src/routes/_authenticated/expediente.tsx",
+      "bytes": 21494
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
@@ -2341,6 +2349,74 @@
     },
     {
       "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/components/ui/table"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "jspdf"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "jspdf-autotable"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
+      "target": "@/components/ui/textarea"
+    },
+    {
+      "source": "src/routes/_authenticated/expediente.tsx",
       "target": "@/components/ui/table"
     },
     {
