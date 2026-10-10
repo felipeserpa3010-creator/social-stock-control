@@ -7,6 +7,7 @@ import { useUnit } from "@/hooks/useUnit";
 import {
   addMovement,
   ensureUncategorizedProduct,
+  isExpedienteMaterialName,
   movementsOptions,
   productsOptions,
   stockOptions,
@@ -27,6 +28,7 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
   const { profile, isAdmin, isViewer } = useAuth();
   const queryClient = useQueryClient();
   const { data: products = [] } = useQuery(productsOptions(false));
+  const selectableProducts = tipo === "entrada" ? products.filter((p) => !isExpedienteMaterialName(p.nome)) : products;
   const { data: stock = [] } = useQuery(stockOptions(unitId));
   const { data: recent = [] } = useQuery(movementsOptions({ unitId, tipo, limit: 8 }));
 
@@ -188,6 +190,11 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
     try {
       let movementObservation = observacao.trim() || null;
       let receiptId: string | null = null;
+      let movementProductId = productId;
+      if (isEntrada && product) {
+        const classifiedProduct = await ensureUncategorizedProduct(product.nome, product.unidade_medida);
+        movementProductId = classifiedProduct.id;
+      }
 
       if (isEntrada && !isCentralUnit) {
         const { data: nextReceipt, error: receiptError } = await (supabase as any).rpc("next_stock_receipt_number");
@@ -202,7 +209,7 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
 
       await addMovement({
         unit_id: unitId,
-        product_id: productId,
+        product_id: movementProductId,
         tipo,
         quantidade: qty,
         data,
@@ -242,7 +249,7 @@ export function MovementForm({ tipo }: { tipo: Extract<MovementType, "entrada" |
           <Field label="Produto" htmlFor="produto" required>
             <ProductSelect
               id="produto"
-              products={products}
+              products={selectableProducts}
               value={productId}
               onChange={setProductId}
               placeholder="Buscar produto..."
@@ -403,6 +410,7 @@ export function CentralDispatchForm() {
   const { profile } = useAuth();
   const queryClient = useQueryClient();
   const { data: products = [] } = useQuery(productsOptions(false));
+  const centralProducts = products.filter((p) => !isExpedienteMaterialName(p.nome));
   const { data: units = [] } = useQuery(unitsOptions(false));
   const central = units.find((u) => u.nome.trim().toLowerCase() === "gabinete semads");
   const { data: centralStock = [], isPending: stockLoading } = useQuery(stockOptions(central?.id ?? null));
@@ -505,7 +513,7 @@ export function CentralDispatchForm() {
           <Field label="Produto" htmlFor="produto-deposito" required>
             <ProductSelect
               id="produto-deposito"
-              products={products}
+              products={centralProducts}
               value={productId}
               onChange={setProductId}
               placeholder="Buscar produto..."

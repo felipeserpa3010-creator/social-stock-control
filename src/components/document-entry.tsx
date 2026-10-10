@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
-import { addMovement, ensureUncategorizedProduct, productsOptions, unitsOptions, type Product } from "@/lib/queries";
+import { addMovement, ensureUncategorizedProduct, isExpedienteMaterialName, productsOptions, unitsOptions, type Product } from "@/lib/queries";
 import { todayISO } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,7 +54,7 @@ export function DocumentEntry() {
 
   const activeUnits = useMemo(() => units.filter((u) => u.ativo), [units]);
   const activeProducts = useMemo(
-    () => products.filter((p) => p.ativo).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")),
+    () => products.filter((p) => p.ativo && !isExpedienteMaterialName(p.nome)).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")),
     [products],
   );
 
@@ -199,12 +199,10 @@ export function DocumentEntry() {
       }
 
       for (const item of validItems) {
-        let productId = item.productId;
-        // Produto novo só é cadastrado depois da conferência e da confirmação final.
-        if (!productId) {
-          const created = await ensureUncategorizedProduct(item.nome.trim(), item.unidade || "Unidade");
-          productId = created.id;
-        }
+        // Classifica automaticamente o produto pelo nome no momento do lançamento.
+        // Produtos novos só são cadastrados depois da conferência e confirmação final.
+        const resolvedProduct = await ensureUncategorizedProduct(item.nome.trim(), item.unidade || "Unidade");
+        const productId = resolvedProduct.id;
 
         const observacao = isCentral
           ? "Lançamento em massa no Depósito Central"

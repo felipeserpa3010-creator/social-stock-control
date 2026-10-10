@@ -36,26 +36,33 @@ export const Route = createFileRoute("/_authenticated/estoque")({
 });
 
 type Filter = "todos" | "normal" | "baixo" | "zerado";
+type CategoryFilter = "todas" | "alimentos" | "higiene" | "outras";
 
 function StockPage() {
   const { unitId, unit, loading } = useUnit();
   const { data: entries, isPending } = useQuery(stockOptions(unitId));
   const [term, setTerm] = useState("");
   const [filter, setFilter] = useState<Filter>("todos");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("todas");
 
   const rows = useMemo(() => {
     const list = (entries ?? []).filter((e) => {
       const status = stockStatus(e.quantity, e.product.estoque_minimo);
       if (filter !== "todos" && status !== filter) return false;
+      const categoryName = e.product.categories?.nome ?? "";
+      const normalizedCategory = categoryName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      if (categoryFilter === "alimentos" && normalizedCategory !== "alimentos") return false;
+      if (categoryFilter === "higiene" && !["materiais de higiene e limpeza", "produtos de limpeza", "higiene pessoal", "fraldas"].includes(normalizedCategory)) return false;
+      if (categoryFilter === "outras" && ["alimentos", "materiais de higiene e limpeza", "produtos de limpeza", "higiene pessoal", "fraldas"].includes(normalizedCategory)) return false;
       if (!term.trim()) return true;
       const q = term.trim().toLowerCase();
-      return (
-        e.product.nome.toLowerCase().includes(q) ||
-        (e.product.categories?.nome ?? "").toLowerCase().includes(q)
-      );
+      return e.product.nome.toLowerCase().includes(q) || categoryName.toLowerCase().includes(q);
     });
-    return list.sort((a, b) => a.product.nome.localeCompare(b.product.nome, "pt-BR"));
-  }, [entries, term, filter]);
+    return list.sort((a, b) =>
+      (a.product.categories?.nome ?? "").localeCompare(b.product.categories?.nome ?? "", "pt-BR") ||
+      a.product.nome.localeCompare(b.product.nome, "pt-BR"),
+    );
+  }, [entries, term, filter, categoryFilter]);
 
   const counts = useMemo(() => {
     const list = entries ?? [];
@@ -104,6 +111,12 @@ function StockPage() {
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <SearchInput value={term} onChange={setTerm} placeholder="Pesquisar produto..." className="w-56" />
+            <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value as CategoryFilter)} className="h-9 rounded-md border border-input bg-background px-2 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring" aria-label="Filtrar categoria">
+              <option value="todas">Todas as categorias</option>
+              <option value="alimentos">Alimentos</option>
+              <option value="higiene">Materiais de higiene e limpeza</option>
+              <option value="outras">Outras categorias</option>
+            </select>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value as Filter)}
@@ -121,7 +134,7 @@ function StockPage() {
       >
         {loading || isPending ? (
           <div className="p-4">
-            <TableSkeleton rows={8} cols={4} />
+            <TableSkeleton rows={8} cols={5} />
           </div>
         ) : rows.length === 0 ? (
           <div className="p-4">
@@ -136,6 +149,7 @@ function StockPage() {
               <TableHeader>
                 <TableRow className="bg-muted/50">
                   {unitId === ALL_UNITS && <TableHead>Unidade</TableHead>}
+                  <TableHead>Categoria</TableHead>
                   <TableHead>Nome do produto</TableHead>
                   <TableHead className="text-right">Estoque aproximado</TableHead>
                   <TableHead>Unidade de medida</TableHead>
@@ -147,6 +161,7 @@ function StockPage() {
                 {rows.map((r) => (
                   <TableRow key={`${r.unit_id}-${r.product.id}`}>
                     {unitId === ALL_UNITS && <TableCell className="font-medium">{r.unit?.nome ?? "—"}</TableCell>}
+                    <TableCell className="text-sm text-muted-foreground">{r.product.categories?.nome ?? "Não categorizado"}</TableCell>
                     <TableCell className="font-semibold">{r.product.nome}</TableCell>
                     <TableCell className="text-right font-bold tabular-nums">{formatQty(r.quantity)}</TableCell>
                     <TableCell className="text-sm text-muted-foreground">{r.product.unidade_medida}</TableCell>

@@ -11,6 +11,7 @@ import {
   PackagePlus,
   PackageMinus,
   PackageCheck,
+  NotebookText,
   Settings,
   ScanLine,
   ShieldCheck,
@@ -31,7 +32,7 @@ import { semadsLogoUrl } from "@/lib/brand";
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" |
     "/relatorios" | "/recibos" | "/unidades" | "/produtos" |
-    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento";
+    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento" | "/expediente";
   label: string;
   icon: typeof Boxes;
   adminOnly?: boolean;
@@ -49,6 +50,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
       { to: "/recebimento", label: "Confirmar recebimento", icon: PackageCheck, writeOnly: true },
       { to: "/recibos", label: "Recibos", icon: FileDown },
+      { to: "/expediente", label: "Materiais de Expediente", icon: NotebookText },
     ],
   },
   {
@@ -93,7 +95,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               i.to === "/dashboard" ||
               i.to === "/estoque" ||
               i.to === "/recibos" ||
-              (isCentralViewer && i.to === "/saida")
+              (isCentralViewer && (i.to === "/saida" || i.to === "/expediente"))
             );
           }
           if (isCentralUser) {
@@ -101,7 +103,8 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               i.to === "/dashboard" ||
               i.to === "/estoque" ||
               i.to === "/saida" ||
-              i.to === "/recibos"
+              i.to === "/recibos" ||
+              i.to === "/expediente"
             );
           }
           return (
@@ -233,7 +236,7 @@ function Shell({ children }: { children: ReactNode }) {
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isCentralViewer = isViewer && isCentroDistribuicao(unit?.nome);
-  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || (isCentralViewer && pathname === "/saida");
+  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || (isCentralViewer && (pathname === "/saida" || pathname === "/expediente"));
   const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
 
   return (
