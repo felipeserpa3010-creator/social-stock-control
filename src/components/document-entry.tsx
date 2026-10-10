@@ -199,12 +199,10 @@ export function DocumentEntry() {
       }
 
       for (const item of validItems) {
-        let productId = item.productId;
-        // Produto novo só é cadastrado depois da conferência e da confirmação final.
-        if (!productId) {
-          const created = await ensureUncategorizedProduct(item.nome.trim(), item.unidade || "Unidade");
-          productId = created.id;
-        }
+        // Classifica automaticamente o produto pelo nome no momento do lançamento.
+        // Produtos novos só são cadastrados depois da conferência e confirmação final.
+        const resolvedProduct = await ensureUncategorizedProduct(item.nome.trim(), item.unidade || "Unidade");
+        const productId = item.productId || resolvedProduct.id;
 
         const observacao = isCentral
           ? "Lançamento em massa no Depósito Central"
