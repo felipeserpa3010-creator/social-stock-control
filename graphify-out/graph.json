@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T18:49:28.079478+00:00",
+  "generated_at": "2026-10-10T18:51:48.857215+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -120,6 +120,10 @@
     {
       "path": "supabase/migrations/20260928020000_deposito_semads_logo.sql",
       "bytes": 271
+    },
+    {
+      "path": "supabase/migrations/20261010130000_ceo_delete_expediente_receipts.sql",
+      "bytes": 807
     },
     {
       "path": "supabase/migrations/20261006170000_deposito_central_semads.sql",
@@ -539,7 +543,7 @@
     },
     {
       "path": "src/routes/_authenticated/expediente.tsx",
-      "bytes": 21494
+      "bytes": 22369
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",

@@ -153,6 +153,18 @@ function ExpedientePage() {
     onError: (e) => toast.error(e instanceof Error ? e.message : "Não foi possível confirmar o recebimento."),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase as any).rpc("delete_expediente_receipt", { _receipt_id: id });
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      toast.success("Recibo de expediente excluído.");
+      await queryClient.invalidateQueries({ queryKey: ["expediente-receipts"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Não foi possível excluir o recibo."),
+  });
+
   const printReceipt = (receipt: ReceiptWithItems) => {
     const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
     doc.setFillColor(139, 107, 69);
@@ -347,7 +359,7 @@ function ExpedientePage() {
               <TableCell>{formatDate(r.sent_at)}</TableCell>
               <TableCell className="max-w-[360px] whitespace-normal">{r.items.map((item) => `${item.material_name}: ${formatQty(item.quantity)} ${item.unit_measure}`).join("; ") || "—"}</TableCell>
               <TableCell>{r.confirmed_at ? formatDate(r.confirmed_at) : "—"}</TableCell>
-              <TableCell><span className={r.status === "confirmed" ? "rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800" : "rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800"}>{r.status === "confirmed" ? "Recebido" : "Pendente"}</span></TableCell><TableCell><Button size="sm" variant="outline" onClick={() => printReceipt(r)}><FileDown className="size-4" /> PDF</Button></TableCell>
+              <TableCell><span className={r.status === "confirmed" ? "rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800" : "rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800"}>{r.status === "confirmed" ? "Recebido" : "Pendente"}</span></TableCell><TableCell><div className="flex items-center gap-2"><Button size="sm" variant="outline" onClick={() => printReceipt(r)}><FileDown className="size-4" /> PDF</Button>{isAdmin && <Button size="sm" variant="destructive" disabled={deleteMutation.isPending} onClick={() => { if (window.confirm(`Tem certeza que deseja excluir o recibo de expediente nº ${r.receipt_number}? Essa ação não pode ser desfeita.`)) deleteMutation.mutate(r.id); }}><Trash2 className="size-4" /> Excluir</Button>}</div></TableCell>
             </TableRow>)}
           </TableBody></Table></div>}
       </Panel>
