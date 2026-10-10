@@ -10,11 +10,10 @@ import { useUnit } from "@/hooks/useUnit";
 import { supabase } from "@/integrations/supabase/client";
 import { unitsOptions } from "@/lib/queries";
 import { todayISO, formatDate, formatQty } from "@/lib/format";
-import { PageHeader, Panel, EmptyState } from "@/components/ui-kit";
+import { PageHeader, Panel, EmptyState, Field } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Field } from "@/components/ui-kit";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/expediente")({
@@ -24,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/expediente")({
     const [{ data: admin }, { data: responsible }, { data: dispatcher }] = await Promise.all([
       supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" }),
       supabase.rpc("has_role", { _user_id: data.user.id, _role: "responsavel" }),
-      supabase.rpc("is_expediente_dispatcher"),
+      (supabase as any).rpc("is_expediente_dispatcher"),
     ]);
     if (admin !== true && responsible !== true && dispatcher !== true) throw redirect({ to: "/dashboard" });
   },
@@ -80,7 +79,7 @@ function ExpedientePage() {
   const canConfirm = role === "responsavel" && !isAdmin && !dispatcher && Boolean(profile?.unit_id);
   const { data: units = [] } = useQuery(unitsOptions(false));
   const { data: receipts = [], isPending, isError, error } = useQuery({
-    queryKey: ["expediente-receipts"],
+    queryKey: ["expediente-receipts", units.map((u) => u.id).join("|")],
     queryFn: async () => {
       const { data: headers, error: headerError } = await (supabase as any)
         .from("expediente_receipts").select("*").order("sent_at", { ascending: false }).order("created_at", { ascending: false });
@@ -122,7 +121,7 @@ function ExpedientePage() {
       if (!validItems.length || validItems.some((i) => !i.name || !i.unit || !Number.isFinite(i.quantity) || i.quantity <= 0)) {
         throw new Error("Preencha o nome, a quantidade e a unidade de cada material.");
       }
-      const { data, error } = await supabase.rpc("create_expediente_receipt", {
+      const { data, error } = await (supabase as any).rpc("create_expediente_receipt", {
         _destination_unit_id: destinationId,
         _sent_at: sentAt,
         _items: validItems,
@@ -144,7 +143,7 @@ function ExpedientePage() {
 
   const confirmMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.rpc("confirm_expediente_receipt", { _receipt_id: id });
+      const { error } = await (supabase as any).rpc("confirm_expediente_receipt", { _receipt_id: id });
       if (error) throw error;
     },
     onSuccess: async () => {
