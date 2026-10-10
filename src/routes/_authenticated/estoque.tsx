@@ -36,12 +36,14 @@ export const Route = createFileRoute("/_authenticated/estoque")({
 });
 
 type Filter = "todos" | "normal" | "baixo" | "zerado";
+type CategoryFilter = "todas" | "alimentos" | "higiene" | "outras";
 
 function StockPage() {
   const { unitId, unit, loading } = useUnit();
   const { data: entries, isPending } = useQuery(stockOptions(unitId));
   const [term, setTerm] = useState("");
   const [filter, setFilter] = useState<Filter>("todos");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("todas");
 
   const rows = useMemo(() => {
     const list = (entries ?? []).filter((e) => {
@@ -121,7 +123,7 @@ function StockPage() {
       >
         {loading || isPending ? (
           <div className="p-4">
-            <TableSkeleton rows={8} cols={4} />
+            <TableSkeleton rows={8} cols={5} />
           </div>
         ) : rows.length === 0 ? (
           <div className="p-4">
