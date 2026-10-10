@@ -38,6 +38,94 @@ export type Database = {
         }
         Relationships: []
       }
+      expediente_receipt_items: {
+        Row: {
+          created_at: string
+          id: string
+          material_name: string
+          quantity: number
+          receipt_id: string
+          unit_measure: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          material_name: string
+          quantity: number
+          receipt_id: string
+          unit_measure?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          material_name?: string
+          quantity?: number
+          receipt_id?: string
+          unit_measure?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expediente_receipt_items_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "expediente_receipts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expediente_receipts: {
+        Row: {
+          confirmed_at: string | null
+          confirmed_by: string | null
+          confirmed_by_name: string | null
+          created_at: string
+          destination_unit_id: string
+          id: string
+          note: string | null
+          receipt_number: string
+          sent_at: string
+          sent_by: string
+          sent_by_name: string
+          status: string
+        }
+        Insert: {
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          confirmed_by_name?: string | null
+          created_at?: string
+          destination_unit_id: string
+          id?: string
+          note?: string | null
+          receipt_number: string
+          sent_at?: string
+          sent_by: string
+          sent_by_name?: string
+          status?: string
+        }
+        Update: {
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          confirmed_by_name?: string | null
+          created_at?: string
+          destination_unit_id?: string
+          id?: string
+          note?: string | null
+          receipt_number?: string
+          sent_at?: string
+          sent_by?: string
+          sent_by_name?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expediente_receipts_destination_unit_id_fkey"
+            columns: ["destination_unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           ativo: boolean
@@ -431,6 +519,19 @@ export type Database = {
     Functions: {
       can_access_unit: { Args: { _unit_id: string }; Returns: boolean }
       can_write_unit: { Args: { _unit_id: string }; Returns: boolean }
+      confirm_expediente_receipt: {
+        Args: { _receipt_id: string }
+        Returns: undefined
+      }
+      create_expediente_receipt: {
+        Args: {
+          _destination_unit_id: string
+          _items: Json
+          _note?: string
+          _sent_at: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -440,6 +541,7 @@ export type Database = {
       }
       is_active_user: { Args: never; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
+      is_expediente_dispatcher: { Args: never; Returns: boolean }
       is_viewer: { Args: never; Returns: boolean }
       my_unit: { Args: never; Returns: string }
       next_stock_receipt_number: { Args: never; Returns: string }

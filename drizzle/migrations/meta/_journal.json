@@ -43,6 +43,13 @@
       "when": 1791552541231,
       "tag": "0005_recibo_numeracao_reaproveita",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791659052569,
+      "tag": "0006_materiais_expediente_recibos_relatorios",
+      "breakpoints": true
     }
   ]
 }
