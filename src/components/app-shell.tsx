@@ -236,7 +236,7 @@ function Shell({ children }: { children: ReactNode }) {
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isCentralViewer = isViewer && isCentroDistribuicao(unit?.nome);
-  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || (isCentralViewer && pathname === "/saida");
+  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || (isCentralViewer && (pathname === "/saida" || pathname === "/expediente"));
   const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
 
   return (
