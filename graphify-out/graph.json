@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T18:38:59.644002+00:00",
+  "generated_at": "2026-10-10T18:39:19.097259+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -191,7 +191,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 12881
+      "bytes": 13064
     },
     {
       "path": "src/components/ui-kit.tsx",
