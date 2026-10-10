@@ -202,7 +202,7 @@ function ExpedientePage() {
     try {
       const confirmed = visibleReceipts.filter((r) => {
         if (r.status !== "confirmed" || !r.confirmed_at) return false;
-        const date = r.confirmed_at.slice(0, 10);
+        const receivedAt = new Date(r.confirmed_at);\n        const date = `${receivedAt.getFullYear()}-${String(receivedAt.getMonth() + 1).padStart(2, "0")}-${String(receivedAt.getDate()).padStart(2, "0")}`;
         return date >= from && date <= to;
       });
       if (!confirmed.length) throw new Error("Não há recebimentos confirmados nesse período para os filtros selecionados.");
