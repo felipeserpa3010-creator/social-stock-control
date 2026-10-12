@@ -24,6 +24,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedEntradaRouteImport } from './routes/_authenticated/entrada'
 import { Route as AuthenticatedEntradaDocumentoRouteImport } from './routes/_authenticated/entrada-documento'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
+import { Route as AuthenticatedExpedienteRouteImport } from './routes/_authenticated/expediente'
 import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedMediasRouteImport } from './routes/_authenticated/medias'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
@@ -112,6 +113,11 @@ const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
   path: '/estoque',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedExpedienteRoute = AuthenticatedExpedienteRouteImport.update({
+  id: '/expediente',
+  path: '/expediente',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedHistoricoRoute = AuthenticatedHistoricoRouteImport.update({
   id: '/historico',
   path: '/historico',
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/entrada': typeof AuthenticatedEntradaRoute
   '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
+  '/expediente': typeof AuthenticatedExpedienteRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
@@ -199,6 +206,7 @@ export interface FileRoutesByTo {
   '/entrada': typeof AuthenticatedEntradaRoute
   '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
+  '/expediente': typeof AuthenticatedExpedienteRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/produtos': typeof AuthenticatedProdutosRoute
@@ -226,6 +234,7 @@ export interface FileRoutesById {
   '/_authenticated/entrada': typeof AuthenticatedEntradaRoute
   '/_authenticated/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
+  '/_authenticated/expediente': typeof AuthenticatedExpedienteRoute
   '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/medias': typeof AuthenticatedMediasRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
@@ -253,6 +262,7 @@ export interface FileRouteTypes {
     | '/entrada'
     | '/entrada-documento'
     | '/estoque'
+    | '/expediente'
     | '/historico'
     | '/medias'
     | '/produtos'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/entrada'
     | '/entrada-documento'
     | '/estoque'
+    | '/expediente'
     | '/historico'
     | '/medias'
     | '/produtos'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/_authenticated/entrada'
     | '/_authenticated/entrada-documento'
     | '/_authenticated/estoque'
+    | '/_authenticated/expediente'
     | '/_authenticated/historico'
     | '/_authenticated/medias'
     | '/_authenticated/produtos'
@@ -433,6 +445,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEstoqueRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/expediente': {
+      id: '/_authenticated/expediente'
+      path: '/expediente'
+      fullPath: '/expediente'
+      preLoaderRoute: typeof AuthenticatedExpedienteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/historico': {
       id: '/_authenticated/historico'
       path: '/historico'
@@ -507,6 +526,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEntradaRoute: typeof AuthenticatedEntradaRoute
   AuthenticatedEntradaDocumentoRoute: typeof AuthenticatedEntradaDocumentoRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
+  AuthenticatedExpedienteRoute: typeof AuthenticatedExpedienteRoute
   AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedMediasRoute: typeof AuthenticatedMediasRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
@@ -526,6 +546,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEntradaRoute: AuthenticatedEntradaRoute,
   AuthenticatedEntradaDocumentoRoute: AuthenticatedEntradaDocumentoRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
+  AuthenticatedExpedienteRoute: AuthenticatedExpedienteRoute,
   AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedMediasRoute: AuthenticatedMediasRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
