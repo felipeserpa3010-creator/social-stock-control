@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T19:52:42.814500+00:00",
+  "generated_at": "2026-10-12T19:57:38.306651+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -124,6 +124,10 @@
     {
       "path": "supabase/migrations/20260927023000_user_registration_authorization.sql",
       "bytes": 236
+    },
+    {
+      "path": "supabase/migrations/20261012180000_unifica_create_expediente_receipt_material_type.sql",
+      "bytes": 4531
     },
     {
       "path": "supabase/migrations/20260928020000_deposito_semads_logo.sql",
