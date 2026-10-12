@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T19:43:11.110967+00:00",
+  "generated_at": "2026-10-12T19:43:27.271444+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -215,7 +215,7 @@
     },
     {
       "path": "src/lib/assistant-data.ts",
-      "bytes": 18782
+      "bytes": 19385
     },
     {
       "path": "src/lib/error-page.ts",
