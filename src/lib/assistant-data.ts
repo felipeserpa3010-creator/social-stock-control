@@ -87,6 +87,11 @@ export const SYSTEM_HELP: SystemHelp[] = [
     text: "Na área 'Relatórios de envios em PDF', selecione a data inicial e final e, quando permitido, a unidade. O relatório considera recebimentos confirmados dentro do período e mostra os materiais enviados/recebidos, quantidades, unidades, datas e unidade destinatária. Se não houver recebimentos confirmados no intervalo, revise as datas e o filtro da unidade. É um relatório do Registro de Envios, separado do Relatório PDF do estoque."
   },
   {
+    keywords: ["excluir recibo de expediente", "apagar recibo de expediente", "excluir recibo de outros materiais", "apagar recibo de outros materiais"],
+    title: "Excluir recibos do Registro de Envios",
+    text: "O CEO pode excluir recibos do Registro de Envios quando essa ação estiver habilitada. A exclusão é feita no próprio módulo de materiais de expediente/outros materiais e é diferente da exclusão de Recibos de Produtos do estoque. Se a opção não aparecer ou o sistema apresentar erro, é necessário verificar a permissão e as funções do banco de dados implantado."
+  },
+  {
     keywords: ["registro de recibos", "recibo de expediente", "recibo de outros materiais", "recibo de materiais", "confirmar materiais de expediente"],
     title: "Registro de recibos de materiais",
     text: "A opção 'Registro de recibos' permite consultar os recibos de materiais de expediente e de outros materiais, agrupados por mês. O recibo apresenta número, unidade de destino, data, quem enviou, situação, lista de materiais, quantidades e unidades; pode ser impresso em PDF. A unidade destinatária confirma o recebimento quando essa ação estiver disponível. O CEO pode excluir recibos conforme as permissões do sistema. Esse fluxo não altera o estoque principal."
