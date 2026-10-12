@@ -37,7 +37,7 @@ type NavItem = {
   icon: typeof Boxes;
   adminOnly?: boolean;
   writeOnly?: boolean;
-  hash?: "expediente-lancamento" | "expediente-recibos" | "expediente-relatorio";
+  hash?: "expediente-lancamento" | "outros-materiais-lancamento" | "expediente-recibos" | "expediente-relatorio";
 };
 
 const NAV: { group: string; items: NavItem[] }[] = [
@@ -51,9 +51,16 @@ const NAV: { group: string; items: NavItem[] }[] = [
       { to: "/saida", label: "Saída", icon: PackageMinus, writeOnly: true },
       { to: "/recebimento", label: "Confirmar recebimento", icon: PackageCheck, writeOnly: true },
       { to: "/recibos", label: "Recibos", icon: FileDown },
-      { to: "/expediente", hash: "expediente-lancamento", label: "Lançar material de expediente", icon: NotebookText },
-      { to: "/expediente", hash: "expediente-recibos", label: "Recibos de expediente", icon: FileDown },
-      { to: "/expediente", hash: "expediente-relatorio", label: "Relatório de expediente", icon: FileDown },
+
+    ],
+  },
+  {
+    group: "Registro de Envios",
+    items: [
+      { to: "/expediente", hash: "expediente-lancamento", label: "Materiais de expediente", icon: NotebookText },
+      { to: "/expediente", hash: "outros-materiais-lancamento", label: "Outros materiais", icon: Boxes },
+      { to: "/expediente", hash: "expediente-recibos", label: "Registro de recibos", icon: FileDown },
+      { to: "/expediente", hash: "expediente-relatorio", label: "Relatórios de envios em PDF", icon: FileDown },
     ],
   },
   {
