@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T19:20:24.132501+00:00",
+  "generated_at": "2026-10-12T19:20:16.167462+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -108,6 +108,10 @@
     {
       "path": "supabase/migrations/20261005143000_confirmacao_aplica_estoque.sql",
       "bytes": 4065
+    },
+    {
+      "path": "supabase/migrations/20261012160000_registro_envios_outros_materiais.sql",
+      "bytes": 1365
     },
     {
       "path": "supabase/migrations/20261005160000_gabinete_unidades_autorizadas.sql",
