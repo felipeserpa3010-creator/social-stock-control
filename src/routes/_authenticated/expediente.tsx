@@ -1,5 +1,5 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, redirect, useRouterState } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FileDown, Plus, Send, Trash2, CheckCircle2, Loader2 } from "lucide-react";
 import { jsPDF } from "jspdf";
@@ -29,8 +29,8 @@ export const Route = createFileRoute("/_authenticated/expediente")({
   },
   head: () => ({
     meta: [
-      { title: "Materiais de Expediente — Controle de Estoque" },
-      { name: "description", content: "Registre envios, confirme recebimentos e consulte relatórios de materiais de expediente." },
+      { title: "Registro de Envios — Controle de Estoque" },
+      { name: "description", content: "Registre envios de materiais de expediente e outros materiais sem movimentar estoque." },
     ],
   }),
   component: ExpedientePage,
@@ -45,6 +45,7 @@ type Receipt = {
   sent_by_name: string;
   sent_at: string;
   note: string | null;
+  material_type: "expediente" | "outros";
   status: "pending" | "confirmed";
   confirmed_by: string | null;
   confirmed_by_name: string | null;
@@ -61,11 +62,17 @@ function ExpedientePage() {
   const [destinationId, setDestinationId] = useState("");
   const [sentAt, setSentAt] = useState(todayISO());
   const [note, setNote] = useState("");
+  const [materialType, setMaterialType] = useState<"expediente" | "outros">("expediente");
   const [items, setItems] = useState<ExpedienteItem[]>([{ name: "", quantity: "1", unit: "unidade" }]);
   const [filterUnit, setFilterUnit] = useState("all");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
+  const currentHash = useRouterState({ select: (state) => state.location.hash });
+  useEffect(() => {
+    if (currentHash === "#outros-materiais-lancamento") setMaterialType("outros");
+    else if (currentHash === "#expediente-lancamento") setMaterialType("expediente");
+  }, [currentHash]);
 
   const { data: dispatcher = false } = useQuery({
     queryKey: ["expediente-dispatcher"],
@@ -126,15 +133,17 @@ function ExpedientePage() {
         _sent_at: sentAt,
         _items: validItems,
         _note: note.trim() || null,
+        _material_type: materialType,
       });
       if (error) throw error;
       return String(data);
     },
     onSuccess: async (number) => {
-      toast.success(`Recibo de expediente nº ${number} criado e aguardando confirmação da unidade.`);
+      toast.success(`Recibo de ${materialType === "expediente" ? "materiais de expediente" : "outros materiais"} nº ${number} criado e aguardando confirmação da unidade.`);
       setItems([{ name: "", quantity: "1", unit: "unidade" }]);
       setDestinationId("");
       setNote("");
+      setMaterialType("expediente");
       setSentAt(todayISO());
       await queryClient.invalidateQueries({ queryKey: ["expediente-receipts"] });
     },
@@ -171,7 +180,7 @@ function ExpedientePage() {
     doc.rect(0, 0, 210, 28, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(15);
-    doc.text("SEMADS — RECIBO DE MATERIAIS DE EXPEDIENTE", 12, 12);
+    doc.text(`SEMADS — RECIBO DE ${receipt.material_type === "outros" ? "OUTROS MATERIAIS" : "MATERIAIS DE EXPEDIENTE"}`, 12, 12);
     doc.setFontSize(10);
     doc.text(`Recibo nº ${receipt.receipt_number}`, 12, 21);
     doc.setTextColor(40, 40, 40);
@@ -224,7 +233,7 @@ function ExpedientePage() {
       doc.rect(0, 0, 297, 25, "F");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(15);
-      doc.text("SEMADS — RELATÓRIO DE MATERIAIS DE EXPEDIENTE", 14, 11);
+      doc.text("SEMADS — RELATÓRIO DE REGISTRO DE ENVIOS", 14, 11);
       doc.setFontSize(9);
       doc.text(`Recebimentos confirmados de ${formatDate(from)} até ${formatDate(to)}`, 14, 19);
       doc.setTextColor(40, 40, 40);
@@ -236,10 +245,11 @@ function ExpedientePage() {
         `${formatQty(item.quantity)} ${item.unit_measure}`,
         formatDate(r.sent_at),
         formatDate(r.confirmed_at),
+        r.material_type === "outros" ? "Outros materiais" : "Materiais de expediente",
       ])));
       autoTable(doc, {
         startY: 31,
-        head: [["Recibo", "Unidade", "Material", "Quantidade", "Data do envio", "Data do recebimento"]],
+        head: [["Recibo", "Unidade", "Material", "Quantidade", "Data do envio", "Data do recebimento", "Categoria"]],
         body,
         theme: "grid",
         headStyles: { fillColor: [139, 107, 69], textColor: [255, 255, 255] },
@@ -263,13 +273,19 @@ function ExpedientePage() {
 
   return (
     <>
-      <PageHeader title="Materiais de Expediente" description="Registro dos materiais enviados, confirmação de recebimento e consulta dos recibos por unidade. Este módulo não movimenta o estoque." />
+      <PageHeader title="Registro de Envios" description="Materiais de expediente e outros materiais: registro de envio, recibos e confirmação pela unidade. Nenhuma dessas entregas movimenta o estoque." />
 
       {canDispatch && (
         <div id="expediente-lancamento" className="scroll-mt-20">
-        <Panel title="Registrar envio de materiais" description="O CEO e o Centro de Distribuição podem registrar os envios. Cada lançamento gera um recibo independente do estoque.">
+        <Panel title="Registrar envio de materiais" description="O CEO e o Centro de Distribuição podem registrar materiais de expediente ou outros materiais. Cada envio gera recibo e aguarda confirmação da unidade, sem movimentar o estoque.">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); launchMutation.mutate(); }}>
             <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Tipo de material" htmlFor="exp-tipo" required>
+                <select id="exp-tipo" value={materialType} onChange={(e) => setMaterialType(e.target.value as "expediente" | "outros")} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
+                  <option value="expediente">Materiais de expediente</option>
+                  <option value="outros">Outros materiais</option>
+                </select>
+              </Field>
               <Field label="Unidade destinatária" htmlFor="exp-destino" required>
                 <select id="exp-destino" required value={destinationId} onChange={(e) => setDestinationId(e.target.value)} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
                   <option value="">Selecione a unidade...</option>
@@ -283,13 +299,13 @@ function ExpedientePage() {
 
             <div className="space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold">Materiais enviados</h3>
+                <h3 className="text-sm font-semibold">{materialType === "expediente" ? "Materiais de expediente enviados" : "Outros materiais enviados"}</h3>
                 <Button type="button" size="sm" variant="outline" onClick={() => setItems((old) => [...old, { name: "", quantity: "1", unit: "unidade" }])}><Plus className="size-4" /> Adicionar material</Button>
               </div>
               {items.map((item, index) => (
                 <div key={index} className="grid gap-3 rounded-lg border p-3 sm:grid-cols-[minmax(0,1fr)_110px_145px_40px]">
                   <Field label="Nome do material" htmlFor={`exp-name-${index}`} required>
-                    <Input id={`exp-name-${index}`} required value={item.name} onChange={(e) => setItems((old) => old.map((v, i) => i === index ? { ...v, name: e.target.value } : v))} placeholder="Ex.: Papel A4, caneta, pasta..." />
+                    <Input id={`exp-name-${index}`} required value={item.name} onChange={(e) => setItems((old) => old.map((v, i) => i === index ? { ...v, name: e.target.value } : v))} placeholder={materialType === "expediente" ? "Ex.: Papel A4, caneta, pasta..." : "Ex.: Vassoura, rodo, copos, panelas, sacos de lixo..."} />
                   </Field>
                   <Field label="Quantidade" htmlFor={`exp-qty-${index}`} required>
                     <Input id={`exp-qty-${index}`} required inputMode="decimal" value={item.quantity} onChange={(e) => setItems((old) => old.map((v, i) => i === index ? { ...v, quantity: e.target.value } : v))} />
@@ -327,7 +343,7 @@ function ExpedientePage() {
                 <div key={r.id} className="rounded-lg border p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <p className="font-semibold">Recibo de Expediente nº {r.receipt_number}</p>
+                      <p className="font-semibold">Recibo de {r.material_type === "outros" ? "Outros Materiais" : "Expediente"} nº {r.receipt_number}</p>
                       <p className="text-xs text-muted-foreground">{r.unitName} · Enviado em {formatDate(r.sent_at)} · Por {r.sent_by_name}</p>
                     </div>
                     <Button size="sm" disabled={confirmMutation.isPending} onClick={() => confirmMutation.mutate(r.id)}><CheckCircle2 className="size-4" /> Confirmar recebimento</Button>
