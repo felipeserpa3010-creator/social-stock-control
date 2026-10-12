@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T19:33:39.039156+00:00",
+  "generated_at": "2026-10-12T19:36:28.466242+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -68,6 +68,10 @@
     {
       "path": "supabase/migrations/20261005120000_numero_recibo_sequencial.sql",
       "bytes": 459
+    },
+    {
+      "path": "supabase/migrations/20261012170000_restringe_registro_envios_ao_ceo_e_centro_distribuicao.sql",
+      "bytes": 4031
     },
     {
       "path": "supabase/migrations/20261008160000_auditoria_fluxos_recibos_central.sql",
