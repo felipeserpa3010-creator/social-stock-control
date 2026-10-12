@@ -72,6 +72,52 @@ export type SystemHelp = {
 
 export const SYSTEM_HELP: SystemHelp[] = [
   {
+    keywords: ["materiais de expediente", "material de expediente", "registro de envios", "envio de materiais", "envios de materiais"],
+    title: "Registro de Envios — Materiais de expediente",
+    text: "Esta área registra envios de materiais de expediente para uma unidade. O usuário autorizado seleciona a unidade destinatária, a data, os materiais, quantidades e unidades de medida, e pode adicionar observação. O envio gera um recibo próprio, fica pendente até a unidade confirmar e pode ser consultado no Registro de recibos. Este módulo é separado do estoque de alimentos/produtos e NÃO aumenta nem reduz o estoque principal."
+  },
+  {
+    keywords: ["outros materiais", "outro material", "registro de outros materiais"],
+    title: "Registro de Envios — Outros materiais",
+    text: "Use a opção 'Outros materiais' para registrar envio de materiais que não sejam de expediente. Informe a unidade de destino, data, nome de cada material, quantidade e unidade de medida. O sistema cria um recibo separado, que fica aguardando confirmação da unidade. Esse registro é independente do estoque principal e não movimenta o saldo de produtos."
+  },
+  {
+    keywords: ["relatorio de envios", "relatório de envios", "envios em pdf", "relatorio de materiais de expediente", "relatório de materiais de expediente", "relatorio de outros materiais", "relatório de outros materiais"],
+    title: "Relatórios de envios em PDF",
+    text: "Na área 'Relatórios de envios em PDF', selecione a data inicial e final e, quando permitido, a unidade. O relatório considera recebimentos confirmados dentro do período e mostra os materiais enviados/recebidos, quantidades, unidades, datas e unidade destinatária. Se não houver recebimentos confirmados no intervalo, revise as datas e o filtro da unidade. É um relatório do Registro de Envios, separado do Relatório PDF do estoque."
+  },
+  {
+    keywords: ["registro de recibos", "recibo de expediente", "recibo de outros materiais", "recibo de materiais", "confirmar materiais de expediente"],
+    title: "Registro de recibos de materiais",
+    text: "A opção 'Registro de recibos' permite consultar os recibos de materiais de expediente e de outros materiais, agrupados por mês. O recibo apresenta número, unidade de destino, data, quem enviou, situação, lista de materiais, quantidades e unidades; pode ser impresso em PDF. A unidade destinatária confirma o recebimento quando essa ação estiver disponível. O CEO pode excluir recibos conforme as permissões do sistema. Esse fluxo não altera o estoque principal."
+  },
+  {
+    keywords: ["visualizador", "perfil visualizador", "somente visualizar", "só visualizar", "somente consulta", "somente consultar"],
+    title: "Perfil Visualizador",
+    text: "O perfil Visualizador é somente para consulta: pode acessar Painel, Estoque, Recibos e Relatórios PDF; também pode consultar o Registro de recibos e os Relatórios de envios em PDF. Não deve cadastrar produtos, lançar entradas, registrar saídas, confirmar recebimentos nem excluir registros. O alcance dos dados depende da unidade vinculada e das permissões configuradas; o visualizador não deve presumir acesso a todas as unidades."
+  },
+  {
+    keywords: ["permissao do responsavel", "permissões do responsável", "responsavel da unidade", "responsável da unidade"],
+    title: "Permissões do responsável pela unidade",
+    text: "O responsável pela unidade consulta o estoque e os recibos da própria unidade, registra saídas conforme as permissões liberadas e confirma o recebimento dos Recibos de Produtos enviados para sua unidade. Não registra entradas nem administra produtos, usuários ou unidades. Nos recibos do Registro de Envios, a confirmação disponível depende do tipo de usuário e da autorização configurada."
+  },
+  {
+    keywords: ["estoque antes da confirmacao", "estoque antes da confirmação", "estoque pendente", "recibo pendente", "quando entra no estoque"],
+    title: "Quando o estoque é atualizado",
+    text: "Um Recibo de Produtos enviado pelo CEO deve ficar pendente e não pode aumentar o estoque confirmado da unidade antes da confirmação do recebimento pela própria unidade. Depois da confirmação, entram apenas as quantidades daquele recibo. Se um recibo ainda pendente for excluído, suas quantidades não devem permanecer no estoque. Não confunda esse fluxo com o Registro de Envios de materiais de expediente/outros materiais, que é separado e não movimenta o estoque principal."
+  },
+  {
+    keywords: ["numero de fornecimento", "número de fornecimento", "pesquisar recibo", "buscar recibo por numero", "buscar recibo por número"],
+    title: "Consultar recibos e números",
+    text: "A página Recibos é usada para consultar Recibos de Produtos e localizar uma entrega por número, unidade ou produto quando esses filtros estiverem disponíveis. O recibo impresso deve mostrar o número e os dados da entrega. Para materiais de expediente e outros materiais, use 'Registro de recibos', que é um módulo separado. A numeração efetiva é a exibida no sistema; se houver divergência, ela precisa ser verificada na aplicação e no banco."
+  },
+  {
+    keywords: ["configuracoes", "configurações", "ajustes do sistema"],
+    title: "Configurações",
+    text: "A área Configurações reúne os ajustes administrativos que estiverem habilitados para o CEO. O que aparece pode variar conforme a versão implantada. Se você disser qual ajuste procura, posso orientar sobre a função correspondente sem presumir que uma opção esteja disponível."
+  },
+
+  {
     keywords: ["painel", "dashboard", "inicio", "início"],
     title: "Painel",
     text: "O Painel é a visão geral do sistema. O CEO acompanha estoque, lançamentos e recibos pendentes. Os demais perfis veem somente o que sua permissão permite."
