@@ -246,14 +246,68 @@ function ExpedientePage() {
       });
       if (!confirmed.length) throw new Error("Não há recebimentos confirmados nesse período para a unidade selecionada.");
       const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-      doc.setFillColor(139, 107, 69);
-      doc.rect(0, 0, 297, 25, "F");
+      const brown: [number, number, number] = [125, 47, 25];
+      const lightBrown: [number, number, number] = [246, 239, 234];
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const selectedUnitName = reportUnit === "all" ? "Todas as unidades" : (units.find((u) => u.id === reportUnit)?.nome ?? "Unidade selecionada");
+      const lineCount = confirmed.reduce((total, receipt) => total + receipt.items.length, 0);
+      const unitCount = new Set(confirmed.map((receipt) => receipt.destination_unit_id)).size;
+      const totalReceipts = confirmed.length;
+      // Tenta inserir a logo oficial; se o arquivo não carregar, o relatório continua sendo gerado.
+      let logoData: string | null = null;
+      try {
+        logoData = await new Promise<string | null>((resolve) => {
+          const image = new Image();
+          image.onload = () => {
+            try {
+              const canvas = document.createElement("canvas");
+              canvas.width = image.naturalWidth;
+              canvas.height = image.naturalHeight;
+              const context = canvas.getContext("2d");
+              if (!context) return resolve(null);
+              context.drawImage(image, 0, 0);
+              resolve(canvas.toDataURL("image/jpeg", 0.92));
+            } catch { resolve(null); }
+          };
+          image.onerror = () => resolve(null);
+          image.src = "/IMG-20260917-WA0055.jpg";
+        });
+      } catch { logoData = null; }
+
+      // Cabeçalho institucional em marrom SEMADS.
+      doc.setFillColor(...brown);
+      doc.rect(0, 0, pageWidth, 31, "F");
+      if (logoData) {
+        try { doc.addImage(logoData, "JPEG", 12, 5, 21, 21, undefined, "FAST"); } catch { /* logo opcional */ }
+      }
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(15);
-      doc.text("SEMADS — RELATÓRIO DE MATERIAIS ENTREGUES", 14, 11);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text("SEMADS", logoData ? 38 : 14, 12);
+      doc.setFontSize(11);
+      doc.text("RELATÓRIO DE MATERIAIS ENTREGUES", logoData ? 38 : 14, 19);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.text(`Período de recebimento: ${formatDate(from)} a ${formatDate(to)}`, logoData ? 38 : 14, 25);
+
+      // Faixa de identificação e resumo para facilitar a guarda e a consulta do PDF.
+      doc.setFillColor(...lightBrown);
+      doc.roundedRect(12, 36, pageWidth - 24, 20, 2, 2, "F");
+      doc.setTextColor(...brown);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.text("UNIDADE / ABRANGÊNCIA", 16, 42);
+      doc.text("RECIBOS CONFIRMADOS", 110, 42);
+      doc.text("ITENS REGISTRADOS", 174, 42);
+      doc.text("UNIDADES ATENDIDAS", 235, 42);
+      doc.setTextColor(45, 45, 45);
       doc.setFontSize(9);
-      doc.text(`Materiais recebidos e confirmados de ${formatDate(from)} até ${formatDate(to)}`, 14, 19);
-      doc.setTextColor(40, 40, 40);
+      doc.text(doc.splitTextToSize(selectedUnitName, 87).slice(0, 2), 16, 48);
+      doc.text(String(totalReceipts), 110, 49);
+      doc.text(String(lineCount), 174, 49);
+      doc.text(String(unitCount), 235, 49);
+
       const body: Array<Array<string>> = [];
       confirmed.forEach((r) => r.items.forEach((item) => body.push([
         r.receipt_number,
@@ -265,20 +319,33 @@ function ExpedientePage() {
         r.material_type === "outros" ? "Outros materiais" : "Materiais de expediente",
       ])));
       autoTable(doc, {
-        startY: 31,
-        head: [["Recibo", "Unidade", "Material", "Quantidade", "Data do envio", "Data do recebimento", "Categoria"]],
+        startY: 61,
+        head: [["Nº RECIBO", "UNIDADE DESTINO", "MATERIAL ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "DATA DO RECEBIMENTO", "TIPO DE MATERIAL"]],
         body,
         theme: "grid",
-        headStyles: { fillColor: [139, 107, 69], textColor: [255, 255, 255] },
-        styles: { fontSize: 8, cellPadding: 2.5, overflow: "linebreak" },
-        margin: { left: 12, right: 12 },
+        showHead: "everyPage",
+        headStyles: { fillColor: brown, textColor: [255, 255, 255], fontStyle: "bold", fontSize: 8, cellPadding: 3 },
+        styles: { font: "helvetica", fontSize: 8, cellPadding: 3, overflow: "linebreak", textColor: [45, 45, 45], lineColor: [225, 216, 210], lineWidth: 0.15, valign: "middle" },
+        alternateRowStyles: { fillColor: [250, 248, 246] },
+        columnStyles: { 0: { cellWidth: 21 }, 1: { cellWidth: 42 }, 2: { cellWidth: 52 }, 3: { cellWidth: 28 }, 4: { cellWidth: 31 }, 5: { cellWidth: 38 }, 6: { cellWidth: "auto" } },
+        margin: { top: 12, left: 12, right: 12, bottom: 15 },
+        didDrawPage: () => {
+          if (doc.getCurrentPageInfo().pageNumber > 1) {
+            doc.setFillColor(...brown);
+            doc.rect(0, 0, pageWidth, 7, "F");
+          }
+        },
       });
       const pages = doc.getNumberOfPages();
       for (let page = 1; page <= pages; page++) {
         doc.setPage(page);
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        doc.text(`Gerado em ${formatDate(todayISO())} · Página ${page} de ${pages}`, 285, 203, { align: "right" });
+        doc.setDrawColor(220, 210, 203);
+        doc.line(12, pageHeight - 11, pageWidth - 12, pageHeight - 11);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7.5);
+        doc.setTextColor(100, 92, 88);
+        doc.text("SEMADS · Registro de Envios · Documento para arquivo e consulta", 12, pageHeight - 6);
+        doc.text(`Emitido em ${formatDate(todayISO())} · Página ${page} de ${pages}`, pageWidth - 12, pageHeight - 6, { align: "right" });
       }
       doc.save(`relatorio-registro-envios-${from}-a-${to}.pdf`);
     } catch (e) {
