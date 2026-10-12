@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T19:43:27.271444+00:00",
+  "generated_at": "2026-10-12T19:52:42.814500+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -43,7 +43,7 @@
     },
     {
       "path": "src/routeTree.gen.ts",
-      "bytes": 20952
+      "bytes": 21863
     },
     {
       "path": "src/styles.css",
@@ -327,7 +327,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 19976
+      "bytes": 19977
     },
     {
       "path": "src/integrations/supabase/client.ts",
@@ -762,6 +762,10 @@
     {
       "source": "src/routeTree.gen.ts",
       "target": "./routes/_authenticated/estoque"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
+      "target": "./routes/_authenticated/expediente"
     },
     {
       "source": "src/routeTree.gen.ts",
