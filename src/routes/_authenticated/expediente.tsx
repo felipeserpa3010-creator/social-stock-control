@@ -247,9 +247,9 @@ function ExpedientePage() {
       doc.rect(0, 0, 297, 25, "F");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(15);
-      doc.text("SEMADS — RELATÓRIO DE REGISTRO DE ENVIOS", 14, 11);
+      doc.text("SEMADS — RELATÓRIO DE MATERIAIS ENTREGUES", 14, 11);
       doc.setFontSize(9);
-      doc.text(`Recebimentos confirmados de ${formatDate(from)} até ${formatDate(to)}`, 14, 19);
+      doc.text(`Materiais recebidos e confirmados de ${formatDate(from)} até ${formatDate(to)}`, 14, 19);
       doc.setTextColor(40, 40, 40);
       const body: Array<Array<string>> = [];
       confirmed.forEach((r) => r.items.forEach((item) => body.push([
@@ -277,7 +277,7 @@ function ExpedientePage() {
         doc.setTextColor(100, 100, 100);
         doc.text(`Gerado em ${formatDate(todayISO())} · Página ${page} de ${pages}`, 285, 203, { align: "right" });
       }
-      doc.save(`relatorio-materiais-expediente-${from}-a-${to}.pdf`);
+      doc.save(`relatorio-registro-envios-${from}-a-${to}.pdf`);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Não foi possível gerar o relatório.");
     } finally {
@@ -407,7 +407,7 @@ function ExpedientePage() {
       </div>
 
       <div id="expediente-relatorio" className="scroll-mt-20">
-      <Panel title="Relatório de recebimento por período" description="O PDF inclui somente recibos confirmados cuja data de recebimento esteja no período selecionado.">
+      <Panel title="Relatório de materiais entregues por período" description="O PDF reúne todos os materiais de expediente e outros materiais recebidos e confirmados no período selecionado. Escolha a unidade ou mantenha Todas as unidades para incluir todas.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2">
             <Field label="Data inicial do recebimento" htmlFor="exp-report-from" required>
