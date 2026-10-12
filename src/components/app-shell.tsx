@@ -105,7 +105,10 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               i.to === "/dashboard" ||
               i.to === "/estoque" ||
               i.to === "/recibos" ||
-              (isCentralViewer && (i.to === "/saida" || i.to === "/expediente"))
+              i.to === "/relatorios" ||
+              (i.to === "/expediente" &&
+                (i.hash === "expediente-recibos" || i.hash === "expediente-relatorio")) ||
+              (isCentralViewer && i.to === "/saida")
             );
           }
           if (isCentralUser) {
