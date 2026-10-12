@@ -65,6 +65,7 @@ function ExpedientePage() {
   const [materialType, setMaterialType] = useState<"expediente" | "outros">("expediente");
   const [items, setItems] = useState<ExpedienteItem[]>([{ name: "", quantity: "1", unit: "unidade" }]);
   const [filterUnit, setFilterUnit] = useState("all");
+  const [reportUnit, setReportUnit] = useState("all");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
@@ -235,13 +236,15 @@ function ExpedientePage() {
     }
     setReportLoading(true);
     try {
-      const confirmed = visibleReceipts.filter((r) => {
+      const confirmed = receipts.filter((r) => {
+        if (canDispatch && reportUnit !== "all" && r.destination_unit_id !== reportUnit) return false;
+        if (!canDispatch && r.destination_unit_id !== (profile?.unit_id ?? unitId)) return false;
         if (r.status !== "confirmed" || !r.confirmed_at) return false;
         const receivedAt = new Date(r.confirmed_at);
         const date = `${receivedAt.getFullYear()}-${String(receivedAt.getMonth() + 1).padStart(2, "0")}-${String(receivedAt.getDate()).padStart(2, "0")}`;
         return date >= from && date <= to;
       });
-      if (!confirmed.length) throw new Error("Não há recebimentos confirmados nesse período para os filtros selecionados.");
+      if (!confirmed.length) throw new Error("Não há recebimentos confirmados nesse período para a unidade selecionada.");
       const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
       doc.setFillColor(139, 107, 69);
       doc.rect(0, 0, 297, 25, "F");
@@ -407,9 +410,15 @@ function ExpedientePage() {
       </div>
 
       <div id="expediente-relatorio" className="scroll-mt-20">
-      <Panel title="Relatório de materiais entregues por período" description="O PDF reúne todos os materiais de expediente e outros materiais recebidos e confirmados no período selecionado. Escolha a unidade ou mantenha Todas as unidades para incluir todas.">
+      <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Se mantiver Todas as unidades, o PDF reunirá todas as entregas confirmadas no período.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2">
+            {canDispatch && <Field label="Unidade do relatório" htmlFor="exp-report-unit">
+              <select id="exp-report-unit" value={reportUnit} onChange={(e) => setReportUnit(e.target.value)} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <option value="all">Todas as unidades</option>
+                {units.filter((u) => !/gabinete semads|centro de distribui/i.test(u.nome)).map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
+              </select>
+            </Field>}
             <Field label="Data inicial do recebimento" htmlFor="exp-report-from" required>
               <Input id="exp-report-from" type="date" required value={from} onChange={(e) => setFrom(e.target.value)} />
             </Field>
