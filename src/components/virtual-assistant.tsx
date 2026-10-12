@@ -11,6 +11,9 @@ const QUICK = [
   "Como funciona o lançamento em massa?",
   "Como confirmar um Recibo de Produtos?",
   "Onde consultar os recibos de entrega?",
+  "Como registrar materiais de expediente?",
+  "Como gerar relatório de envios em PDF?",
+  "O que o usuário visualizador pode fazer?",
 ];
 
 function normalize(value: string) {
@@ -81,7 +84,7 @@ function systemAnswer(question: string) {
   const q = normalize(question);
   const help = SYSTEM_HELP.find((item) => item.keywords.some((keyword) => q.includes(normalize(keyword))));
   if (help) return `${help.title}\n\n${help.text}`;
-  return "Posso ensinar as funções do sistema passo a passo: Painel, Estoque, Entrada, Saída, Média de consumo, Relatórios PDF, Produtos e categorias, Unidades, Usuários e Configurações. Diga o nome da tela que você quer aprender.";
+  return "Posso explicar as funções do Controle de Estoque SEMADS: Painel, Estoque, Entrada, Lançamento em massa, Saída, Confirmar recebimento, Recibos de Produtos, Relatórios PDF, Produtos e categorias, Unidades, Usuários, permissões, Configurações e o Registro de Envios (Materiais de expediente, Outros materiais, Registro de recibos e Relatórios de envios em PDF). Também ajudo com pesos médios de alimentos e conservação. Diga qual função você quer conhecer.";
 }
 
 function answer(question: string) {
@@ -102,7 +105,7 @@ export function VirtualAssistant() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
-    { from: "bot", text: "Olá! Sou o Assistente Virtual do Controle de Estoque SEMADS. Posso explicar as funções do sistema, permissões, estoque, lançamentos, Recibos de Produtos, confirmação de recebimento, saídas, relatórios e usuários. Também posso informar pesos médios de alimentos e orientar sobre conservação." },
+    { from: "bot", text: "Olá! Sou o Assistente Virtual do Controle de Estoque SEMADS. Posso orientar sobre todas as áreas do sistema: estoque, lançamentos, confirmação de recebimento, Recibos de Produtos, saídas, relatórios, usuários e permissões. Também explico o Registro de Envios de materiais de expediente e outros materiais, os recibos e relatórios de envios em PDF. Posso ainda informar pesos médios de alimentos e orientar sobre conservação." },
   ]);
 
   const suggestions = useMemo(() => QUICK.filter((item) => !messages.some((m) => m.text === item)), [messages]);
