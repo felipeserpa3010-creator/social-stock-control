@@ -116,6 +116,20 @@ function ExpedientePage() {
     return r.destination_unit_id === (profile?.unit_id ?? unitId);
   }), [receipts, canDispatch, filterUnit, profile?.unit_id, unitId]);
 
+  const receiptsByMonth = useMemo(() => {
+    const groups = new Map<string, ReceiptWithItems[]>();
+    visibleReceipts.forEach((receipt) => {
+      const monthKey = receipt.sent_at.slice(0, 7);
+      const current = groups.get(monthKey) ?? [];
+      current.push(receipt);
+      groups.set(monthKey, current);
+    });
+    return Array.from(groups.entries()).map(([monthKey, monthReceipts]) => {
+      const [year, month] = monthKey.split("-").map(Number);
+      const label = new Date(year, month - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+      return { monthKey, monthLabel: label.charAt(0).toUpperCase() + label.slice(1), receipts: monthReceipts };
+    });
+  }, [visibleReceipts]);
   const launchMutation = useMutation({
     mutationFn: async () => {
       if (!destinationId) throw new Error("Selecione a unidade que receberá os materiais.");
@@ -372,7 +386,12 @@ function ExpedientePage() {
           : <div className="overflow-x-auto"><Table className="min-w-[1050px]"><TableHeader><TableRow className="bg-muted/50">
             <TableHead>Recibo</TableHead><TableHead>Unidade</TableHead><TableHead>Data do envio</TableHead><TableHead>Materiais</TableHead><TableHead>Data do recebimento</TableHead><TableHead>Situação</TableHead><TableHead>Ação</TableHead>
           </TableRow></TableHeader><TableBody>
-            {visibleReceipts.map((r) => <TableRow key={r.id}>
+            {receiptsByMonth.map((group) => (
+              <React.Fragment key={group.monthKey}>
+                <TableRow className="bg-muted/60 hover:bg-muted/60">
+                  <TableCell colSpan={7} className="py-3 font-semibold">{group.monthLabel} <span className="ml-2 text-xs font-normal text-muted-foreground">({group.receipts.length} {group.receipts.length === 1 ? "recibo" : "recibos"})</span></TableCell>
+                </TableRow>
+                {group.receipts.map((r) => <TableRow key={r.id}>
               <TableCell className="font-bold">Nº {r.receipt_number}</TableCell>
               <TableCell>{r.unitName}</TableCell>
               <TableCell>{formatDate(r.sent_at)}</TableCell>
@@ -380,6 +399,8 @@ function ExpedientePage() {
               <TableCell>{r.confirmed_at ? formatDate(r.confirmed_at) : "—"}</TableCell>
               <TableCell><span className={r.status === "confirmed" ? "rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800" : "rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800"}>{r.status === "confirmed" ? "Recebido" : "Pendente"}</span></TableCell><TableCell><div className="flex items-center gap-2"><Button size="sm" variant="outline" onClick={() => printReceipt(r)}><FileDown className="size-4" /> PDF</Button>{isAdmin && <Button size="sm" variant="destructive" disabled={deleteMutation.isPending} onClick={() => { if (window.confirm(`Tem certeza que deseja excluir o recibo de expediente nº ${r.receipt_number}? Essa ação não pode ser desfeita.`)) deleteMutation.mutate(r.id); }}><Trash2 className="size-4" /> Excluir</Button>}</div></TableCell>
             </TableRow>)}
+              </React.Fragment>
+            ))}
           </TableBody></Table></div>}
       </Panel>
 
