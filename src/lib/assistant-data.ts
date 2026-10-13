@@ -17,7 +17,7 @@ export const FOOD_REFERENCES: FoodReference[] = [
   { aliases: ["banana", "banana prata"], name: "Banana-prata", unitLabel: "unidade média", weightG: 70, preparation: "crua", source: "Guia do Alimento — TACO 4ª ed. / NEPA-UNICAMP" },
   { aliases: ["laranja", "laranja pera", "laranja pêra"], name: "Laranja-pêra", unitLabel: "unidade média", weightG: 125, preparation: "crua", source: "Guia do Alimento — TACO 4ª ed. / NEPA-UNICAMP" },
   { aliases: ["maca", "maçã", "maca fuji", "maçã fuji"], name: "Maçã Fuji", unitLabel: "unidade média", weightG: 124, preparation: "com casca, crua", source: "Guia do Alimento — TACO 4ª ed. / NEPA-UNICAMP" },
-  { aliases: ["tomate"], name: "Tomate", unitLabel: "unidade média", weightG: 89, preparation: "com semente, cru", source: "Guia do Alimento — TACO 4ª ed. / NEPA-UNICAMP" },
+  { aliases: ["tomate"], name: "Tomate", unitLabel: "unidade média", weightG: 120, preparation: "com semente, cru; estimativa de tamanho médio", source: "Estimativa prática de peso médio por unidade; o peso real varia conforme variedade e tamanho" },
   { aliases: ["batata", "batata inglesa"], name: "Batata inglesa", unitLabel: "unidade média", weightG: 140, preparation: "cozida", source: "Guia do Alimento — TACO 4ª ed. / NEPA-UNICAMP" },
   { aliases: ["batata doce", "batata-doce"], name: "Batata-doce", unitLabel: "pedaço médio", weightG: 80, preparation: "cozida", source: "Guia do Alimento — TACO 4ª ed. / NEPA-UNICAMP" },
   { aliases: ["mamao", "mamão", "mamao formosa", "mamão formosa"], name: "Mamão Formosa", unitLabel: "fatia média", weightG: 152, preparation: "cru", source: "Guia do Alimento — TACO 4ª ed. / NEPA-UNICAMP" },
