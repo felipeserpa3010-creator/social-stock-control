@@ -251,7 +251,7 @@ function Shell({ children }: { children: ReactNode }) {
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isCentralViewer = isViewer && isCentroDistribuicao(unit?.nome);
-  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || pathname === "/envios-recibos" || pathname === "/envios-relatorios" || (isCentralViewer && (pathname === "/saida" || pathname === "/expediente" || pathname === "/outros-materiais"));
+  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || pathname === "/relatorios" || pathname === "/envios-recibos" || pathname === "/envios-relatorios" || (isCentralViewer && (pathname === "/saida" || pathname === "/expediente" || pathname === "/outros-materiais"));
   const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
 
   return (

@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileDown, Plus, Send, Trash2, CheckCircle2, Loader2 } from "lucide-react";
+import { FileDown, Eye, Printer, Plus, Send, Trash2, CheckCircle2, Loader2 } from "lucide-react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
