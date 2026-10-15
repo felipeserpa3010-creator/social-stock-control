@@ -140,7 +140,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
                   <li key={item.to}>
                     <Link
                       to={item.to}
-                      hash={item.hash}
+                      {...(item.hash ? { hash: item.hash } : {})}
                       onClick={onNavigate}
                       title={item.label}
                       className={cn(

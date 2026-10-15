@@ -128,7 +128,7 @@ function ExpedientePage() {
     });
     return Array.from(groups.entries()).map(([monthKey, monthReceipts]) => {
       const [year, month] = monthKey.split("-").map(Number);
-      const label = new Date(year, month - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+      const label = new Date(year ?? 1970, (month ?? 1) - 1, 1).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
       return { monthKey, monthLabel: label.charAt(0).toUpperCase() + label.slice(1), receipts: monthReceipts };
     });
   }, [visibleReceipts]);
@@ -163,7 +163,7 @@ function ExpedientePage() {
       setSentAt(todayISO());
       await queryClient.invalidateQueries({ queryKey: ["expediente-receipts"] });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Não foi possível registrar o envio."),
+    onError: (e: any) => toast.error(e?.message || "Não foi possível registrar o envio."),
   });
 
   const confirmMutation = useMutation({
