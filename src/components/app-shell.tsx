@@ -32,12 +32,11 @@ import { semadsLogoUrl } from "@/lib/brand";
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" |
     "/relatorios" | "/recibos" | "/unidades" | "/produtos" |
-    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento" | "/expediente";
+    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento" | "/expediente" | "/outros-materiais" | "/envios-recibos" | "/envios-relatorios";
   label: string;
   icon: typeof Boxes;
   adminOnly?: boolean;
   writeOnly?: boolean;
-  hash?: "expediente-lancamento" | "outros-materiais-lancamento" | "expediente-recibos" | "expediente-relatorio";
 };
 
 const NAV: { group: string; items: NavItem[] }[] = [
@@ -57,10 +56,10 @@ const NAV: { group: string; items: NavItem[] }[] = [
   {
     group: "Registro de Envios",
     items: [
-      { to: "/expediente", hash: "expediente-lancamento", label: "Materiais de expediente", icon: NotebookText },
-      { to: "/expediente", hash: "outros-materiais-lancamento", label: "Outros materiais", icon: Boxes },
-      { to: "/expediente", hash: "expediente-recibos", label: "Registro de recibos", icon: FileDown },
-      { to: "/expediente", hash: "expediente-relatorio", label: "Relatórios de envios em PDF", icon: FileDown },
+      { to: "/expediente", label: "Materiais de expediente", icon: NotebookText },
+      { to: "/outros-materiais", label: "Outros materiais", icon: Boxes },
+      { to: "/envios-recibos", label: "Registro de recibos", icon: FileDown },
+      { to: "/envios-relatorios", label: "Relatórios de envios em PDF", icon: FileDown },
     ],
   },
   {
@@ -106,8 +105,8 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               i.to === "/estoque" ||
               i.to === "/recibos" ||
               i.to === "/relatorios" ||
-              (i.to === "/expediente" &&
-                (i.hash === "expediente-recibos" || i.hash === "expediente-relatorio")) ||
+              i.to === "/envios-recibos" ||
+              i.to === "/envios-relatorios" ||
               (isCentralViewer && i.to === "/saida")
             );
           }
@@ -117,7 +116,10 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               i.to === "/estoque" ||
               i.to === "/saida" ||
               i.to === "/recibos" ||
-              i.to === "/expediente"
+              i.to === "/expediente" ||
+              i.to === "/outros-materiais" ||
+              i.to === "/envios-recibos" ||
+              i.to === "/envios-relatorios"
             );
           }
           return (
@@ -140,7 +142,6 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
                   <li key={item.to}>
                     <Link
                       to={item.to}
-                      {...(item.hash ? { hash: item.hash } : {})}
                       onClick={onNavigate}
                       title={item.label}
                       className={cn(
@@ -250,7 +251,7 @@ function Shell({ children }: { children: ReactNode }) {
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isCentralViewer = isViewer && isCentroDistribuicao(unit?.nome);
-  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || (isCentralViewer && (pathname === "/saida" || pathname === "/expediente"));
+  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || pathname === "/envios-recibos" || pathname === "/envios-relatorios" || (isCentralViewer && (pathname === "/saida" || pathname === "/expediente" || pathname === "/outros-materiais"));
   const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
 
   return (
