@@ -23,10 +23,13 @@ import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authen
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedEntradaRouteImport } from './routes/_authenticated/entrada'
 import { Route as AuthenticatedEntradaDocumentoRouteImport } from './routes/_authenticated/entrada-documento'
+import { Route as AuthenticatedEnviosRecibosRouteImport } from './routes/_authenticated/envios-recibos'
+import { Route as AuthenticatedEnviosRelatoriosRouteImport } from './routes/_authenticated/envios-relatorios'
 import { Route as AuthenticatedEstoqueRouteImport } from './routes/_authenticated/estoque'
 import { Route as AuthenticatedExpedienteRouteImport } from './routes/_authenticated/expediente'
 import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedMediasRouteImport } from './routes/_authenticated/medias'
+import { Route as AuthenticatedOutrosMateriaisRouteImport } from './routes/_authenticated/outros-materiais'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
 import { Route as AuthenticatedRecebimentoRouteImport } from './routes/_authenticated/recebimento'
 import { Route as AuthenticatedRecibosRouteImport } from './routes/_authenticated/recibos'
@@ -108,6 +111,18 @@ const AuthenticatedEntradaDocumentoRoute =
     path: '/entrada-documento',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedEnviosRecibosRoute =
+  AuthenticatedEnviosRecibosRouteImport.update({
+    id: '/envios-recibos',
+    path: '/envios-recibos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedEnviosRelatoriosRoute =
+  AuthenticatedEnviosRelatoriosRouteImport.update({
+    id: '/envios-relatorios',
+    path: '/envios-relatorios',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEstoqueRoute = AuthenticatedEstoqueRouteImport.update({
   id: '/estoque',
   path: '/estoque',
@@ -128,6 +143,12 @@ const AuthenticatedMediasRoute = AuthenticatedMediasRouteImport.update({
   path: '/medias',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOutrosMateriaisRoute =
+  AuthenticatedOutrosMateriaisRouteImport.update({
+    id: '/outros-materiais',
+    path: '/outros-materiais',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   id: '/produtos',
   path: '/produtos',
@@ -179,10 +200,13 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
+  '/envios-recibos': typeof AuthenticatedEnviosRecibosRoute
+  '/envios-relatorios': typeof AuthenticatedEnviosRelatoriosRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/expediente': typeof AuthenticatedExpedienteRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
+  '/outros-materiais': typeof AuthenticatedOutrosMateriaisRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/recebimento': typeof AuthenticatedRecebimentoRoute
   '/recibos': typeof AuthenticatedRecibosRoute
@@ -205,10 +229,13 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
+  '/envios-recibos': typeof AuthenticatedEnviosRecibosRoute
+  '/envios-relatorios': typeof AuthenticatedEnviosRelatoriosRoute
   '/estoque': typeof AuthenticatedEstoqueRoute
   '/expediente': typeof AuthenticatedExpedienteRoute
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
+  '/outros-materiais': typeof AuthenticatedOutrosMateriaisRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/recebimento': typeof AuthenticatedRecebimentoRoute
   '/recibos': typeof AuthenticatedRecibosRoute
@@ -233,10 +260,13 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/entrada': typeof AuthenticatedEntradaRoute
   '/_authenticated/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
+  '/_authenticated/envios-recibos': typeof AuthenticatedEnviosRecibosRoute
+  '/_authenticated/envios-relatorios': typeof AuthenticatedEnviosRelatoriosRoute
   '/_authenticated/estoque': typeof AuthenticatedEstoqueRoute
   '/_authenticated/expediente': typeof AuthenticatedExpedienteRoute
   '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/medias': typeof AuthenticatedMediasRoute
+  '/_authenticated/outros-materiais': typeof AuthenticatedOutrosMateriaisRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
   '/_authenticated/recebimento': typeof AuthenticatedRecebimentoRoute
   '/_authenticated/recibos': typeof AuthenticatedRecibosRoute
@@ -261,10 +291,13 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/entrada'
     | '/entrada-documento'
+    | '/envios-recibos'
+    | '/envios-relatorios'
     | '/estoque'
     | '/expediente'
     | '/historico'
     | '/medias'
+    | '/outros-materiais'
     | '/produtos'
     | '/recebimento'
     | '/recibos'
@@ -287,10 +320,13 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/entrada'
     | '/entrada-documento'
+    | '/envios-recibos'
+    | '/envios-relatorios'
     | '/estoque'
     | '/expediente'
     | '/historico'
     | '/medias'
+    | '/outros-materiais'
     | '/produtos'
     | '/recebimento'
     | '/recibos'
@@ -314,10 +350,13 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/entrada'
     | '/_authenticated/entrada-documento'
+    | '/_authenticated/envios-recibos'
+    | '/_authenticated/envios-relatorios'
     | '/_authenticated/estoque'
     | '/_authenticated/expediente'
     | '/_authenticated/historico'
     | '/_authenticated/medias'
+    | '/_authenticated/outros-materiais'
     | '/_authenticated/produtos'
     | '/_authenticated/recebimento'
     | '/_authenticated/recibos'
@@ -438,6 +477,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEntradaDocumentoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/envios-recibos': {
+      id: '/_authenticated/envios-recibos'
+      path: '/envios-recibos'
+      fullPath: '/envios-recibos'
+      preLoaderRoute: typeof AuthenticatedEnviosRecibosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/envios-relatorios': {
+      id: '/_authenticated/envios-relatorios'
+      path: '/envios-relatorios'
+      fullPath: '/envios-relatorios'
+      preLoaderRoute: typeof AuthenticatedEnviosRelatoriosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/estoque': {
       id: '/_authenticated/estoque'
       path: '/estoque'
@@ -464,6 +517,13 @@ declare module '@tanstack/react-router' {
       path: '/medias'
       fullPath: '/medias'
       preLoaderRoute: typeof AuthenticatedMediasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/outros-materiais': {
+      id: '/_authenticated/outros-materiais'
+      path: '/outros-materiais'
+      fullPath: '/outros-materiais'
+      preLoaderRoute: typeof AuthenticatedOutrosMateriaisRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/produtos': {
@@ -525,10 +585,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEntradaRoute: typeof AuthenticatedEntradaRoute
   AuthenticatedEntradaDocumentoRoute: typeof AuthenticatedEntradaDocumentoRoute
+  AuthenticatedEnviosRecibosRoute: typeof AuthenticatedEnviosRecibosRoute
+  AuthenticatedEnviosRelatoriosRoute: typeof AuthenticatedEnviosRelatoriosRoute
   AuthenticatedEstoqueRoute: typeof AuthenticatedEstoqueRoute
   AuthenticatedExpedienteRoute: typeof AuthenticatedExpedienteRoute
   AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedMediasRoute: typeof AuthenticatedMediasRoute
+  AuthenticatedOutrosMateriaisRoute: typeof AuthenticatedOutrosMateriaisRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
   AuthenticatedRecebimentoRoute: typeof AuthenticatedRecebimentoRoute
   AuthenticatedRecibosRoute: typeof AuthenticatedRecibosRoute
@@ -545,10 +608,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEntradaRoute: AuthenticatedEntradaRoute,
   AuthenticatedEntradaDocumentoRoute: AuthenticatedEntradaDocumentoRoute,
+  AuthenticatedEnviosRecibosRoute: AuthenticatedEnviosRecibosRoute,
+  AuthenticatedEnviosRelatoriosRoute: AuthenticatedEnviosRelatoriosRoute,
   AuthenticatedEstoqueRoute: AuthenticatedEstoqueRoute,
   AuthenticatedExpedienteRoute: AuthenticatedExpedienteRoute,
   AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedMediasRoute: AuthenticatedMediasRoute,
+  AuthenticatedOutrosMateriaisRoute: AuthenticatedOutrosMateriaisRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
   AuthenticatedRecebimentoRoute: AuthenticatedRecebimentoRoute,
   AuthenticatedRecibosRoute: AuthenticatedRecibosRoute,
