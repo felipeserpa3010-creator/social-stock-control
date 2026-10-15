@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { FileText, Printer, Trash2 } from "lucide-react";
+import { Eye, FileText, Printer, Trash2 } from "lucide-react";
 import { ALL_UNITS, receivedEntriesOptions, receiptIdFromObservation, orderNumberFromObservation, removePendingReceipt, removePendingReceiptGroup, type ReceivedEntryRow } from "@/lib/queries";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDate, formatQty } from "@/lib/format";
@@ -79,7 +79,7 @@ function ReceiptsPage() {
       });
   }, [entries, term]);
 
-  const imprimirRecibo = async (group: ReceiptGroup) => {
+  const imprimirRecibo = async (group: ReceiptGroup, print = true) => {
     const doc = await buildReceiptPdf({
       reciboId: displayReceiptNumber(group.id),
       numeroOrdemFornecimento: orderNumberFromObservation(group.entries[0]?.observacao),
@@ -91,7 +91,7 @@ function ReceiptsPage() {
         medida: entry.products?.unidade_medida ?? "—",
       })),
     });
-    doc.autoPrint();
+    if (print) doc.autoPrint();
     window.open(doc.output("bloburl"), "_blank");
   };
 
@@ -180,6 +180,9 @@ function ReceiptsPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group, false)}>
+                          <Eye /> Visualizar
+                        </Button>
                         <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
                           <Printer /> Imprimir
                         </Button>
@@ -218,8 +221,11 @@ function ReceiptsPage() {
                     </p>
                   </div>
                   <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group, false)}>
+                      <Eye /> Visualizar
+                    </Button>
                     <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
-                      <FileText /> Consultar / imprimir
+                      <FileText /> Imprimir
                     </Button>
                     {isAdmin && (
                       <Button
