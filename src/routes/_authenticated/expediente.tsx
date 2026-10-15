@@ -163,7 +163,7 @@ function ExpedientePage() {
       setSentAt(todayISO());
       await queryClient.invalidateQueries({ queryKey: ["expediente-receipts"] });
     },
-    onError: (e) => toast.error(e instanceof Error ? e.message : "Não foi possível registrar o envio."),
+    onError: (e: any) => toast.error(e?.message || "Não foi possível registrar o envio."),
   });
 
   const confirmMutation = useMutation({
