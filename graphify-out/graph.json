@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T16:21:27.557137+00:00",
+  "generated_at": "2026-10-15T16:42:28.447167+00:00",
   "files": [
     {
       "path": "roadmap.md",
@@ -203,7 +203,7 @@
     },
     {
       "path": "src/components/expediente-page.tsx",
-      "bytes": 28163
+      "bytes": 28615
     },
     {
       "path": "src/components/auth-layout.tsx",
@@ -215,7 +215,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 13816
+      "bytes": 13846
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -339,7 +339,7 @@
     },
     {
       "path": "src/integrations/supabase/previewAuthStorage.ts",
-      "bytes": 4565
+      "bytes": 5352
     },
     {
       "path": "src/integrations/supabase/types.ts",
@@ -563,7 +563,7 @@
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
-      "bytes": 10894
+      "bytes": 11270
     },
     {
       "path": "src/routes/_authenticated/envios-recibos.tsx",
@@ -583,7 +583,7 @@
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 14353
+      "bytes": 14406
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
