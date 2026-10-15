@@ -81,6 +81,7 @@ export type Database = {
           created_at: string
           destination_unit_id: string
           id: string
+          material_type: string
           note: string | null
           receipt_number: string
           sent_at: string
@@ -95,6 +96,7 @@ export type Database = {
           created_at?: string
           destination_unit_id: string
           id?: string
+          material_type?: string
           note?: string | null
           receipt_number: string
           sent_at?: string
@@ -109,6 +111,7 @@ export type Database = {
           created_at?: string
           destination_unit_id?: string
           id?: string
+          material_type?: string
           note?: string | null
           receipt_number?: string
           sent_at?: string
@@ -523,15 +526,26 @@ export type Database = {
         Args: { _receipt_id: string }
         Returns: undefined
       }
-      create_expediente_receipt: {
-        Args: {
-          _destination_unit_id: string
-          _items: Json
-          _note?: string
-          _sent_at: string
-        }
-        Returns: string
-      }
+      create_expediente_receipt:
+        | {
+            Args: {
+              _destination_unit_id: string
+              _items: Json
+              _note?: string
+              _sent_at: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              _destination_unit_id: string
+              _items: Json
+              _material_type: string
+              _note: string
+              _sent_at: string
+            }
+            Returns: string
+          }
       delete_expediente_receipt: {
         Args: { _receipt_id: string }
         Returns: undefined
