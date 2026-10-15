@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-13T15:01:17.910837+00:00",
+  "generated_at": "2026-10-15T02:56:43.636564+00:00",
   "files": [
     {
       "path": "drizzle.config.ts",
@@ -207,7 +207,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 13810
+      "bytes": 13837
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -331,7 +331,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 19977
+      "bytes": 20369
     },
     {
       "path": "src/integrations/supabase/client.ts",
@@ -555,7 +555,7 @@
     },
     {
       "path": "src/routes/_authenticated/expediente.tsx",
-      "bytes": 29868
+      "bytes": 29869
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
@@ -614,6 +614,10 @@
       "bytes": 1561
     },
     {
+      "path": "drizzle/migrations/0008_registro_envios_outros_materiais.sql",
+      "bytes": 1364
+    },
+    {
       "path": "drizzle/migrations/0001_fix_semads_viewer_trigger.sql",
       "bytes": 747
     },
@@ -647,7 +651,7 @@
     },
     {
       "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 1306
+      "bytes": 1466
     },
     {
       "path": "drizzle/migrations/meta/0001_snapshot.json",
@@ -659,6 +663,10 @@
     },
     {
       "path": "drizzle/migrations/meta/0007_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0008_snapshot.json",
       "bytes": 336
     },
     {
