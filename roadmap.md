@@ -1,3 +1,3 @@
 # Registro de Envios
-- [ ] Separar materiais de expediente, outros materiais, recibos e relatórios em telas próprias.
-- [ ] Verificar navegação e conteúdo exclusivo de cada tela.
+- [x] Separar materiais de expediente, outros materiais, recibos e relatórios em telas próprias.
+- [x] Verificar navegação autenticada, conteúdo exclusivo e destaque individual das quatro opções; prévia sem erros.
