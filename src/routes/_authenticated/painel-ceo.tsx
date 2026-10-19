@@ -111,13 +111,14 @@ function shipmentsOptions(since: string) {
         const nao = list.some((r) => String(r.observacao ?? "").includes("NAO_RECEBIDO"));
         const confirmedDates = list.map((r) => confirmations.get(r.id)).filter(Boolean) as string[];
         const allConfirmed = confirmedDates.length === list.length;
-        const numero = key.split("::")[0];
+        const numero = key.split("::")[0] ?? "";
+        const first = list[0]!;
         return {
           key,
           numero: numero.startsWith("INDIVIDUAL-") ? "Avulso" : numero,
-          unitId: list[0].unit_id,
-          unitName: list[0].units?.nome ?? "Unidade",
-          date: list.map((r) => r.data).sort()[0],
+          unitId: first.unit_id,
+          unitName: first.units?.nome ?? "Unidade",
+          date: list.map((r) => r.data).sort()[0] ?? first.data,
           items: list.length,
           status: allConfirmed ? "confirmado" : nao ? "nao_recebido" : "pendente",
           confirmedAt: allConfirmed ? confirmedDates.sort().at(-1) ?? null : null,
