@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-19T15:01:59.700981+00:00",
+  "generated_at": "2026-10-19T15:10:30.532201+00:00",
   "files": [
     {
       "path": "roadmap.md",
-      "bytes": 242
+      "bytes": 353
     },
     {
       "path": "drizzle.config.ts",
@@ -615,7 +615,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 17794
+      "bytes": 15877
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
@@ -2834,10 +2834,6 @@
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/lib/media"
     },
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
