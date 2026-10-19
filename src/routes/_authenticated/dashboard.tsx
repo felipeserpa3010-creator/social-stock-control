@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertTriangle, Boxes, PackageMinus, PackagePlus, TrendingUp, Trash2 } from "lucide-react";
+import { AlertTriangle, Boxes, TrendingUp, Trash2 } from "lucide-react";
 import { useUnit } from "@/hooks/useUnit";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -13,8 +13,7 @@ import {
   removePendingReceiptGroup,
   receiptIdFromObservation,
 } from "@/lib/queries";
-import { byMonth, lastMonths, monthKey } from "@/lib/media";
-import { formatDate, formatQty, stockStatus, todayISO } from "@/lib/format";
+import { formatDate, formatQty, stockStatus } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, StatCard, StatusPill, TypeBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -56,21 +55,12 @@ function DashboardPage() {
     },
   });
 
-  const month = todayISO().slice(0, 7);
-  const entradasMes = movements
-    .filter((m) => m.tipo === "entrada" && monthKey(m.data) === month)
-    .reduce((acc, m) => acc + Number(m.quantidade), 0);
-  const saidasMes = movements
-    .filter((m) => m.tipo === "saida" && monthKey(m.data) === month)
-    .reduce((acc, m) => acc + Number(m.quantidade), 0);
 
   const alertas = stock
     .filter((s) => stockStatus(s.quantity, s.product.estoque_minimo) !== "normal")
     .sort((a, b) => a.quantity - b.quantity);
   const zerados = alertas.filter((s) => stockStatus(s.quantity) === "zerado");
   const baixos = alertas.filter((s) => stockStatus(s.quantity) !== "zerado");
-  const serie = byMonth(movements, lastMonths(6), "saida");
-  const max = Math.max(1, ...serie.map((s) => s.total));
 
   return (
     <>
@@ -269,31 +259,6 @@ function DashboardPage() {
         </Panel>
 
         <div className="space-y-5">
-          <Panel title="Saídas dos últimos 6 meses" description="Total registrado em cada mês.">
-            <div className="flex h-32 items-end gap-2">
-              {serie.map((s) => (
-                <div key={s.key} className="flex h-full flex-1 flex-col justify-end gap-1">
-                  <div
-                    className="w-full rounded-t bg-primary/85 transition-all"
-                    style={{ height: `${Math.max(2, (s.total / max) * 100)}%` }}
-                    title={`${s.label}: ${formatQty(s.total)}`}
-                  />
-                  <span className="text-center text-[10px] text-muted-foreground">{s.label}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 flex flex-wrap gap-3 border-t border-border/70 pt-3 text-sm">
-              <span className="inline-flex items-center gap-1.5">
-                <PackagePlus className="size-4 text-success" />
-                <strong className="tabular-nums">{formatQty(entradasMes)}</strong> entradas no mês
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <PackageMinus className="size-4 text-destructive" />
-                <strong className="tabular-nums">{formatQty(saidasMes)}</strong> saídas no mês
-              </span>
-            </div>
-          </Panel>
-
           <Panel title="Últimos lançamentos" bodyClassName="p-0">
             {movements.length === 0 ? (
               <div className="p-4">
