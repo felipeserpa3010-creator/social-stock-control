@@ -218,8 +218,7 @@ function DashboardPage() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Produtos ativos" value={products.length} icon={Boxes} />
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           label="Itens zerados"
           value={zerados.length}
