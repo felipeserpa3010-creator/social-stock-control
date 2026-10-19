@@ -4,3 +4,7 @@
 
 # Painel
 - [x] Remover o gráfico "Saídas dos últimos 6 meses" e os contadores de entradas/saídas no mês.
+
+# Usuários
+- [ ] Mostrar liberação, perfil e exclusão sem ocultar ações em telas pequenas.
+- [ ] Verificar ações e proteções de exclusão.

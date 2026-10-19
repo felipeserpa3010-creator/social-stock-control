@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { userDeletionError } from "./user-management";
 
 type BootstrapInput = { nome: string; email: string; senha: string; unit_id: string };
 type CreateUserInput = {
@@ -387,7 +388,7 @@ export const adminSetAccess = createServerFn({ method: "POST" })
         const { data: unit } = await supabaseAdmin
           .from("units")
           .select("nome")
-          .eq("id", profile!.unit_id!)
+          .eq("id", profile?.unit_id ?? "")
           .maybeSingle();
         const isGabinete = unit?.nome?.trim().toLowerCase() === "gabinete semads";
         const { error: roleError } = await supabaseAdmin
@@ -402,4 +403,26 @@ export const adminSetAccess = createServerFn({ method: "POST" })
       .eq("user_id", data.user_id);
     if (error) throw new Error(error.message);
     return { ok: true as const };
+  });
+
+/** Somente CEO: exclui contas sem apagar o histórico de movimentações. */
+export const adminDeleteUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { user_id: string }) => {
+    if (!d?.user_id) throw new Error("Usuário inválido.");
+    return d;
+  })
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin, error: accessError } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId, _role: "admin",
+    });
+    if (accessError || isAdmin !== true) return { ok: false as const, error: "Somente o Administrador Principal pode excluir usuários." };
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: role, error: roleError } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", data.user_id).maybeSingle();
+    if (roleError) return { ok: false as const, error: "Não foi possível verificar o perfil do usuário." };
+    const rejection = userDeletionError(context.userId, data.user_id, role?.role ?? null);
+    if (rejection) return { ok: false as const, error: rejection };
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.user_id);
+    if (error) return { ok: false as const, error: "Não foi possível excluir este usuário. Se ele possui registros vinculados, bloqueie o acesso para preservar o histórico." };
+    return { ok: true as const, error: null };
   });
