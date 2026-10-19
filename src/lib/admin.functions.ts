@@ -423,6 +423,12 @@ export const adminDeleteUser = createServerFn({ method: "POST" })
     const rejection = userDeletionError(context.userId, data.user_id, role?.role ?? null);
     if (rejection) return { ok: false as const, error: rejection };
     const { error } = await supabaseAdmin.auth.admin.deleteUser(data.user_id);
-    if (error) return { ok: false as const, error: "Não foi possível excluir este usuário. Se ele possui registros vinculados, bloqueie o acesso para preservar o histórico." };
+    if (error && error.code !== "user_not_found") return { ok: false as const, error: "Não foi possível excluir este usuário. Se ele possui registros vinculados, bloqueie o acesso para preservar o histórico." };
+    // Some existing profiles have no cascading Auth foreign key. Remove only
+    // access metadata explicitly; never delete business records.
+    const { error: rolesError } = await supabaseAdmin.from("user_roles").delete().eq("user_id", data.user_id);
+    if (rolesError) return { ok: false as const, error: "A conta foi desativada, mas não foi possível remover o perfil de acesso. Tente excluir novamente." };
+    const { error: profileError } = await supabaseAdmin.from("profiles").delete().eq("user_id", data.user_id);
+    if (profileError) return { ok: false as const, error: "A conta foi desativada, mas o cadastro possui vínculos no histórico e não pôde ser removido." };
     return { ok: true as const, error: null };
   });
