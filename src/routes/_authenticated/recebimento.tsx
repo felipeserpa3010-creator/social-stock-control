@@ -31,9 +31,10 @@ function ReceiptPage() {
   const { role, profile, isAdmin, isViewer } = useAuth();
   const { unitId, unit, loading } = useUnit();
   const queryClient = useQueryClient();
-  const canConfirm = role === "responsavel" && Boolean(profile?.unit_id);
-  const { data: entries = [], isPending } = useQuery(receivedEntriesOptions(unitId, canConfirm));
-  const pending = useMemo(() => entries.filter((e) => !e.receipt), [entries]);
+  const myUnitId = profile?.unit_id ?? unitId ?? null;
+  const canConfirm = !isAdmin && !isViewer && Boolean(myUnitId);
+  const { data: entries = [], isLoading: isPending } = useQuery(receivedEntriesOptions(myUnitId, canConfirm));
+  const pending = useMemo(() => entries.filter((e) => !e.receipt && !String(e.observacao ?? "").includes("NAO_RECEBIDO")), [entries]);
   const notReceived = useMemo(() => entries.filter((e) => !e.receipt && String(e.observacao ?? "").includes("NAO_RECEBIDO")), [entries]);
   const confirmed = useMemo(() => entries.filter((e) => e.receipt), [entries]);
   const pendingGroups = useMemo(() => {
