@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-19T15:10:30.532201+00:00",
+  "generated_at": "2026-10-19T15:37:33.899765+00:00",
   "files": [
     {
       "path": "roadmap.md",
-      "bytes": 353
+      "bytes": 643
     },
     {
       "path": "drizzle.config.ts",
@@ -11,7 +11,7 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 939
+      "bytes": 1112
     },
     {
       "path": "tsconfig.json",
@@ -226,6 +226,10 @@
       "bytes": 19280
     },
     {
+      "path": "src/lib/user-management.test.ts",
+      "bytes": 716
+    },
+    {
       "path": "src/lib/assistant-data.ts",
       "bytes": 20361
     },
@@ -246,6 +250,10 @@
       "bytes": 1739
     },
     {
+      "path": "src/lib/user-management.ts",
+      "bytes": 287
+    },
+    {
       "path": "src/lib/brand.ts",
       "bytes": 117
     },
@@ -259,7 +267,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 18250
+      "bytes": 20481
     },
     {
       "path": "src/lib/format.ts",
@@ -583,7 +591,7 @@
     },
     {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 14406
+      "bytes": 15340
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
@@ -1220,6 +1228,18 @@
       "target": "@/integrations/supabase/client"
     },
     {
+      "source": "src/lib/user-management.test.ts",
+      "target": "node:test"
+    },
+    {
+      "source": "src/lib/user-management.test.ts",
+      "target": "node:assert/strict"
+    },
+    {
+      "source": "src/lib/user-management.test.ts",
+      "target": "./user-management"
+    },
+    {
       "source": "src/lib/pdf.ts",
       "target": "jspdf"
     },
@@ -1254,6 +1274,14 @@
     {
       "source": "src/lib/admin.functions.ts",
       "target": "@/integrations/supabase/auth-middleware"
+    },
+    {
+      "source": "src/lib/admin.functions.ts",
+      "target": "./user-management"
+    },
+    {
+      "source": "src/lib/admin.functions.ts",
+      "target": "@/integrations/supabase/client.server"
     },
     {
       "source": "src/lib/admin.functions.ts",
@@ -2658,10 +2686,6 @@
     {
       "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/components/ui/dialog"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@/components/ui/table"
     },
     {
       "source": "src/routes/_authenticated/configuracoes.tsx",
