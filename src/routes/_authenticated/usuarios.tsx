@@ -1,36 +1,30 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { KeyRound, Loader2, Plus } from "lucide-react";
+import { KeyRound, Loader2, Plus, Trash2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { unitsOptions, usersOptions, type AppRole } from "@/lib/queries";
-import { adminCreateUser, adminResetPassword, adminSetAccess, adminSetRole, adminSetUnit } from "@/lib/admin.functions";
+import { adminDeleteUser, adminCreateUser, adminResetPassword, adminSetAccess, adminSetRole, adminSetUnit } from "@/lib/admin.functions";
 import { EmptyState, PageHeader, Panel, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Field } from "@/components/ui-kit";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({
     meta: [
-      { title: "Usuários — Controle de Estoque" },
+      { title: "Usuários — SEMADS" },
       {
         name: "description",
         content: "Cadastro e perfis de acesso dos usuários do controle de estoque.",
       },
-      { property: "og:title", content: "Usuários — Controle de Estoque" },
+      { property: "og:title", content: "Usuários — SEMADS" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       {
         property: "og:description",
         content: "Gerencie quem acessa o sistema e a qual unidade cada responsável pertence.",
@@ -63,6 +57,8 @@ function UsersPage() {
   });
   const [reset, setReset] = useState<{ id: string; nome: string } | null>(null);
   const [newPass, setNewPass] = useState("");
+  const [deleting, setDeleting] = useState<{ id: string; nome: string } | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: ["users"] });
@@ -98,13 +94,14 @@ function UsersPage() {
   };
 
   const changeRole = async (userId: string, role: AppRole) => {
+    setBusy(userId);
     try {
       await adminSetRole({ data: { user_id: userId, role } });
       toast.success("Perfil atualizado.");
       refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível alterar o perfil.");
-    }
+    } finally { setBusy(null); }
   };
 
   const doReset = async () => {
@@ -124,13 +121,14 @@ function UsersPage() {
   };
 
   const toggleActive = async (userId: string, ativo: boolean) => {
+    setBusy(userId);
     try {
       await adminSetAccess({ data: { user_id: userId, ativo } });
       toast.success(ativo ? "Acesso liberado." : "Acesso bloqueado.");
       refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Não foi possível atualizar.");
-    }
+    } finally { setBusy(null); }
   };
 
   return (
@@ -155,83 +153,50 @@ function UsersPage() {
             <EmptyState title="Nenhum usuário" description="Crie o primeiro usuário acima." />
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table className="min-w-[860px]">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>E-mail</TableHead>
-                  <TableHead>Perfil</TableHead>
-                  <TableHead>Unidade / acesso</TableHead>
-                  <TableHead>Acesso</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((u) => {
-                  const me = u.user_id === user?.id;
-                  const unit = units.find((x) => x.id === u.unit_id);
-                  return (
-                    <TableRow key={u.id}>
-                      <TableCell className="font-medium">
-                        {u.nome}
-                        {me && <span className="ml-1 text-[11px] text-muted-foreground">(você)</span>}
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">{u.email}</TableCell>
-                      <TableCell>
-                        <Badge variant={u.role === "admin" ? "default" : "secondary"}>
-                          {u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : u.role === "responsavel" ? "Responsável" : "Pendente"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {u.role === "visualizador" ? "Todas as unidades" : unit?.nome ?? "—"}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={u.ativo ? "secondary" : "outline"}>
-                          {u.ativo ? "Liberado" : u.role ? "Desativado" : "Aguardando liberação"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex flex-wrap justify-end gap-1">
-                          <select
-                            value={u.role ?? "responsavel"}
-                            disabled={me}
-                            aria-label={`Perfil de ${u.nome}`}
-                            onChange={(e) => changeRole(u.user_id, e.target.value as AppRole)}
-                            className="h-8 rounded-md border border-input bg-background px-1.5 text-xs disabled:opacity-50"
-                          >
-                            <option value="responsavel">Responsável de unidade</option>
-                            <option value="visualizador">Visualizador (somente consulta)</option>
-                          </select>
-                          <select
-                            value={u.unit_id ?? ""}
-                            disabled={me || u.role === "admin"}
-                            aria-label={`Unidade de ${u.nome}`}
-                            onChange={(e) => void adminSetUnit({ data: { user_id: u.user_id, unit_id: e.target.value || null } }).then(refresh).catch((err) => toast.error(err instanceof Error ? err.message : "Não foi possível alterar a unidade."))}
-                            className="h-8 rounded-md border border-input bg-background px-1.5 text-xs disabled:opacity-50"
-                          >
-                            <option value="">Sem unidade</option>
-                            {units.map((unit) => <option key={unit.id} value={unit.id}>{unit.sigla ?? unit.nome}</option>)}
-                          </select>
-                          <Button variant="ghost" size="sm" onClick={() => setReset({ id: u.user_id, nome: u.nome })}>
-                            <KeyRound /> Senha
-                          </Button>
-                          {!me && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => toggleActive(u.user_id, !u.ativo)}
-                            >
-                              {u.ativo ? "Bloquear" : "Liberar"}
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+          <div className="divide-y divide-border">
+            {users.map((u) => {
+              const me = u.user_id === user?.id;
+              const protectedUser = me || u.role === "admin";
+              return (
+                <div key={u.id} className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+                  <div className="min-w-0 space-y-2">
+                    <p className="font-medium break-words">{u.nome}{me && <span className="ml-1 text-xs text-muted-foreground">(você)</span>}</p>
+                    <p className="text-sm text-muted-foreground break-all">{u.email}</p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="secondary">{u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : u.role === "responsavel" ? "Usuário de unidade" : "Perfil pendente"}</Badge>
+                      <Badge variant={u.ativo ? "secondary" : "outline"}>{u.ativo ? "Liberado" : "Aguardando liberação / bloqueado"}</Badge>
+                    </div>
+                  </div>
+                  <div className="min-w-0 space-y-3">
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Field label="Perfil de acesso" htmlFor={`role-${u.id}`}>
+                        <select id={`role-${u.id}`} value={u.role ?? ""} disabled={protectedUser || busy === u.user_id}
+                          onChange={(e) => void changeRole(u.user_id, e.target.value as AppRole)}
+                          className="h-9 w-full min-w-0 rounded-md border border-input bg-background px-2 text-sm disabled:opacity-50">
+                          <option value="" disabled>Definir perfil...</option>
+                          {u.role === "admin" && <option value="admin">Administrador Principal</option>}
+                          <option value="responsavel">Usuário de unidade</option>
+                          <option value="visualizador">Visualizador (somente consulta)</option>
+                        </select>
+                      </Field>
+                      <Field label="Unidade" htmlFor={`unit-${u.id}`}>
+                        <select id={`unit-${u.id}`} value={u.unit_id ?? ""} disabled={protectedUser || u.role === "visualizador" || busy === u.user_id}
+                          onChange={(e) => void adminSetUnit({ data: { user_id: u.user_id, unit_id: e.target.value || null } }).then(refresh).catch((err) => toast.error(err instanceof Error ? err.message : "Não foi possível alterar a unidade."))}
+                          className="h-9 w-full min-w-0 rounded-md border border-input bg-background px-2 text-sm disabled:opacity-50">
+                          <option value="">Selecione a unidade</option>
+                          {units.map((unit) => <option key={unit.id} value={unit.id}>{unit.nome}</option>)}
+                        </select>
+                      </Field>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {!protectedUser && <Button size="sm" variant={u.ativo ? "outline" : "default"} disabled={busy === u.user_id} onClick={() => void toggleActive(u.user_id, !u.ativo)}><ShieldCheck />{u.ativo ? "Bloquear acesso" : "Liberar acesso"}</Button>}
+                      <Button variant="outline" size="sm" onClick={() => setReset({ id: u.user_id, nome: u.nome })}><KeyRound />Senha</Button>
+                      {!protectedUser && <Button variant="destructive" size="sm" disabled={busy === u.user_id} onClick={() => setDeleting({ id: u.user_id, nome: u.nome })}><Trash2 />Excluir usuário</Button>}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </Panel>
@@ -319,6 +284,28 @@ function UsersPage() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={Boolean(deleting)} onOpenChange={(o) => { if (!o && !busy) setDeleting(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader><DialogTitle>Excluir usuário</DialogTitle></DialogHeader>
+          <p className="text-sm text-muted-foreground">Excluir a conta de <strong>{deleting?.nome}</strong>? Esta ação é definitiva. O histórico de movimentações será preservado.</p>
+          <DialogFooter>
+            <Button variant="ghost" disabled={Boolean(busy)} onClick={() => setDeleting(null)}>Cancelar</Button>
+            <Button variant="destructive" disabled={Boolean(busy)} onClick={async () => {
+              if (!deleting) return;
+              setBusy(deleting.id);
+              try {
+                const result = await adminDeleteUser({ data: { user_id: deleting.id } });
+                if (!result.ok) { toast.error(result.error); return; }
+                toast.success("Usuário excluído.");
+                setDeleting(null);
+                refresh();
+              } catch (err) { toast.error(err instanceof Error ? err.message : "Não foi possível excluir o usuário."); }
+              finally { setBusy(null); }
+            }}>{busy && <Loader2 className="animate-spin" />}Excluir usuário</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
