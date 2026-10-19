@@ -1,15 +1,16 @@
-import { describe, expect, test } from "bun:test";
+import { describe, it as test } from "node:test";
+import assert from "node:assert/strict";
 import { userDeletionError } from "./user-management";
 
 describe("proteções da exclusão de usuários", () => {
   test("impede excluir a própria conta", () => {
-    expect(userDeletionError("ceo", "ceo", "responsavel")).not.toBeNull();
+    assert.notEqual(userDeletionError("ceo", "ceo", "responsavel"), null);
   });
   test("impede excluir o administrador principal", () => {
-    expect(userDeletionError("ceo", "outro", "admin")).not.toBeNull();
+    assert.notEqual(userDeletionError("ceo", "outro", "admin"), null);
   });
   test("permite selecionar responsável ou visualizador para exclusão", () => {
-    expect(userDeletionError("ceo", "unidade", "responsavel")).toBeNull();
-    expect(userDeletionError("ceo", "consulta", "visualizador")).toBeNull();
+    assert.equal(userDeletionError("ceo", "unidade", "responsavel"), null);
+    assert.equal(userDeletionError("ceo", "consulta", "visualizador"), null);
   });
 });
