@@ -30,6 +30,7 @@ import { Route as AuthenticatedExpedienteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedHistoricoRouteImport } from './routes/_authenticated/historico'
 import { Route as AuthenticatedMediasRouteImport } from './routes/_authenticated/medias'
 import { Route as AuthenticatedOutrosMateriaisRouteImport } from './routes/_authenticated/outros-materiais'
+import { Route as AuthenticatedPainelCeoRouteImport } from './routes/_authenticated/painel-ceo'
 import { Route as AuthenticatedProdutosRouteImport } from './routes/_authenticated/produtos'
 import { Route as AuthenticatedRecebimentoRouteImport } from './routes/_authenticated/recebimento'
 import { Route as AuthenticatedRecibosRouteImport } from './routes/_authenticated/recibos'
@@ -149,6 +150,11 @@ const AuthenticatedOutrosMateriaisRoute =
     path: '/outros-materiais',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPainelCeoRoute = AuthenticatedPainelCeoRouteImport.update({
+  id: '/painel-ceo',
+  path: '/painel-ceo',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedProdutosRoute = AuthenticatedProdutosRouteImport.update({
   id: '/produtos',
   path: '/produtos',
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/outros-materiais': typeof AuthenticatedOutrosMateriaisRoute
+  '/painel-ceo': typeof AuthenticatedPainelCeoRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/recebimento': typeof AuthenticatedRecebimentoRoute
   '/recibos': typeof AuthenticatedRecibosRoute
@@ -236,6 +243,7 @@ export interface FileRoutesByTo {
   '/historico': typeof AuthenticatedHistoricoRoute
   '/medias': typeof AuthenticatedMediasRoute
   '/outros-materiais': typeof AuthenticatedOutrosMateriaisRoute
+  '/painel-ceo': typeof AuthenticatedPainelCeoRoute
   '/produtos': typeof AuthenticatedProdutosRoute
   '/recebimento': typeof AuthenticatedRecebimentoRoute
   '/recibos': typeof AuthenticatedRecibosRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/_authenticated/historico': typeof AuthenticatedHistoricoRoute
   '/_authenticated/medias': typeof AuthenticatedMediasRoute
   '/_authenticated/outros-materiais': typeof AuthenticatedOutrosMateriaisRoute
+  '/_authenticated/painel-ceo': typeof AuthenticatedPainelCeoRoute
   '/_authenticated/produtos': typeof AuthenticatedProdutosRoute
   '/_authenticated/recebimento': typeof AuthenticatedRecebimentoRoute
   '/_authenticated/recibos': typeof AuthenticatedRecibosRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/historico'
     | '/medias'
     | '/outros-materiais'
+    | '/painel-ceo'
     | '/produtos'
     | '/recebimento'
     | '/recibos'
@@ -327,6 +337,7 @@ export interface FileRouteTypes {
     | '/historico'
     | '/medias'
     | '/outros-materiais'
+    | '/painel-ceo'
     | '/produtos'
     | '/recebimento'
     | '/recibos'
@@ -357,6 +368,7 @@ export interface FileRouteTypes {
     | '/_authenticated/historico'
     | '/_authenticated/medias'
     | '/_authenticated/outros-materiais'
+    | '/_authenticated/painel-ceo'
     | '/_authenticated/produtos'
     | '/_authenticated/recebimento'
     | '/_authenticated/recibos'
@@ -526,6 +538,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOutrosMateriaisRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/painel-ceo': {
+      id: '/_authenticated/painel-ceo'
+      path: '/painel-ceo'
+      fullPath: '/painel-ceo'
+      preLoaderRoute: typeof AuthenticatedPainelCeoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/produtos': {
       id: '/_authenticated/produtos'
       path: '/produtos'
@@ -592,6 +611,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHistoricoRoute: typeof AuthenticatedHistoricoRoute
   AuthenticatedMediasRoute: typeof AuthenticatedMediasRoute
   AuthenticatedOutrosMateriaisRoute: typeof AuthenticatedOutrosMateriaisRoute
+  AuthenticatedPainelCeoRoute: typeof AuthenticatedPainelCeoRoute
   AuthenticatedProdutosRoute: typeof AuthenticatedProdutosRoute
   AuthenticatedRecebimentoRoute: typeof AuthenticatedRecebimentoRoute
   AuthenticatedRecibosRoute: typeof AuthenticatedRecibosRoute
@@ -615,6 +635,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHistoricoRoute: AuthenticatedHistoricoRoute,
   AuthenticatedMediasRoute: AuthenticatedMediasRoute,
   AuthenticatedOutrosMateriaisRoute: AuthenticatedOutrosMateriaisRoute,
+  AuthenticatedPainelCeoRoute: AuthenticatedPainelCeoRoute,
   AuthenticatedProdutosRoute: AuthenticatedProdutosRoute,
   AuthenticatedRecebimentoRoute: AuthenticatedRecebimentoRoute,
   AuthenticatedRecibosRoute: AuthenticatedRecibosRoute,

@@ -32,7 +32,7 @@ import { semadsLogoUrl } from "@/lib/brand";
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" |
     "/relatorios" | "/recibos" | "/unidades" | "/produtos" |
-    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento" | "/expediente" | "/outros-materiais" | "/envios-recibos" | "/envios-relatorios";
+    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento" | "/expediente" | "/outros-materiais" | "/envios-recibos" | "/envios-relatorios" | "/painel-ceo";
   label: string;
   icon: typeof Boxes;
   adminOnly?: boolean;
@@ -44,6 +44,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
     group: "Operação",
     items: [
       { to: "/dashboard", label: "Painel", icon: LayoutDashboard },
+      { to: "/painel-ceo", label: "Painel Inteligente do CEO", icon: ShieldCheck, adminOnly: true },
       { to: "/estoque", label: "Estoque", icon: Boxes },
       { to: "/entrada", label: "Entrada", icon: PackagePlus, adminOnly: true },
       { to: "/entrada-documento", label: "Lançamento em massa", icon: ScanLine, adminOnly: true },
