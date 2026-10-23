@@ -161,7 +161,7 @@ function ReceiptPage() {
           })}
         </div>}
       </Panel>
-      <MaterialReceipts unitId={myUnitId} />
+      <MaterialReceipts unitId={myUnitId} unitName={unit?.nome} />
 
       {notReceived.length > 0 && <Panel title="Recibos não recebidos" description="Esses recibos não geraram entrada no estoque." bodyClassName="p-0">
         <div className="overflow-x-auto"><Table className="min-w-[620px]"><TableHeader><TableRow>
@@ -193,7 +193,7 @@ function ReceiptPage() {
 }
 type MatReceipt = { id: string; receipt_number: string; sent_at: string; material_type: string; items: { id: string; material_name: string; quantity: number; unit_measure: string }[] };
 
-function MaterialReceipts({ unitId }: { unitId: string | null }) {
+function MaterialReceipts({ unitId, unitName }: { unitId: string | null; unitName?: string }) {
   const qc = useQueryClient();
   const { data = [] } = useQuery({
     queryKey: ["pending-material-receipts", unitId],
