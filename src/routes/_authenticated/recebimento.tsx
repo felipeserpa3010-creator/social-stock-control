@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Clock3, XCircle } from "lucide-react";
+import { CheckCircle2, Clock3, Eye, Printer, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -47,7 +47,7 @@ function ReceiptPage() {
     });
     return Array.from(map.entries()).map(([id, entries]) => ({ id, entries }));
   }, [pending]);
-  const imprimirRecibo = async (receiptId: string, groupEntries: ReceivedEntryRow[]) => {
+  const imprimirRecibo = async (receiptId: string, groupEntries: ReceivedEntryRow[], print = true) => {
     const first = groupEntries[0];
     const doc = await buildReceiptPdf({
       reciboId: receiptId,
@@ -60,7 +60,7 @@ function ReceiptPage() {
         medida: entry.products?.unidade_medida ?? "—",
       })),
     });
-    doc.autoPrint();
+    if (print) doc.autoPrint();
     window.open(doc.output("bloburl"), "_blank");
   };
 
@@ -132,8 +132,11 @@ function ReceiptPage() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries, false)}>
+                    <Eye />Visualizar
+                  </Button>
                   <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries)}>
-                    Imprimir
+                    <Printer />Imprimir
                   </Button>
                   <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending || notReceivedMutation.isPending}>
                     <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Recebi"}
@@ -158,7 +161,7 @@ function ReceiptPage() {
           })}
         </div>}
       </Panel>
-      <MaterialReceipts unitId={myUnitId} />
+      <MaterialReceipts unitId={myUnitId} unitName={unit?.nome} />
 
       {notReceived.length > 0 && <Panel title="Recibos não recebidos" description="Esses recibos não geraram entrada no estoque." bodyClassName="p-0">
         <div className="overflow-x-auto"><Table className="min-w-[620px]"><TableHeader><TableRow>
@@ -190,7 +193,7 @@ function ReceiptPage() {
 }
 type MatReceipt = { id: string; receipt_number: string; sent_at: string; material_type: string; items: { id: string; material_name: string; quantity: number; unit_measure: string }[] };
 
-function MaterialReceipts({ unitId }: { unitId: string | null }) {
+function MaterialReceipts({ unitId, unitName }: { unitId: string | null; unitName?: string | undefined }) {
   const qc = useQueryClient();
   const { data = [] } = useQuery({
     queryKey: ["pending-material-receipts", unitId],
@@ -217,6 +220,29 @@ function MaterialReceipts({ unitId }: { unitId: string | null }) {
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : "Não foi possível confirmar."),
   });
+  const notReceived = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase as any).rpc("mark_expediente_receipt_not_received", { _receipt_id: id });
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      toast.success("Recibo de materiais marcado como não recebido.");
+      await qc.invalidateQueries({ queryKey: ["pending-material-receipts"] });
+      await qc.invalidateQueries({ queryKey: ["expediente-receipts"] });
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Não foi possível registrar."),
+  });
+  const busy = confirm.isPending || notReceived.isPending;
+  const openPdf = async (r: MatReceipt, print: boolean) => {
+    const doc = await buildReceiptPdf({
+      reciboId: r.receipt_number,
+      unidade: unitName ?? "Unidade",
+      data: r.sent_at,
+      rows: r.items.map((i) => ({ produto: i.material_name, quantidade: i.quantity, medida: i.unit_measure })),
+    } as any);
+    if (print) doc.autoPrint();
+    window.open(doc.output("bloburl"), "_blank");
+  };
   return (
     <Panel title={data.length + " Recibo(s) de materiais pendente(s)"} description="Materiais de expediente e outros materiais. A confirmação não altera o estoque." bodyClassName="p-0">
       {data.length === 0 ? <div className="p-4"><EmptyState title="Nenhum recibo de materiais pendente" description="Quando o CEO registrar um envio de materiais para sua unidade, ele aparecerá aqui." /></div>
@@ -227,7 +253,12 @@ function MaterialReceipts({ unitId }: { unitId: string | null }) {
               <p className="font-semibold">Recibo nº {r.receipt_number}</p>
               <p className="text-xs text-muted-foreground">{r.material_type === "outros" ? "Outros materiais" : "Materiais de expediente"} · Enviado em {formatDate(r.sent_at)} · {r.items.length} item(ns)</p>
             </div>
-            <Button size="sm" onClick={() => confirm.mutate(r.id)} disabled={confirm.isPending}><CheckCircle2 />{confirm.isPending ? "Confirmando..." : "Recebi"}</Button>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" onClick={() => openPdf(r, false)}><Eye />Visualizar</Button>
+              <Button variant="outline" size="sm" onClick={() => openPdf(r, true)}><Printer />Imprimir</Button>
+              <Button size="sm" onClick={() => confirm.mutate(r.id)} disabled={busy}><CheckCircle2 />{confirm.isPending ? "Confirmando..." : "Recebi"}</Button>
+              <Button variant="outline" size="sm" onClick={() => notReceived.mutate(r.id)} disabled={busy}><XCircle />{notReceived.isPending ? "Registrando..." : "Não recebi"}</Button>
+            </div>
           </div>
           <div className="overflow-x-auto"><Table className="min-w-[520px]"><TableHeader><TableRow>
             <TableHead>Material</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Unidade</TableHead>
