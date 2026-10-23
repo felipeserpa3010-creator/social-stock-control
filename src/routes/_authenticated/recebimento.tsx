@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Clock3, Eye, Printer, XCircle } from "lucide-react";
+import { CheckCircle2, Eye, Printer, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -172,19 +172,6 @@ function ReceiptPage() {
             <TableCell className="text-right tabular-nums">{formatQty(entry.quantidade)} {entry.products?.unidade_medida ?? ""}</TableCell>
             <TableCell className="text-sm text-muted-foreground">{formatDate(entry.data)}</TableCell>
             <TableCell className="text-sm font-medium text-destructive">Não recebido</TableCell>
-          </TableRow>)}
-        </TableBody></Table></div>
-      </Panel>}
-      {confirmed.length > 0 && <Panel title="Recebimentos confirmados" description="Registro de quem confirmou e quando a confirmação foi feita." bodyClassName="p-0">
-        <div className="overflow-x-auto"><Table className="min-w-[720px]"><TableHeader><TableRow>
-          <TableHead>Produto</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Data do lançamento</TableHead><TableHead>Confirmado por</TableHead><TableHead>Data da confirmação</TableHead>
-        </TableRow></TableHeader><TableBody>
-          {confirmed.map((entry) => <TableRow key={entry.id}>
-            <TableCell className="font-medium">{entry.products?.nome ?? "Produto"}</TableCell>
-            <TableCell className="text-right tabular-nums">{formatQty(entry.quantidade)} {entry.products?.unidade_medida ?? ""}</TableCell>
-            <TableCell className="text-sm text-muted-foreground">{formatDate(entry.data)}</TableCell>
-            <TableCell className="text-sm">{entry.receipt?.confirmed_by_name ?? "—"}</TableCell>
-            <TableCell className="text-sm text-muted-foreground"><span className="inline-flex items-center gap-1"><Clock3 className="size-3.5" />{formatDate(entry.receipt?.confirmed_at ?? null)}</span></TableCell>
           </TableRow>)}
         </TableBody></Table></div>
       </Panel>}
