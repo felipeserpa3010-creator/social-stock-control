@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Clock3, XCircle } from "lucide-react";
+import { CheckCircle2, Clock3, Eye, Printer, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -47,7 +47,7 @@ function ReceiptPage() {
     });
     return Array.from(map.entries()).map(([id, entries]) => ({ id, entries }));
   }, [pending]);
-  const imprimirRecibo = async (receiptId: string, groupEntries: ReceivedEntryRow[]) => {
+  const imprimirRecibo = async (receiptId: string, groupEntries: ReceivedEntryRow[], print = true) => {
     const first = groupEntries[0];
     const doc = await buildReceiptPdf({
       reciboId: receiptId,
@@ -60,7 +60,7 @@ function ReceiptPage() {
         medida: entry.products?.unidade_medida ?? "—",
       })),
     });
-    doc.autoPrint();
+    if (print) doc.autoPrint();
     window.open(doc.output("bloburl"), "_blank");
   };
 
@@ -132,8 +132,11 @@ function ReceiptPage() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries, false)}>
+                    <Eye />Visualizar
+                  </Button>
                   <Button variant="outline" size="sm" onClick={() => imprimirRecibo(receiptId, group.entries)}>
-                    Imprimir
+                    <Printer />Imprimir
                   </Button>
                   <Button size="sm" onClick={() => mutation.mutate(receiptId)} disabled={mutation.isPending || notReceivedMutation.isPending}>
                     <CheckCircle2 />{mutation.isPending ? "Confirmando..." : "Recebi"}
