@@ -188,3 +188,54 @@ function ReceiptPage() {
     </>
   );
 }
+type MatReceipt = { id: string; receipt_number: string; sent_at: string; material_type: string; items: { id: string; material_name: string; quantity: number; unit_measure: string }[] };
+
+function MaterialReceipts({ unitId }: { unitId: string | null }) {
+  const qc = useQueryClient();
+  const { data = [] } = useQuery({
+    queryKey: ["pending-material-receipts", unitId],
+    enabled: Boolean(unitId),
+    queryFn: async (): Promise<MatReceipt[]> => {
+      const { data: rows, error } = await (supabase as any).from("expediente_receipts").select("*")
+        .eq("destination_unit_id", unitId).eq("status", "pending").order("sent_at", { ascending: false });
+      if (error) throw error;
+      if (!rows?.length) return [];
+      const { data: items, error: e2 } = await (supabase as any).from("expediente_receipt_items").select("*").in("receipt_id", rows.map((r: any) => r.id));
+      if (e2) throw e2;
+      return rows.map((r: any) => ({ ...r, items: (items ?? []).filter((i: any) => i.receipt_id === r.id) }));
+    },
+  });
+  const confirm = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await (supabase as any).rpc("confirm_expediente_receipt", { _receipt_id: id });
+      if (error) throw error;
+    },
+    onSuccess: async () => {
+      toast.success("Recebimento de materiais confirmado.");
+      await qc.invalidateQueries({ queryKey: ["pending-material-receipts"] });
+      await qc.invalidateQueries({ queryKey: ["expediente-receipts"] });
+    },
+    onError: (err) => toast.error(err instanceof Error ? err.message : "Não foi possível confirmar."),
+  });
+  return (
+    <Panel title={data.length + " Recibo(s) de materiais pendente(s)"} description="Materiais de expediente e outros materiais. A confirmação não altera o estoque." bodyClassName="p-0">
+      {data.length === 0 ? <div className="p-4"><EmptyState title="Nenhum recibo de materiais pendente" description="Quando o CEO registrar um envio de materiais para sua unidade, ele aparecerá aqui." /></div>
+      : <div className="space-y-4 p-4">{data.map((r) => (
+        <div key={r.id} className="rounded-lg border p-4">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="font-semibold">Recibo nº {r.receipt_number}</p>
+              <p className="text-xs text-muted-foreground">{r.material_type === "outros" ? "Outros materiais" : "Materiais de expediente"} · Enviado em {formatDate(r.sent_at)} · {r.items.length} item(ns)</p>
+            </div>
+            <Button size="sm" onClick={() => confirm.mutate(r.id)} disabled={confirm.isPending}><CheckCircle2 />{confirm.isPending ? "Confirmando..." : "Recebi"}</Button>
+          </div>
+          <div className="overflow-x-auto"><Table className="min-w-[520px]"><TableHeader><TableRow>
+            <TableHead>Material</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Unidade</TableHead>
+          </TableRow></TableHeader><TableBody>
+            {r.items.map((i) => <TableRow key={i.id}><TableCell className="font-semibold">{i.material_name}</TableCell>
+              <TableCell className="text-right font-bold tabular-nums">{formatQty(i.quantity)}</TableCell><TableCell>{i.unit_measure}</TableCell></TableRow>)}
+          </TableBody></Table></div>
+        </div>))}</div>}
+    </Panel>
+  );
+}
