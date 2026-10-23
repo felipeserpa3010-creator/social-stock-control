@@ -158,6 +158,8 @@ function ReceiptPage() {
           })}
         </div>}
       </Panel>
+      <MaterialReceipts unitId={myUnitId} />
+
       {notReceived.length > 0 && <Panel title="Recibos não recebidos" description="Esses recibos não geraram entrada no estoque." bodyClassName="p-0">
         <div className="overflow-x-auto"><Table className="min-w-[620px]"><TableHeader><TableRow>
           <TableHead>Produto</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Data do lançamento</TableHead><TableHead>Status</TableHead>
