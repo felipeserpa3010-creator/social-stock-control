@@ -561,6 +561,10 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       is_expediente_dispatcher: { Args: never; Returns: boolean }
       is_viewer: { Args: never; Returns: boolean }
+      mark_expediente_receipt_not_received: {
+        Args: { _receipt_id: string }
+        Returns: undefined
+      }
       my_unit: { Args: never; Returns: string }
       next_stock_receipt_number: { Args: never; Returns: string }
       send_from_central_deposit: {

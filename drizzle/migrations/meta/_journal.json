@@ -64,6 +64,13 @@
       "when": 1792032940907,
       "tag": "0008_registro_envios_outros_materiais",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792763397472,
+      "tag": "0009_migration",
+      "breakpoints": true
     }
   ]
 }
