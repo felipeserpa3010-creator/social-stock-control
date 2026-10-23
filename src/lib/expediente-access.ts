@@ -16,7 +16,7 @@ export async function requireExpedienteAccess() {
 export async function requireEnvioRegistroAccess() {
   const { data } = await supabase.auth.getUser();
   if (!data.user) throw redirect({ to: "/auth" });
-  const [admin, dispatcher] = await Promise.all([
+  const [{ data: admin }, { data: dispatcher }] = await Promise.all([
     supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" }),
     (supabase as any).rpc("is_expediente_dispatcher"),
   ]);
