@@ -126,7 +126,9 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
           return (
             !i.adminOnly &&
             i.to !== "/entrada" &&
-            i.to !== "/entrada-documento"
+            i.to !== "/entrada-documento" &&
+            i.to !== "/expediente" &&
+            i.to !== "/outros-materiais"
           );
         });
         if (!items.length) return null;
