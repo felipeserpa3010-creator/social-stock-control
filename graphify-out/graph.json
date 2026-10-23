@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-23T13:30:40.166666+00:00",
+  "generated_at": "2026-10-23T13:51:01.279248+00:00",
   "files": [
     {
       "path": "roadmap.md",
-      "bytes": 643
+      "bytes": 734
     },
     {
       "path": "drizzle.config.ts",
@@ -351,7 +351,7 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 20369
+      "bytes": 20488
     },
     {
       "path": "src/integrations/supabase/client.ts",
@@ -551,7 +551,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 14848
+      "bytes": 16681
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -650,6 +650,10 @@
       "bytes": 1561
     },
     {
+      "path": "drizzle/migrations/0009_migration.sql",
+      "bytes": 1779
+    },
+    {
       "path": "drizzle/migrations/0008_registro_envios_outros_materiais.sql",
       "bytes": 1364
     },
@@ -678,6 +682,10 @@
       "bytes": 336
     },
     {
+      "path": "drizzle/migrations/meta/0009_snapshot.json",
+      "bytes": 336
+    },
+    {
       "path": "drizzle/migrations/meta/0004_snapshot.json",
       "bytes": 336
     },
@@ -687,7 +695,7 @@
     },
     {
       "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 1466
+      "bytes": 1603
     },
     {
       "path": "drizzle/migrations/meta/0001_snapshot.json",
