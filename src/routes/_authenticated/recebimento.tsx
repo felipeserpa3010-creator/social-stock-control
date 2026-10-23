@@ -193,7 +193,7 @@ function ReceiptPage() {
 }
 type MatReceipt = { id: string; receipt_number: string; sent_at: string; material_type: string; items: { id: string; material_name: string; quantity: number; unit_measure: string }[] };
 
-function MaterialReceipts({ unitId, unitName }: { unitId: string | null; unitName?: string }) {
+function MaterialReceipts({ unitId, unitName }: { unitId: string | null; unitName?: string | undefined }) {
   const qc = useQueryClient();
   const { data = [] } = useQuery({
     queryKey: ["pending-material-receipts", unitId],
