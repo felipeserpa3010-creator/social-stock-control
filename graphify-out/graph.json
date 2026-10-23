@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T15:09:59.534456+00:00",
+  "generated_at": "2026-10-23T15:19:26.665386+00:00",
   "files": [
     {
       "path": "roadmap.md",
@@ -215,7 +215,7 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 13963
+      "bytes": 14045
     },
     {
       "path": "src/components/ui-kit.tsx",
@@ -259,7 +259,7 @@
     },
     {
       "path": "src/lib/expediente-access.ts",
-      "bytes": 815
+      "bytes": 1260
     },
     {
       "path": "src/lib/media.ts",
@@ -583,7 +583,7 @@
     },
     {
       "path": "src/routes/_authenticated/expediente.tsx",
-      "bytes": 850
+      "bytes": 856
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
@@ -599,7 +599,7 @@
     },
     {
       "path": "src/routes/_authenticated/outros-materiais.tsx",
-      "bytes": 820
+      "bytes": 826
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
