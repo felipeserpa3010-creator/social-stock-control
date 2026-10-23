@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ExpedientePage } from "@/components/expediente-page";
-import { requireExpedienteAccess } from "@/lib/expediente-access";
+import { requireEnvioRegistroAccess } from "@/lib/expediente-access";
 
 export const Route = createFileRoute("/_authenticated/outros-materiais")({
-  beforeLoad: requireExpedienteAccess,
+  beforeLoad: requireEnvioRegistroAccess,
   head: () => ({ meta: [
     { title: "Outros materiais — SEMADS" },
     { name: "description", content: "Registro de envio de outros materiais da SEMADS." },
