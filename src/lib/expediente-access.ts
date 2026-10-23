@@ -12,3 +12,13 @@ export async function requireExpedienteAccess() {
     ]);
     if (admin !== true && responsible !== true && viewer !== true && dispatcher !== true) throw redirect({ to: "/dashboard" });
 }
+
+export async function requireEnvioRegistroAccess() {
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) throw redirect({ to: "/auth" });
+  const [admin, dispatcher] = await Promise.all([
+    supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" }),
+    (supabase as any).rpc("is_expediente_dispatcher"),
+  ]);
+  if (admin !== true && dispatcher !== true) throw redirect({ to: "/dashboard" });
+}
