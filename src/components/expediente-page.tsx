@@ -359,7 +359,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
         headStyles: { fillColor: brown, textColor: [255, 255, 255], fontStyle: "bold", fontSize: 8, cellPadding: 3 },
         styles: { font: "helvetica", fontSize: 8, cellPadding: 3, overflow: "linebreak", textColor: [45, 45, 45], lineColor: [225, 216, 210], lineWidth: 0.15, valign: "middle" },
         alternateRowStyles: { fillColor: [250, 248, 246] },
-        columnStyles: { 0: { cellWidth: 24 }, 1: { cellWidth: 48 }, 2: { cellWidth: 62 }, 3: { cellWidth: 32 }, 4: { cellWidth: 34 }, 5: { cellWidth: "auto" } },
+        columnStyles: { 0: { cellWidth: 28 }, 1: { cellWidth: 46 }, 2: { cellWidth: 60 }, 3: { cellWidth: 30 }, 4: { cellWidth: 32 }, 5: { cellWidth: "auto" } },
         margin: { top: 12, left: 12, right: 12, bottom: 15 },
         didDrawPage: () => {
           if (doc.getCurrentPageInfo().pageNumber > 1) {
