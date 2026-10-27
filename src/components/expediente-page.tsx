@@ -293,7 +293,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       const selectedUnitName = reportUnit === "all" ? "Todas as unidades" : (units.find((u) => u.id === reportUnit)?.nome ?? "Unidade selecionada");
       const lineCount = lines.length;
       const unitCount = new Set(lines.map((l) => l.unitId)).size;
-      const totalReceipts = new Set(lines.map((l) => `${l.tipo}::${l.numero}::${l.unitId}`)).size;
+      const totalReceipts = new Set(lines.map((l) => `${l.numero}::${l.unitId}`)).size;
       // Tenta inserir a logo oficial; se o arquivo não carregar, o relatório continua sendo gerado.
       let logoData: string | null = null;
       try {
@@ -349,17 +349,17 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       doc.text(String(unitCount), 235, 49);
 
       const body: Array<Array<string>> = [];
-      lines.forEach((l) => body.push([l.numero, l.unitName, l.item, l.qty, formatDate(l.sentAt), formatDate(l.confirmedAt), l.tipo]));
+      lines.forEach((l) => body.push([l.numero, l.unitName, l.item, l.qty, formatDate(l.sentAt), l.estoque ?? "—"]));
       autoTable(doc, {
         startY: 61,
-        head: [["Nº RECIBO", "UNIDADE DESTINO", "ITEM ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "DATA DO RECEBIMENTO", "TIPO DE ENVIO"]],
+        head: [["Nº RECIBO", "UNIDADE DESTINO", "ITEM ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "ESTOQUE ATUAL"]],
         body,
         theme: "grid",
         showHead: "everyPage",
         headStyles: { fillColor: brown, textColor: [255, 255, 255], fontStyle: "bold", fontSize: 8, cellPadding: 3 },
         styles: { font: "helvetica", fontSize: 8, cellPadding: 3, overflow: "linebreak", textColor: [45, 45, 45], lineColor: [225, 216, 210], lineWidth: 0.15, valign: "middle" },
         alternateRowStyles: { fillColor: [250, 248, 246] },
-        columnStyles: { 0: { cellWidth: 21 }, 1: { cellWidth: 42 }, 2: { cellWidth: 52 }, 3: { cellWidth: 28 }, 4: { cellWidth: 31 }, 5: { cellWidth: 38 }, 6: { cellWidth: "auto" } },
+        columnStyles: { 0: { cellWidth: 24 }, 1: { cellWidth: 48 }, 2: { cellWidth: 62 }, 3: { cellWidth: 32 }, 4: { cellWidth: 34 }, 5: { cellWidth: "auto" } },
         margin: { top: 12, left: 12, right: 12, bottom: 15 },
         didDrawPage: () => {
           if (doc.getCurrentPageInfo().pageNumber > 1) {
