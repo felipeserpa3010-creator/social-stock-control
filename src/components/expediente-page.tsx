@@ -275,22 +275,13 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
         ((stockRows ?? []) as any[]).forEach((s) => {
           stockMap.set(`${s.unit_id}::${s.product_id}`, `${formatQty(Number(s.quantidade))} ${s.products?.unidade_medida ?? ""}`.trim());
         });
-        let pairIndex = 0;
-        lines.forEach((l) => {
-          if (l.estoque !== "—") return;
-          const pair = stockPairs.find((p, i) => i >= pairIndex && p.unitId === l.unitId && lines[lines.indexOf(l)].item === l.item);
-          void pair;
-        });
-        // Marca o estoque atual nas linhas de estoque, na ordem em que foram incluídas.
+        // Preenche o estoque atual nas linhas de estoque, na ordem em que foram incluídas.
         let cursor = 0;
-        lines.forEach((l, i) => {
-          if (l.estoque !== "—") return;
+        lines.forEach((l) => {
+          if (l.estoque !== null) return;
           const pair = stockPairs[cursor];
-          if (pair && pair.unitId === l.unitId) {
-            l.estoque = stockMap.get(`${pair.unitId}::${pair.productId}`) ?? "0";
-            cursor += 1;
-          }
-          void i;
+          cursor += 1;
+          l.estoque = pair ? stockMap.get(`${pair.unitId}::${pair.productId}`) ?? "0" : "—";
         });
       }
       lines.sort((a, b) => a.confirmedAt.localeCompare(b.confirmedAt) || a.numero.localeCompare(b.numero));
