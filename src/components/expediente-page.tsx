@@ -291,9 +291,6 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
       const selectedUnitName = reportUnit === "all" ? "Todas as unidades" : (units.find((u) => u.id === reportUnit)?.nome ?? "Unidade selecionada");
-      const lineCount = lines.length;
-      const unitCount = new Set(lines.map((l) => l.unitId)).size;
-      const totalReceipts = new Set(lines.map((l) => `${l.numero}::${l.unitId}`)).size;
       // Tenta inserir a logo oficial; se o arquivo não carregar, o relatório continua sendo gerado.
       let logoData: string | null = null;
       try {
