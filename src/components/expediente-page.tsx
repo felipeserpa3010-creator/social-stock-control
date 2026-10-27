@@ -331,27 +331,22 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       doc.setFontSize(8.5);
       doc.text(`Período de recebimento: ${formatDate(from)} a ${formatDate(to)}`, logoData ? 38 : 14, 25);
 
-      // Faixa de identificação e resumo para facilitar a guarda e a consulta do PDF.
+      // Faixa com a unidade destinatária do relatório.
       doc.setFillColor(...lightBrown);
-      doc.roundedRect(12, 36, pageWidth - 24, 20, 2, 2, "F");
+      doc.roundedRect(12, 36, pageWidth - 24, 13, 2, 2, "F");
       doc.setTextColor(...brown);
       doc.setFont("helvetica", "bold");
       doc.setFontSize(8);
-      doc.text("UNIDADE / ABRANGÊNCIA", 16, 42);
-      doc.text("RECIBOS CONFIRMADOS", 110, 42);
-      doc.text("ITENS REGISTRADOS", 174, 42);
-      doc.text("UNIDADES ATENDIDAS", 235, 42);
+      doc.text("UNIDADE", 16, 41.5);
       doc.setTextColor(45, 45, 45);
-      doc.setFontSize(9);
-      doc.text(doc.splitTextToSize(selectedUnitName, 87).slice(0, 2), 16, 48);
-      doc.text(String(totalReceipts), 110, 49);
-      doc.text(String(lineCount), 174, 49);
-      doc.text(String(unitCount), 235, 49);
+      doc.setFontSize(10.5);
+      doc.text(doc.splitTextToSize(selectedUnitName, pageWidth - 40)[0] ?? selectedUnitName, 16, 46.8);
 
       const body: Array<Array<string>> = [];
       lines.forEach((l) => body.push([l.numero, l.unitName, l.item, l.qty, formatDate(l.sentAt), l.estoque ?? "—"]));
       autoTable(doc, {
-        startY: 61,
+        startY: 55,
+
         head: [["Nº RECIBO", "UNIDADE DESTINO", "ITEM ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "ESTOQUE ATUAL"]],
         body,
         theme: "grid",
