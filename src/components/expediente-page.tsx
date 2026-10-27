@@ -516,7 +516,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       </div>}
 
       {view === "relatorios" && <div id="expediente-relatorio" className="scroll-mt-20">
-      <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Se mantiver Todas as unidades, o PDF reunirá todas as entregas confirmadas no período: estoque, materiais de expediente e outros materiais.">
+      <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Marque os itens para um relatório só deles ou deixe todos desmarcados para incluir estoque, materiais de expediente e outros materiais.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2">
             {canDispatch && <Field label="Unidade do relatório" htmlFor="exp-report-unit">
