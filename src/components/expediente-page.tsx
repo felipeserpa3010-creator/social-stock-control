@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FileDown, Eye, Printer, Plus, Send, Trash2, CheckCircle2, Loader2 } from "lucide-react";
+import { FileDown, Eye, Printer, Plus, Send, Trash2, CheckCircle2, Loader2, ChevronsUpDown } from "lucide-react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { toast } from "sonner";
@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type ExpedienteItem = { name: string; quantity: string; unit: string };
 type Receipt = {
@@ -531,22 +533,40 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
             <Field label="Data final do recebimento" htmlFor="exp-report-to" required>
               <Input id="exp-report-to" type="date" required min={from || undefined} value={to} onChange={(e) => setTo(e.target.value)} />
             </Field>
-            <Field label="Itens do relatório" hint="Sem marcação, o relatório inclui todos os materiais." className="sm:col-span-2">
-              <div className="max-h-44 overflow-y-auto rounded-md border border-input bg-background p-2">
-                {itemOptions.length === 0 ? (
-                  <p className="px-1 py-1 text-sm text-muted-foreground">Nenhum item disponível.</p>
-                ) : itemOptions.map((name) => (
-                  <label key={name} className="flex cursor-pointer items-center gap-2 rounded px-1 py-1 text-sm hover:bg-accent">
-                    <input
-                      type="checkbox"
-                      className="size-4 accent-primary"
-                      checked={reportItems.includes(name)}
-                      onChange={() => setReportItems((old) => (old.includes(name) ? old.filter((n) => n !== name) : [...old, name]))}
-                    />
-                    {name}
-                  </label>
-                ))}
-              </div>
+            <Field label="Itens do relatório" hint="Sem marcação, inclui todos os materiais.">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    id="exp-report-items"
+                    type="button"
+                    className="flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-background px-3 text-sm"
+                  >
+                    <span className="truncate">
+                      {reportItems.length === 0
+                        ? "Todos os materiais"
+                        : reportItems.length === 1
+                          ? reportItems[0]
+                          : `${reportItems.length} itens selecionados`}
+                    </span>
+                    <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-2" align="start">
+                  <div className="max-h-60 overflow-y-auto">
+                    {itemOptions.length === 0 ? (
+                      <p className="px-2 py-1 text-sm text-muted-foreground">Nenhum item disponível.</p>
+                    ) : itemOptions.map((name) => (
+                      <label key={name} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-accent">
+                        <Checkbox
+                          checked={reportItems.includes(name)}
+                          onCheckedChange={(checked) => setReportItems((old) => (checked ? [...old, name] : old.filter((n) => n !== name)))}
+                        />
+                        <span className="truncate">{name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
             </Field>
           </div>
           <Button onClick={generateReport} disabled={reportLoading || !from || !to}><FileDown className="size-4" />{reportLoading ? "Gerando PDF..." : "Gerar relatório PDF"}</Button>
