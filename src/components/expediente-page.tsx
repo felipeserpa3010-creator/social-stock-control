@@ -513,14 +513,6 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
                 {units.filter((u) => !/gabinete semads|centro de distribui/i.test(u.nome)).map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
               </select>
             </Field>}
-            <Field label="Tipo de envio" htmlFor="exp-report-type">
-              <select id="exp-report-type" value={reportType} onChange={(e) => setReportType(e.target.value as typeof reportType)} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
-                <option value="todos">Todos (estoque, expediente e outros)</option>
-                <option value="estoque">Estoque</option>
-                <option value="expediente">Materiais de expediente</option>
-                <option value="outros">Outros materiais</option>
-              </select>
-            </Field>
             <Field label="Data inicial do recebimento" htmlFor="exp-report-from" required>
               <Input id="exp-report-from" type="date" required value={from} onChange={(e) => setFrom(e.target.value)} />
             </Field>
