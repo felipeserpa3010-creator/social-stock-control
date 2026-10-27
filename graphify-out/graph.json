@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-23T15:19:26.665386+00:00",
+  "generated_at": "2026-10-27T15:52:22.175857+00:00",
   "files": [
     {
       "path": "roadmap.md",
@@ -203,7 +203,7 @@
     },
     {
       "path": "src/components/expediente-page.tsx",
-      "bytes": 31577
+      "bytes": 31812
     },
     {
       "path": "src/components/auth-layout.tsx",
