@@ -228,7 +228,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
         const date = dayOf(r.confirmed_at);
         return date >= from && date <= to;
       });
-      type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; estoque: string };
+      type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; estoque: string | null };
       const lines: ReportLine[] = [];
       confirmed.forEach((r) => r.items.forEach((item) => lines.push({
         numero: r.receipt_number, unitId: r.destination_unit_id, unitName: r.unitName, item: item.material_name,
@@ -257,7 +257,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
             lines.push({
               numero: receiptIdFromObservation(m.observacao) ?? "Avulso", unitId: m.unit_id, unitName: m.units?.nome ?? "Unidade",
               item: m.products?.nome ?? "Produto", qty: `${formatQty(Number(m.quantidade))} ${m.products?.unidade_medida ?? ""}`.trim(),
-              sentAt: m.data, confirmedAt, estoque: "—",
+              sentAt: m.data, confirmedAt, estoque: null,
             });
             if (m.product_id) stockPairs.push({ unitId: m.unit_id, productId: m.product_id });
           });
