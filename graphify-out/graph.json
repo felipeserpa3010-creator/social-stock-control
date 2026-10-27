@@ -1,53 +1,53 @@
 {
-  "generated_at": "2026-10-27T16:19:19.016765+00:00",
+  "generated_at": "2026-10-27T16:24:11.026391+00:00",
   "files": [
     {
       "path": "roadmap.md",
       "bytes": 734
     },
     {
-      "path": "tsconfig.json",
-      "bytes": 820
-    },
-    {
-      "path": "components.json",
-      "bytes": 443
-    },
-    {
-      "path": "package.json",
-      "bytes": 3154
-    },
-    {
-      "path": "vite.config.ts",
-      "bytes": 820
-    },
-    {
-      "path": "README.md",
-      "bytes": 17177
+      "path": "drizzle.config.ts",
+      "bytes": 245
     },
     {
       "path": "AGENTS.md",
       "bytes": 1112
     },
     {
+      "path": "tsconfig.json",
+      "bytes": 820
+    },
+    {
+      "path": "vite.config.ts",
+      "bytes": 820
+    },
+    {
       "path": "eslint.config.js",
       "bytes": 1250
     },
     {
-      "path": "drizzle.config.ts",
-      "bytes": 245
+      "path": "README.md",
+      "bytes": 17177
     },
     {
-      "path": "drizzle/schema.ts",
-      "bytes": 60
+      "path": "package.json",
+      "bytes": 3154
+    },
+    {
+      "path": "components.json",
+      "bytes": 443
+    },
+    {
+      "path": ".lovable/project.json",
+      "bytes": 124
     },
     {
       "path": ".lovasiri/sync.json",
       "bytes": 80
     },
     {
-      "path": "src/start.ts",
-      "bytes": 1064
+      "path": "src/routeTree.gen.ts",
+      "bytes": 25901
     },
     {
       "path": "src/styles.css",
@@ -62,160 +62,76 @@
       "bytes": 394
     },
     {
-      "path": "src/routeTree.gen.ts",
-      "bytes": 25901
+      "path": "src/start.ts",
+      "bytes": 1064
     },
     {
-      "path": ".lovable/project.json",
-      "bytes": 124
-    },
-    {
-      "path": "drizzle/migrations/0000_stock_receipts.sql",
-      "bytes": 1561
-    },
-    {
-      "path": "drizzle/migrations/0008_registro_envios_outros_materiais.sql",
-      "bytes": 1364
-    },
-    {
-      "path": "drizzle/migrations/0002_allow_admin_delete_receipts.sql",
-      "bytes": 538
-    },
-    {
-      "path": "drizzle/migrations/0003_receipt_custom_order_number.sql",
-      "bytes": 3677
-    },
-    {
-      "path": "drizzle/migrations/0004_estoque_so_na_confirmacao.sql",
-      "bytes": 3936
-    },
-    {
-      "path": "drizzle/migrations/0005_recibo_numeracao_reaproveita.sql",
-      "bytes": 863
-    },
-    {
-      "path": "drizzle/migrations/0001_fix_semads_viewer_trigger.sql",
-      "bytes": 747
-    },
-    {
-      "path": "drizzle/migrations/0006_materiais_expediente_recibos_relatorios.sql",
-      "bytes": 8320
-    },
-    {
-      "path": "drizzle/migrations/0009_migration.sql",
-      "bytes": 1779
-    },
-    {
-      "path": "drizzle/migrations/0007_ceo_delete_expediente_receipts.sql",
-      "bytes": 897
-    },
-    {
-      "path": "drizzle/migrations/meta/0004_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0007_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0001_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0005_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0009_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 1603
-    },
-    {
-      "path": "drizzle/migrations/meta/0002_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0006_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0008_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0000_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "drizzle/migrations/meta/0003_snapshot.json",
-      "bytes": 336
-    },
-    {
-      "path": "supabase/migrations/20261012180000_unifica_create_expediente_receipt_material_type.sql",
-      "bytes": 4531
-    },
-    {
-      "path": "supabase/migrations/20261008120000_recibo_reutiliza_numero_excluido.sql",
-      "bytes": 1534
-    },
-    {
-      "path": "supabase/migrations/20260928165059_927e0640-a403-4074-a38c-45a576cf67b5.sql",
-      "bytes": 860
-    },
-    {
-      "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
-      "bytes": 853
-    },
-    {
-      "path": "supabase/migrations/20261012160000_registro_envios_outros_materiais.sql",
-      "bytes": 1365
-    },
-    {
-      "path": "supabase/migrations/20261006170000_deposito_central_semads.sql",
-      "bytes": 5028
-    },
-    {
-      "path": "supabase/migrations/20261008124500_regra_entrada_unidade_confirmacao.sql",
-      "bytes": 2683
-    },
-    {
-      "path": "supabase/migrations/20261007003500_corrige_reversao_pendente.sql",
-      "bytes": 1952
-    },
-    {
-      "path": "supabase/migrations/20260827033548_607fad6c-bb0f-4cc5-ac0e-6d723f41dcde.sql",
-      "bytes": 15120
+      "path": "drizzle/schema.ts",
+      "bytes": 60
     },
     {
       "path": "supabase/migrations/20261005120000_numero_recibo_sequencial.sql",
       "bytes": 459
     },
     {
-      "path": "supabase/migrations/20261010120000_materiais_expediente_recibos_relatorios.sql",
-      "bytes": 8320
-    },
-    {
-      "path": "supabase/migrations/20261005010000_excluir_lancamentos_reverter_estoque.sql",
-      "bytes": 1780
-    },
-    {
       "path": "supabase/migrations/20261012170000_restringe_registro_envios_ao_ceo_e_centro_distribuicao.sql",
       "bytes": 4031
+    },
+    {
+      "path": "supabase/migrations/20261008160000_auditoria_fluxos_recibos_central.sql",
+      "bytes": 3815
     },
     {
       "path": "supabase/migrations/20260928161332_ad16cb3c-5662-4329-aadb-3c2d8953c854.sql",
       "bytes": 422
     },
     {
-      "path": "supabase/migrations/20261005160000_gabinete_unidades_autorizadas.sql",
-      "bytes": 2954
+      "path": "supabase/migrations/20261008124500_regra_entrada_unidade_confirmacao.sql",
+      "bytes": 2683
+    },
+    {
+      "path": "supabase/migrations/20260928161520_14a2a83a-7a67-4a0b-86fb-2742dbc80f42.sql",
+      "bytes": 513
+    },
+    {
+      "path": "supabase/migrations/20261003160000_reiniciar_produtos_e_estoque.sql",
+      "bytes": 736
+    },
+    {
+      "path": "supabase/migrations/20261005010000_excluir_lancamentos_reverter_estoque.sql",
+      "bytes": 1780
+    },
+    {
+      "path": "supabase/migrations/20261009110000_reinicia_numeracao_recibos.sql",
+      "bytes": 2340
+    },
+    {
+      "path": "supabase/migrations/20260827033548_607fad6c-bb0f-4cc5-ac0e-6d723f41dcde.sql",
+      "bytes": 15120
+    },
+    {
+      "path": "supabase/migrations/20261008120000_recibo_reutiliza_numero_excluido.sql",
+      "bytes": 1534
     },
     {
       "path": "supabase/migrations/20261005143000_confirmacao_aplica_estoque.sql",
       "bytes": 4065
+    },
+    {
+      "path": "supabase/migrations/20261012160000_registro_envios_outros_materiais.sql",
+      "bytes": 1365
+    },
+    {
+      "path": "supabase/migrations/20261005160000_gabinete_unidades_autorizadas.sql",
+      "bytes": 2954
+    },
+    {
+      "path": "supabase/migrations/20260927023000_user_registration_authorization.sql",
+      "bytes": 236
+    },
+    {
+      "path": "supabase/migrations/20261012180000_unifica_create_expediente_receipt_material_type.sql",
+      "bytes": 4531
     },
     {
       "path": "supabase/migrations/20260928020000_deposito_semads_logo.sql",
@@ -226,48 +142,48 @@
       "bytes": 807
     },
     {
-      "path": "supabase/migrations/20261003120000_logo_semads_4k.sql",
-      "bytes": 216
-    },
-    {
-      "path": "supabase/migrations/20261008160000_auditoria_fluxos_recibos_central.sql",
-      "bytes": 3815
-    },
-    {
-      "path": "supabase/migrations/20261005161000_corrige_acesso_visualizador.sql",
-      "bytes": 760
-    },
-    {
-      "path": "supabase/migrations/20260927023000_user_registration_authorization.sql",
-      "bytes": 236
-    },
-    {
-      "path": "supabase/migrations/20261003160000_reiniciar_produtos_e_estoque.sql",
-      "bytes": 736
+      "path": "supabase/migrations/20261006170000_deposito_central_semads.sql",
+      "bytes": 5028
     },
     {
       "path": "supabase/migrations/20261008123000_fix_stock_confirmation_and_deletion.sql",
       "bytes": 7073
     },
     {
-      "path": "supabase/migrations/20261002090000_estoque_permissoes_definitivas.sql",
-      "bytes": 5877
-    },
-    {
-      "path": "supabase/migrations/20260928161520_14a2a83a-7a67-4a0b-86fb-2742dbc80f42.sql",
-      "bytes": 513
-    },
-    {
       "path": "supabase/migrations/20261003150000_excluir_lancamento_estoque.sql",
       "bytes": 1664
     },
     {
-      "path": "supabase/migrations/20261009110000_reinicia_numeracao_recibos.sql",
-      "bytes": 2340
+      "path": "supabase/migrations/20261010120000_materiais_expediente_recibos_relatorios.sql",
+      "bytes": 8320
+    },
+    {
+      "path": "supabase/migrations/20261003120000_logo_semads_4k.sql",
+      "bytes": 216
+    },
+    {
+      "path": "supabase/migrations/20261002090000_estoque_permissoes_definitivas.sql",
+      "bytes": 5877
+    },
+    {
+      "path": "supabase/migrations/20261007003500_corrige_reversao_pendente.sql",
+      "bytes": 1952
     },
     {
       "path": "supabase/migrations/20261002093000_confirmacao_recebimento.sql",
       "bytes": 1280
+    },
+    {
+      "path": "supabase/migrations/20260827033617_b8d04ae2-3d70-46bc-aba8-f432a16d4b9c.sql",
+      "bytes": 853
+    },
+    {
+      "path": "supabase/migrations/20260928165059_927e0640-a403-4074-a38c-45a576cf67b5.sql",
+      "bytes": 860
+    },
+    {
+      "path": "supabase/migrations/20261005161000_corrige_acesso_visualizador.sql",
+      "bytes": 760
     },
     {
       "path": "supabase/functions/analyze-inventory-image/index.ts",
@@ -278,100 +194,60 @@
       "bytes": 7299
     },
     {
-      "path": "src/assets/semads-logo.png.asset.json",
-      "bytes": 453
-    },
-    {
-      "path": "src/hooks/use-mobile.tsx",
-      "bytes": 576
-    },
-    {
-      "path": "src/hooks/useAuth.tsx",
-      "bytes": 2864
-    },
-    {
-      "path": "src/hooks/useUnit.tsx",
-      "bytes": 2410
-    },
-    {
-      "path": "src/components/pickers.tsx",
-      "bytes": 3124
-    },
-    {
       "path": "src/components/virtual-assistant.tsx",
       "bytes": 10433
-    },
-    {
-      "path": "src/components/auth-layout.tsx",
-      "bytes": 1665
-    },
-    {
-      "path": "src/components/expediente-page.tsx",
-      "bytes": 31329
-    },
-    {
-      "path": "src/components/document-entry.tsx",
-      "bytes": 19280
     },
     {
       "path": "src/components/movement-form.tsx",
       "bytes": 24112
     },
     {
-      "path": "src/components/ui-kit.tsx",
-      "bytes": 6629
+      "path": "src/components/expediente-page.tsx",
+      "bytes": 33417
+    },
+    {
+      "path": "src/components/auth-layout.tsx",
+      "bytes": 1665
+    },
+    {
+      "path": "src/components/pickers.tsx",
+      "bytes": 3124
     },
     {
       "path": "src/components/app-shell.tsx",
       "bytes": 14045
     },
     {
-      "path": "src/lib/media.ts",
-      "bytes": 3263
+      "path": "src/components/ui-kit.tsx",
+      "bytes": 6629
     },
     {
-      "path": "src/lib/expediente-access.ts",
-      "bytes": 1260
+      "path": "src/components/document-entry.tsx",
+      "bytes": 19280
     },
     {
-      "path": "src/lib/lovable-error-reporting.ts",
-      "bytes": 1739
-    },
-    {
-      "path": "src/lib/admin.functions.ts",
-      "bytes": 20481
-    },
-    {
-      "path": "src/lib/error-capture.ts",
-      "bytes": 2898
-    },
-    {
-      "path": "src/lib/queries.ts",
-      "bytes": 23566
-    },
-    {
-      "path": "src/lib/format.ts",
-      "bytes": 1203
-    },
-    {
-      "path": "src/lib/logo.ts",
-      "bytes": 1550
-    },
-    {
-      "path": "src/lib/utils.ts",
-      "bytes": 169
+      "path": "src/lib/user-management.test.ts",
+      "bytes": 716
     },
     {
       "path": "src/lib/assistant-data.ts",
       "bytes": 20361
     },
     {
+      "path": "src/lib/error-page.ts",
+      "bytes": 1371
+    },
+    {
+      "path": "src/lib/logo.ts",
+      "bytes": 1550
+    },
+    {
       "path": "src/lib/pdf.ts",
       "bytes": 12664
     },
     {
-      "path": "src/lib/user-management.test.ts",
-      "bytes": 716
+      "path": "src/lib/lovable-error-reporting.ts",
+      "bytes": 1739
     },
     {
       "path": "src/lib/user-management.ts",
@@ -382,8 +258,36 @@
       "bytes": 117
     },
     {
-      "path": "src/lib/error-page.ts",
-      "bytes": 1371
+      "path": "src/lib/expediente-access.ts",
+      "bytes": 1260
+    },
+    {
+      "path": "src/lib/media.ts",
+      "bytes": 3263
+    },
+    {
+      "path": "src/lib/admin.functions.ts",
+      "bytes": 20481
+    },
+    {
+      "path": "src/lib/format.ts",
+      "bytes": 1203
+    },
+    {
+      "path": "src/lib/error-capture.ts",
+      "bytes": 2898
+    },
+    {
+      "path": "src/lib/queries.ts",
+      "bytes": 23566
+    },
+    {
+      "path": "src/lib/utils.ts",
+      "bytes": 169
+    },
+    {
+      "path": "src/assets/semads-logo.png.asset.json",
+      "bytes": 453
     },
     {
       "path": "src/routes/auth.tsx",
@@ -392,6 +296,18 @@
     {
       "path": "src/routes/ia-visao.tsx",
       "bytes": 5622
+    },
+    {
+      "path": "src/routes/setup.tsx",
+      "bytes": 7577
+    },
+    {
+      "path": "src/routes/redefinir-senha.tsx",
+      "bytes": 4062
+    },
+    {
+      "path": "src/routes/__root.tsx",
+      "bytes": 5424
     },
     {
       "path": "src/routes/README.md",
@@ -406,212 +322,24 @@
       "bytes": 2942
     },
     {
-      "path": "src/routes/__root.tsx",
-      "bytes": 5424
-    },
-    {
       "path": "src/routes/cadastro.tsx",
       "bytes": 3417
     },
     {
-      "path": "src/routes/redefinir-senha.tsx",
-      "bytes": 4062
+      "path": "src/hooks/useAuth.tsx",
+      "bytes": 2864
     },
     {
-      "path": "src/routes/setup.tsx",
-      "bytes": 7577
+      "path": "src/hooks/use-mobile.tsx",
+      "bytes": 576
     },
     {
-      "path": "src/components/ui/input-otp.tsx",
-      "bytes": 2232
+      "path": "src/hooks/useUnit.tsx",
+      "bytes": 2410
     },
     {
-      "path": "src/components/ui/sidebar.tsx",
-      "bytes": 23975
-    },
-    {
-      "path": "src/components/ui/toggle-group.tsx",
-      "bytes": 1752
-    },
-    {
-      "path": "src/components/ui/pagination.tsx",
-      "bytes": 2739
-    },
-    {
-      "path": "src/components/ui/button.tsx",
-      "bytes": 1894
-    },
-    {
-      "path": "src/components/ui/chart.tsx",
-      "bytes": 10570
-    },
-    {
-      "path": "src/components/ui/popover.tsx",
-      "bytes": 1352
-    },
-    {
-      "path": "src/components/ui/dialog.tsx",
-      "bytes": 3648
-    },
-    {
-      "path": "src/components/ui/command.tsx",
-      "bytes": 4876
-    },
-    {
-      "path": "src/components/ui/tabs.tsx",
-      "bytes": 1934
-    },
-    {
-      "path": "src/components/ui/alert.tsx",
-      "bytes": 1589
-    },
-    {
-      "path": "src/components/ui/avatar.tsx",
-      "bytes": 1413
-    },
-    {
-      "path": "src/components/ui/checkbox.tsx",
-      "bytes": 1043
-    },
-    {
-      "path": "src/components/ui/radio-group.tsx",
-      "bytes": 1405
-    },
-    {
-      "path": "src/components/ui/progress.tsx",
-      "bytes": 781
-    },
-    {
-      "path": "src/components/ui/context-menu.tsx",
-      "bytes": 7360
-    },
-    {
-      "path": "src/components/ui/label.tsx",
-      "bytes": 716
-    },
-    {
-      "path": "src/components/ui/accordion.tsx",
-      "bytes": 2015
-    },
-    {
-      "path": "src/components/ui/breadcrumb.tsx",
-      "bytes": 2749
-    },
-    {
-      "path": "src/components/ui/table.tsx",
-      "bytes": 2820
-    },
-    {
-      "path": "src/components/ui/calendar.tsx",
-      "bytes": 7226
-    },
-    {
-      "path": "src/components/ui/alert-dialog.tsx",
-      "bytes": 4183
-    },
-    {
-      "path": "src/components/ui/dropdown-menu.tsx",
-      "bytes": 7565
-    },
-    {
-      "path": "src/components/ui/resizable.tsx",
-      "bytes": 1552
-    },
-    {
-      "path": "src/components/ui/sheet.tsx",
-      "bytes": 4248
-    },
-    {
-      "path": "src/components/ui/slider.tsx",
-      "bytes": 1025
-    },
-    {
-      "path": "src/components/ui/form.tsx",
-      "bytes": 4201
-    },
-    {
-      "path": "src/components/ui/textarea.tsx",
-      "bytes": 677
-    },
-    {
-      "path": "src/components/ui/card.tsx",
-      "bytes": 1817
-    },
-    {
-      "path": "src/components/ui/separator.tsx",
-      "bytes": 723
-    },
-    {
-      "path": "src/components/ui/hover-card.tsx",
-      "bytes": 1246
-    },
-    {
-      "path": "src/components/ui/scroll-area.tsx",
-      "bytes": 1635
-    },
-    {
-      "path": "src/components/ui/navigation-menu.tsx",
-      "bytes": 5152
-    },
-    {
-      "path": "src/components/ui/collapsible.tsx",
-      "bytes": 335
-    },
-    {
-      "path": "src/components/ui/menubar.tsx",
-      "bytes": 8515
-    },
-    {
-      "path": "src/components/ui/switch.tsx",
-      "bytes": 1156
-    },
-    {
-      "path": "src/components/ui/input.tsx",
-      "bytes": 776
-    },
-    {
-      "path": "src/components/ui/tooltip.tsx",
-      "bytes": 1278
-    },
-    {
-      "path": "src/components/ui/badge.tsx",
-      "bytes": 1123
-    },
-    {
-      "path": "src/components/ui/carousel.tsx",
-      "bytes": 6200
-    },
-    {
-      "path": "src/components/ui/drawer.tsx",
-      "bytes": 2973
-    },
-    {
-      "path": "src/components/ui/select.tsx",
-      "bytes": 5749
-    },
-    {
-      "path": "src/components/ui/toggle.tsx",
-      "bytes": 1534
-    },
-    {
-      "path": "src/components/ui/skeleton.tsx",
-      "bytes": 239
-    },
-    {
-      "path": "src/components/ui/sonner.tsx",
-      "bytes": 734
-    },
-    {
-      "path": "src/components/ui/aspect-ratio.tsx",
-      "bytes": 143
-    },
-    {
-      "path": "src/integrations/supabase/client.server.ts",
-      "bytes": 2753
-    },
-    {
-      "path": "src/integrations/supabase/auth-attacher.ts",
-      "bytes": 611
+      "path": "src/integrations/supabase/cron-auth.ts",
+      "bytes": 1109
     },
     {
       "path": "src/integrations/supabase/auth-middleware.ts",
@@ -622,24 +350,236 @@
       "bytes": 6623
     },
     {
+      "path": "src/integrations/supabase/types.ts",
+      "bytes": 20488
+    },
+    {
       "path": "src/integrations/supabase/client.ts",
       "bytes": 2493
     },
     {
-      "path": "src/integrations/supabase/cron-auth.ts",
-      "bytes": 1109
+      "path": "src/integrations/supabase/auth-attacher.ts",
+      "bytes": 611
     },
     {
-      "path": "src/integrations/supabase/types.ts",
-      "bytes": 20488
+      "path": "src/integrations/supabase/client.server.ts",
+      "bytes": 2753
+    },
+    {
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "bytes": 7565
+    },
+    {
+      "path": "src/components/ui/input-otp.tsx",
+      "bytes": 2232
+    },
+    {
+      "path": "src/components/ui/command.tsx",
+      "bytes": 4876
+    },
+    {
+      "path": "src/components/ui/context-menu.tsx",
+      "bytes": 7360
+    },
+    {
+      "path": "src/components/ui/checkbox.tsx",
+      "bytes": 1043
+    },
+    {
+      "path": "src/components/ui/resizable.tsx",
+      "bytes": 1552
+    },
+    {
+      "path": "src/components/ui/separator.tsx",
+      "bytes": 723
+    },
+    {
+      "path": "src/components/ui/table.tsx",
+      "bytes": 2820
+    },
+    {
+      "path": "src/components/ui/textarea.tsx",
+      "bytes": 677
+    },
+    {
+      "path": "src/components/ui/button.tsx",
+      "bytes": 1894
+    },
+    {
+      "path": "src/components/ui/pagination.tsx",
+      "bytes": 2739
+    },
+    {
+      "path": "src/components/ui/calendar.tsx",
+      "bytes": 7226
+    },
+    {
+      "path": "src/components/ui/toggle.tsx",
+      "bytes": 1534
+    },
+    {
+      "path": "src/components/ui/alert.tsx",
+      "bytes": 1589
+    },
+    {
+      "path": "src/components/ui/sidebar.tsx",
+      "bytes": 23975
+    },
+    {
+      "path": "src/components/ui/toggle-group.tsx",
+      "bytes": 1752
+    },
+    {
+      "path": "src/components/ui/sonner.tsx",
+      "bytes": 734
+    },
+    {
+      "path": "src/components/ui/select.tsx",
+      "bytes": 5749
+    },
+    {
+      "path": "src/components/ui/switch.tsx",
+      "bytes": 1156
+    },
+    {
+      "path": "src/components/ui/navigation-menu.tsx",
+      "bytes": 5152
+    },
+    {
+      "path": "src/components/ui/collapsible.tsx",
+      "bytes": 335
+    },
+    {
+      "path": "src/components/ui/popover.tsx",
+      "bytes": 1352
+    },
+    {
+      "path": "src/components/ui/slider.tsx",
+      "bytes": 1025
+    },
+    {
+      "path": "src/components/ui/sheet.tsx",
+      "bytes": 4248
+    },
+    {
+      "path": "src/components/ui/label.tsx",
+      "bytes": 716
+    },
+    {
+      "path": "src/components/ui/card.tsx",
+      "bytes": 1817
+    },
+    {
+      "path": "src/components/ui/avatar.tsx",
+      "bytes": 1413
+    },
+    {
+      "path": "src/components/ui/breadcrumb.tsx",
+      "bytes": 2749
+    },
+    {
+      "path": "src/components/ui/aspect-ratio.tsx",
+      "bytes": 143
+    },
+    {
+      "path": "src/components/ui/menubar.tsx",
+      "bytes": 8515
+    },
+    {
+      "path": "src/components/ui/hover-card.tsx",
+      "bytes": 1246
+    },
+    {
+      "path": "src/components/ui/chart.tsx",
+      "bytes": 10570
+    },
+    {
+      "path": "src/components/ui/carousel.tsx",
+      "bytes": 6200
+    },
+    {
+      "path": "src/components/ui/badge.tsx",
+      "bytes": 1123
+    },
+    {
+      "path": "src/components/ui/form.tsx",
+      "bytes": 4201
+    },
+    {
+      "path": "src/components/ui/skeleton.tsx",
+      "bytes": 239
+    },
+    {
+      "path": "src/components/ui/drawer.tsx",
+      "bytes": 2973
+    },
+    {
+      "path": "src/components/ui/radio-group.tsx",
+      "bytes": 1405
+    },
+    {
+      "path": "src/components/ui/progress.tsx",
+      "bytes": 781
+    },
+    {
+      "path": "src/components/ui/input.tsx",
+      "bytes": 776
+    },
+    {
+      "path": "src/components/ui/dialog.tsx",
+      "bytes": 3648
+    },
+    {
+      "path": "src/components/ui/alert-dialog.tsx",
+      "bytes": 4183
+    },
+    {
+      "path": "src/components/ui/accordion.tsx",
+      "bytes": 2015
+    },
+    {
+      "path": "src/components/ui/tooltip.tsx",
+      "bytes": 1278
+    },
+    {
+      "path": "src/components/ui/tabs.tsx",
+      "bytes": 1934
+    },
+    {
+      "path": "src/components/ui/scroll-area.tsx",
+      "bytes": 1635
+    },
+    {
+      "path": "src/routes/_authenticated/recebimento.tsx",
+      "bytes": 15354
+    },
+    {
+      "path": "src/routes/_authenticated/estoque.tsx",
+      "bytes": 7142
+    },
+    {
+      "path": "src/routes/_authenticated/historico.tsx",
+      "bytes": 284
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
       "bytes": 2216
     },
     {
-      "path": "src/routes/_authenticated/estoque.tsx",
-      "bytes": 7142
+      "path": "src/routes/_authenticated/conferencias.tsx",
+      "bytes": 287
+    },
+    {
+      "path": "src/routes/_authenticated/recibos.tsx",
+      "bytes": 11270
+    },
+    {
+      "path": "src/routes/_authenticated/envios-recibos.tsx",
+      "bytes": 850
+    },
+    {
+      "path": "src/routes/_authenticated/envios-relatorios.tsx",
+      "bytes": 879
     },
     {
       "path": "src/routes/_authenticated/expediente.tsx",
@@ -650,32 +590,20 @@
       "bytes": 9330
     },
     {
+      "path": "src/routes/_authenticated/usuarios.tsx",
+      "bytes": 15340
+    },
+    {
+      "path": "src/routes/_authenticated/configuracoes.tsx",
+      "bytes": 4159
+    },
+    {
+      "path": "src/routes/_authenticated/outros-materiais.tsx",
+      "bytes": 826
+    },
+    {
       "path": "src/routes/_authenticated/conferencia.tsx",
       "bytes": 286
-    },
-    {
-      "path": "src/routes/_authenticated/envios-relatorios.tsx",
-      "bytes": 879
-    },
-    {
-      "path": "src/routes/_authenticated/historico.tsx",
-      "bytes": 284
-    },
-    {
-      "path": "src/routes/_authenticated/route.tsx",
-      "bytes": 722
-    },
-    {
-      "path": "src/routes/_authenticated/conferencias.tsx",
-      "bytes": 287
-    },
-    {
-      "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 15354
-    },
-    {
-      "path": "src/routes/_authenticated/medias.tsx",
-      "bytes": 281
     },
     {
       "path": "src/routes/_authenticated/entrada.tsx",
@@ -686,32 +614,20 @@
       "bytes": 10804
     },
     {
-      "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 15877
+      "path": "src/routes/_authenticated/route.tsx",
+      "bytes": 722
     },
     {
-      "path": "src/routes/_authenticated/recibos.tsx",
-      "bytes": 11270
-    },
-    {
-      "path": "src/routes/_authenticated/outros-materiais.tsx",
-      "bytes": 826
+      "path": "src/routes/_authenticated/medias.tsx",
+      "bytes": 281
     },
     {
       "path": "src/routes/_authenticated/painel-ceo.tsx",
       "bytes": 22034
     },
     {
-      "path": "src/routes/_authenticated/configuracoes.tsx",
-      "bytes": 4159
-    },
-    {
-      "path": "src/routes/_authenticated/envios-recibos.tsx",
-      "bytes": 850
-    },
-    {
-      "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 15340
+      "path": "src/routes/_authenticated/dashboard.tsx",
+      "bytes": 15877
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
@@ -720,9 +636,97 @@
     {
       "path": "src/routes/_authenticated/produtos.tsx",
       "bytes": 20469
+    },
+    {
+      "path": "drizzle/migrations/0004_estoque_so_na_confirmacao.sql",
+      "bytes": 3936
+    },
+    {
+      "path": "drizzle/migrations/0005_recibo_numeracao_reaproveita.sql",
+      "bytes": 863
+    },
+    {
+      "path": "drizzle/migrations/0000_stock_receipts.sql",
+      "bytes": 1561
+    },
+    {
+      "path": "drizzle/migrations/0009_migration.sql",
+      "bytes": 1779
+    },
+    {
+      "path": "drizzle/migrations/0008_registro_envios_outros_materiais.sql",
+      "bytes": 1364
+    },
+    {
+      "path": "drizzle/migrations/0001_fix_semads_viewer_trigger.sql",
+      "bytes": 747
+    },
+    {
+      "path": "drizzle/migrations/0002_allow_admin_delete_receipts.sql",
+      "bytes": 538
+    },
+    {
+      "path": "drizzle/migrations/0007_ceo_delete_expediente_receipts.sql",
+      "bytes": 897
+    },
+    {
+      "path": "drizzle/migrations/0003_receipt_custom_order_number.sql",
+      "bytes": 3677
+    },
+    {
+      "path": "drizzle/migrations/0006_materiais_expediente_recibos_relatorios.sql",
+      "bytes": 8320
+    },
+    {
+      "path": "drizzle/migrations/meta/0006_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0009_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0004_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0000_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/_journal.json",
+      "bytes": 1603
+    },
+    {
+      "path": "drizzle/migrations/meta/0001_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0002_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0007_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0008_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0005_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0003_snapshot.json",
+      "bytes": 336
     }
   ],
   "dependencies": [
+    {
+      "source": "drizzle.config.ts",
+      "target": "drizzle-kit"
+    },
     {
       "source": "vite.config.ts",
       "target": "@lovable.dev/vite-tanstack-config"
@@ -750,46 +754,6 @@
     {
       "source": "eslint.config.js",
       "target": "typescript-eslint"
-    },
-    {
-      "source": "drizzle.config.ts",
-      "target": "drizzle-kit"
-    },
-    {
-      "source": "src/start.ts",
-      "target": "@tanstack/react-start"
-    },
-    {
-      "source": "src/start.ts",
-      "target": "./lib/error-page"
-    },
-    {
-      "source": "src/start.ts",
-      "target": "@/integrations/supabase/auth-attacher"
-    },
-    {
-      "source": "src/server.ts",
-      "target": "./lib/error-capture"
-    },
-    {
-      "source": "src/server.ts",
-      "target": "./lib/error-page"
-    },
-    {
-      "source": "src/server.ts",
-      "target": "@tanstack/react-start/server-entry"
-    },
-    {
-      "source": "src/router.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/router.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/router.tsx",
-      "target": "./routeTree.gen"
     },
     {
       "source": "src/routeTree.gen.ts",
@@ -920,76 +884,44 @@
       "target": "./start.ts"
     },
     {
-      "source": "drizzle/migrations/0005_recibo_numeracao_reaproveita.sql",
-      "target": "RECIBO_PRODUTOS:REC-[0-9]{4}-([0-9]+)"
+      "source": "src/server.ts",
+      "target": "./lib/error-capture"
     },
     {
-      "source": "drizzle/migrations/0005_recibo_numeracao_reaproveita.sql",
-      "target": "RECIBO_PRODUTOS:REC-[0-9]{4}-([0-9]+)"
+      "source": "src/server.ts",
+      "target": "./lib/error-page"
+    },
+    {
+      "source": "src/server.ts",
+      "target": "@tanstack/react-start/server-entry"
+    },
+    {
+      "source": "src/router.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/router.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/router.tsx",
+      "target": "./routeTree.gen"
+    },
+    {
+      "source": "src/start.ts",
+      "target": "@tanstack/react-start"
+    },
+    {
+      "source": "src/start.ts",
+      "target": "./lib/error-page"
+    },
+    {
+      "source": "src/start.ts",
+      "target": "@/integrations/supabase/auth-attacher"
     },
     {
       "source": "supabase/functions/vision-ocr/index.ts",
       "target": "https://esm.sh/@supabase/supabase-js@2.57.2"
-    },
-    {
-      "source": "src/hooks/use-mobile.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/hooks/useAuth.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/hooks/useAuth.tsx",
-      "target": "@supabase/supabase-js"
-    },
-    {
-      "source": "src/hooks/useAuth.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/hooks/useUnit.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/hooks/useUnit.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/hooks/useUnit.tsx",
-      "target": "@/hooks/useAuth"
-    },
-    {
-      "source": "src/hooks/useUnit.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/components/pickers.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/pickers.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/pickers.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/pickers.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/components/pickers.tsx",
-      "target": "@/components/ui/command"
-    },
-    {
-      "source": "src/components/pickers.tsx",
-      "target": "@/components/ui/popover"
-    },
-    {
-      "source": "src/components/pickers.tsx",
-      "target": "@/lib/queries"
     },
     {
       "source": "src/components/virtual-assistant.tsx",
@@ -1008,20 +940,60 @@
       "target": "@/lib/assistant-data"
     },
     {
-      "source": "src/components/auth-layout.tsx",
+      "source": "src/components/movement-form.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/auth-layout.tsx",
-      "target": "@tanstack/react-router"
+      "source": "src/components/movement-form.tsx",
+      "target": "@tanstack/react-query"
     },
     {
-      "source": "src/components/auth-layout.tsx",
+      "source": "src/components/movement-form.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/components/auth-layout.tsx",
-      "target": "@/lib/brand"
+      "source": "src/components/movement-form.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/components/ui/textarea"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/components/pickers"
+    },
+    {
+      "source": "src/components/movement-form.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/components/expediente-page.tsx",
@@ -1088,144 +1060,48 @@
       "target": "@/components/ui/table"
     },
     {
-      "source": "src/components/document-entry.tsx",
+      "source": "src/components/auth-layout.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/document-entry.tsx",
+      "source": "src/components/auth-layout.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/components/auth-layout.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/components/document-entry.tsx",
-      "target": "sonner"
+      "source": "src/components/auth-layout.tsx",
+      "target": "@/lib/brand"
     },
     {
-      "source": "src/components/document-entry.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/hooks/useAuth"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/lib/pdf"
-    },
-    {
-      "source": "src/components/document-entry.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
+      "source": "src/components/pickers.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/movement-form.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
+      "source": "src/components/pickers.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/components/movement-form.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/hooks/useAuth"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/components/ui/textarea"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/components/pickers"
-    },
-    {
-      "source": "src/components/movement-form.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/components/ui-kit.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui-kit.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui-kit.tsx",
+      "source": "src/components/pickers.tsx",
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui-kit.tsx",
-      "target": "@/components/ui/card"
+      "source": "src/components/pickers.tsx",
+      "target": "@/components/ui/button"
     },
     {
-      "source": "src/components/ui-kit.tsx",
-      "target": "@/components/ui/input"
+      "source": "src/components/pickers.tsx",
+      "target": "@/components/ui/command"
     },
     {
-      "source": "src/components/ui-kit.tsx",
-      "target": "@/components/ui/label"
+      "source": "src/components/pickers.tsx",
+      "target": "@/components/ui/popover"
     },
     {
-      "source": "src/components/ui-kit.tsx",
-      "target": "@/components/ui/skeleton"
-    },
-    {
-      "source": "src/components/ui-kit.tsx",
-      "target": "@/lib/format"
+      "source": "src/components/pickers.tsx",
+      "target": "@/lib/queries"
     },
     {
       "source": "src/components/app-shell.tsx",
@@ -1282,6 +1158,122 @@
     {
       "source": "src/components/app-shell.tsx",
       "target": "@/lib/brand"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "@/components/ui/card"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "@/components/ui/label"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "@/components/ui/skeleton"
+    },
+    {
+      "source": "src/components/ui-kit.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/lib/pdf"
+    },
+    {
+      "source": "src/components/document-entry.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/lib/user-management.test.ts",
+      "target": "node:test"
+    },
+    {
+      "source": "src/lib/user-management.test.ts",
+      "target": "node:assert/strict"
+    },
+    {
+      "source": "src/lib/user-management.test.ts",
+      "target": "./user-management"
+    },
+    {
+      "source": "src/lib/pdf.ts",
+      "target": "jspdf"
+    },
+    {
+      "source": "src/lib/pdf.ts",
+      "target": "jspdf-autotable"
+    },
+    {
+      "source": "src/lib/pdf.ts",
+      "target": "./format"
+    },
+    {
+      "source": "src/lib/pdf.ts",
+      "target": "./brand"
+    },
+    {
+      "source": "src/lib/brand.ts",
+      "target": "@/assets/semads-logo.png.asset.json"
     },
     {
       "source": "src/lib/expediente-access.ts",
@@ -1368,38 +1360,6 @@
       "target": "tailwind-merge"
     },
     {
-      "source": "src/lib/pdf.ts",
-      "target": "jspdf"
-    },
-    {
-      "source": "src/lib/pdf.ts",
-      "target": "jspdf-autotable"
-    },
-    {
-      "source": "src/lib/pdf.ts",
-      "target": "./format"
-    },
-    {
-      "source": "src/lib/pdf.ts",
-      "target": "./brand"
-    },
-    {
-      "source": "src/lib/user-management.test.ts",
-      "target": "node:test"
-    },
-    {
-      "source": "src/lib/user-management.test.ts",
-      "target": "node:assert/strict"
-    },
-    {
-      "source": "src/lib/user-management.test.ts",
-      "target": "./user-management"
-    },
-    {
-      "source": "src/lib/brand.ts",
-      "target": "@/assets/semads-logo.png.asset.json"
-    },
-    {
       "source": "src/routes/auth.tsx",
       "target": "@tanstack/react-router"
     },
@@ -1458,6 +1418,118 @@
     {
       "source": "src/routes/ia-visao.tsx",
       "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@/lib/admin.functions"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@/components/auth-layout"
+    },
+    {
+      "source": "src/routes/setup.tsx",
+      "target": "@/lib/admin.functions"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/redefinir-senha.tsx",
+      "target": "@/components/auth-layout"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "../styles.css?url"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "../lib/lovable-error-reporting"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/__root.tsx",
+      "target": "@/components/ui/sonner"
     },
     {
       "source": "src/routes/index.tsx",
@@ -1512,152 +1584,144 @@
       "target": "@/components/auth-layout"
     },
     {
-      "source": "src/routes/__root.tsx",
+      "source": "src/routes/cadastro.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/lib/admin.functions"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/cadastro.tsx",
+      "target": "@/components/auth-layout"
+    },
+    {
+      "source": "src/hooks/useAuth.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/hooks/useAuth.tsx",
+      "target": "@supabase/supabase-js"
+    },
+    {
+      "source": "src/hooks/useAuth.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/hooks/use-mobile.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/hooks/useUnit.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/hooks/useUnit.tsx",
       "target": "@tanstack/react-query"
     },
     {
-      "source": "src/routes/__root.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/__root.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/__root.tsx",
-      "target": "../styles.css?url"
-    },
-    {
-      "source": "src/routes/__root.tsx",
-      "target": "../lib/lovable-error-reporting"
-    },
-    {
-      "source": "src/routes/__root.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/routes/__root.tsx",
+      "source": "src/hooks/useUnit.tsx",
       "target": "@/hooks/useAuth"
     },
     {
-      "source": "src/routes/__root.tsx",
-      "target": "@/components/ui/sonner"
+      "source": "src/hooks/useUnit.tsx",
+      "target": "@/lib/queries"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "@tanstack/react-router"
+      "source": "src/integrations/supabase/cron-auth.ts",
+      "target": "node:crypto"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "react"
+      "source": "src/integrations/supabase/auth-middleware.ts",
+      "target": "@tanstack/react-start"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "lucide-react"
+      "source": "src/integrations/supabase/auth-middleware.ts",
+      "target": "@tanstack/react-start/server"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "sonner"
+      "source": "src/integrations/supabase/auth-middleware.ts",
+      "target": "@supabase/supabase-js"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "@/lib/admin.functions"
+      "source": "src/integrations/supabase/auth-middleware.ts",
+      "target": "./types"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "@/components/ui/button"
+      "source": "src/integrations/supabase/client.ts",
+      "target": "@supabase/supabase-js"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "@/components/ui/input"
+      "source": "src/integrations/supabase/client.ts",
+      "target": "./types"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "@/components/ui-kit"
+      "source": "src/integrations/supabase/client.ts",
+      "target": "./previewAuthStorage"
     },
     {
-      "source": "src/routes/cadastro.tsx",
-      "target": "@/components/auth-layout"
-    },
-    {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/redefinir-senha.tsx",
+      "source": "src/integrations/supabase/client.ts",
       "target": "@/integrations/supabase/client"
     },
     {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "@/components/ui/button"
+      "source": "src/integrations/supabase/auth-attacher.ts",
+      "target": "@tanstack/react-start"
     },
     {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "@/components/ui/input"
+      "source": "src/integrations/supabase/auth-attacher.ts",
+      "target": "./client"
     },
     {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "@/components/ui-kit"
+      "source": "src/integrations/supabase/client.server.ts",
+      "target": "@supabase/supabase-js"
     },
     {
-      "source": "src/routes/redefinir-senha.tsx",
-      "target": "@/components/auth-layout"
+      "source": "src/integrations/supabase/client.server.ts",
+      "target": "./types"
     },
     {
-      "source": "src/routes/setup.tsx",
-      "target": "@tanstack/react-router"
+      "source": "src/integrations/supabase/client.server.ts",
+      "target": "@/integrations/supabase/client.server"
     },
     {
-      "source": "src/routes/setup.tsx",
+      "source": "src/components/ui/dropdown-menu.tsx",
       "target": "react"
     },
     {
-      "source": "src/routes/setup.tsx",
+      "source": "src/components/ui/dropdown-menu.tsx",
+      "target": "@radix-ui/react-dropdown-menu"
+    },
+    {
+      "source": "src/components/ui/dropdown-menu.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/routes/setup.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/setup.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/routes/setup.tsx",
-      "target": "@/lib/admin.functions"
-    },
-    {
-      "source": "src/routes/setup.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/setup.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/routes/setup.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/setup.tsx",
-      "target": "@/components/auth-layout"
-    },
-    {
-      "source": "src/routes/setup.tsx",
-      "target": "@/lib/admin.functions"
+      "source": "src/components/ui/dropdown-menu.tsx",
+      "target": "@/lib/utils"
     },
     {
       "source": "src/components/ui/input-otp.tsx",
@@ -1673,6 +1737,182 @@
     },
     {
       "source": "src/components/ui/input-otp.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/command.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/command.tsx",
+      "target": "@radix-ui/react-dialog"
+    },
+    {
+      "source": "src/components/ui/command.tsx",
+      "target": "cmdk"
+    },
+    {
+      "source": "src/components/ui/command.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/command.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/command.tsx",
+      "target": "@/components/ui/dialog"
+    },
+    {
+      "source": "src/components/ui/context-menu.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/context-menu.tsx",
+      "target": "@radix-ui/react-context-menu"
+    },
+    {
+      "source": "src/components/ui/context-menu.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/context-menu.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/checkbox.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/checkbox.tsx",
+      "target": "@radix-ui/react-checkbox"
+    },
+    {
+      "source": "src/components/ui/checkbox.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/checkbox.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/resizable.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/resizable.tsx",
+      "target": "react-resizable-panels"
+    },
+    {
+      "source": "src/components/ui/resizable.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/separator.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/separator.tsx",
+      "target": "@radix-ui/react-separator"
+    },
+    {
+      "source": "src/components/ui/separator.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/table.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/table.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/textarea.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/textarea.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/button.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/button.tsx",
+      "target": "@radix-ui/react-slot"
+    },
+    {
+      "source": "src/components/ui/button.tsx",
+      "target": "class-variance-authority"
+    },
+    {
+      "source": "src/components/ui/button.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/pagination.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/pagination.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/pagination.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/pagination.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/ui/calendar.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/calendar.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/calendar.tsx",
+      "target": "react-day-picker"
+    },
+    {
+      "source": "src/components/ui/calendar.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/calendar.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/ui/toggle.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/toggle.tsx",
+      "target": "@radix-ui/react-toggle"
+    },
+    {
+      "source": "src/components/ui/toggle.tsx",
+      "target": "class-variance-authority"
+    },
+    {
+      "source": "src/components/ui/toggle.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/alert.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/alert.tsx",
+      "target": "class-variance-authority"
+    },
+    {
+      "source": "src/components/ui/alert.tsx",
       "target": "@/lib/utils"
     },
     {
@@ -1744,48 +1984,60 @@
       "target": "@/components/ui/toggle"
     },
     {
-      "source": "src/components/ui/pagination.tsx",
+      "source": "src/components/ui/sonner.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/components/ui/select.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/pagination.tsx",
+      "source": "src/components/ui/select.tsx",
+      "target": "@radix-ui/react-select"
+    },
+    {
+      "source": "src/components/ui/select.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/components/ui/pagination.tsx",
+      "source": "src/components/ui/select.tsx",
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/pagination.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/components/ui/button.tsx",
+      "source": "src/components/ui/switch.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/button.tsx",
-      "target": "@radix-ui/react-slot"
+      "source": "src/components/ui/switch.tsx",
+      "target": "@radix-ui/react-switch"
     },
     {
-      "source": "src/components/ui/button.tsx",
+      "source": "src/components/ui/switch.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/navigation-menu.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/navigation-menu.tsx",
+      "target": "@radix-ui/react-navigation-menu"
+    },
+    {
+      "source": "src/components/ui/navigation-menu.tsx",
       "target": "class-variance-authority"
     },
     {
-      "source": "src/components/ui/button.tsx",
+      "source": "src/components/ui/navigation-menu.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/navigation-menu.tsx",
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/chart.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/chart.tsx",
-      "target": "recharts"
-    },
-    {
-      "source": "src/components/ui/chart.tsx",
-      "target": "@/lib/utils"
+      "source": "src/components/ui/collapsible.tsx",
+      "target": "@radix-ui/react-collapsible"
     },
     {
       "source": "src/components/ui/popover.tsx",
@@ -1800,67 +2052,59 @@
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/dialog.tsx",
+      "source": "src/components/ui/slider.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/dialog.tsx",
+      "source": "src/components/ui/slider.tsx",
+      "target": "@radix-ui/react-slider"
+    },
+    {
+      "source": "src/components/ui/slider.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/sheet.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/sheet.tsx",
       "target": "@radix-ui/react-dialog"
     },
     {
-      "source": "src/components/ui/dialog.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/dialog.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/command.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/command.tsx",
-      "target": "@radix-ui/react-dialog"
-    },
-    {
-      "source": "src/components/ui/command.tsx",
-      "target": "cmdk"
-    },
-    {
-      "source": "src/components/ui/command.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/command.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/command.tsx",
-      "target": "@/components/ui/dialog"
-    },
-    {
-      "source": "src/components/ui/tabs.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/tabs.tsx",
-      "target": "@radix-ui/react-tabs"
-    },
-    {
-      "source": "src/components/ui/tabs.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/alert.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/alert.tsx",
+      "source": "src/components/ui/sheet.tsx",
       "target": "class-variance-authority"
     },
     {
-      "source": "src/components/ui/alert.tsx",
+      "source": "src/components/ui/sheet.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/sheet.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/label.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/label.tsx",
+      "target": "@radix-ui/react-label"
+    },
+    {
+      "source": "src/components/ui/label.tsx",
+      "target": "class-variance-authority"
+    },
+    {
+      "source": "src/components/ui/label.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/card.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/card.tsx",
       "target": "@/lib/utils"
     },
     {
@@ -1876,19 +2120,135 @@
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/checkbox.tsx",
+      "source": "src/components/ui/breadcrumb.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/checkbox.tsx",
-      "target": "@radix-ui/react-checkbox"
+      "source": "src/components/ui/breadcrumb.tsx",
+      "target": "@radix-ui/react-slot"
     },
     {
-      "source": "src/components/ui/checkbox.tsx",
+      "source": "src/components/ui/breadcrumb.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/components/ui/checkbox.tsx",
+      "source": "src/components/ui/breadcrumb.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/aspect-ratio.tsx",
+      "target": "@radix-ui/react-aspect-ratio"
+    },
+    {
+      "source": "src/components/ui/menubar.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/menubar.tsx",
+      "target": "@radix-ui/react-menubar"
+    },
+    {
+      "source": "src/components/ui/menubar.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/menubar.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/hover-card.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/hover-card.tsx",
+      "target": "@radix-ui/react-hover-card"
+    },
+    {
+      "source": "src/components/ui/hover-card.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/chart.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/chart.tsx",
+      "target": "recharts"
+    },
+    {
+      "source": "src/components/ui/chart.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/carousel.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/carousel.tsx",
+      "target": "embla-carousel-react"
+    },
+    {
+      "source": "src/components/ui/carousel.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/ui/carousel.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/carousel.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/ui/badge.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/badge.tsx",
+      "target": "class-variance-authority"
+    },
+    {
+      "source": "src/components/ui/badge.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/form.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/form.tsx",
+      "target": "@radix-ui/react-label"
+    },
+    {
+      "source": "src/components/ui/form.tsx",
+      "target": "@radix-ui/react-slot"
+    },
+    {
+      "source": "src/components/ui/form.tsx",
+      "target": "react-hook-form"
+    },
+    {
+      "source": "src/components/ui/form.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/form.tsx",
+      "target": "@/components/ui/label"
+    },
+    {
+      "source": "src/components/ui/skeleton.tsx",
+      "target": "@/lib/utils"
+    },
+    {
+      "source": "src/components/ui/drawer.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/drawer.tsx",
+      "target": "vaul"
+    },
+    {
+      "source": "src/components/ui/drawer.tsx",
       "target": "@/lib/utils"
     },
     {
@@ -1920,96 +2280,28 @@
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/context-menu.tsx",
+      "source": "src/components/ui/input.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/context-menu.tsx",
-      "target": "@radix-ui/react-context-menu"
+      "source": "src/components/ui/input.tsx",
+      "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/context-menu.tsx",
+      "source": "src/components/ui/dialog.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/ui/dialog.tsx",
+      "target": "@radix-ui/react-dialog"
+    },
+    {
+      "source": "src/components/ui/dialog.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/components/ui/context-menu.tsx",
+      "source": "src/components/ui/dialog.tsx",
       "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/label.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/label.tsx",
-      "target": "@radix-ui/react-label"
-    },
-    {
-      "source": "src/components/ui/label.tsx",
-      "target": "class-variance-authority"
-    },
-    {
-      "source": "src/components/ui/label.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/accordion.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/accordion.tsx",
-      "target": "@radix-ui/react-accordion"
-    },
-    {
-      "source": "src/components/ui/accordion.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/accordion.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/breadcrumb.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/breadcrumb.tsx",
-      "target": "@radix-ui/react-slot"
-    },
-    {
-      "source": "src/components/ui/breadcrumb.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/breadcrumb.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/table.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/table.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/calendar.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/calendar.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/calendar.tsx",
-      "target": "react-day-picker"
-    },
-    {
-      "source": "src/components/ui/calendar.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/calendar.tsx",
-      "target": "@/components/ui/button"
     },
     {
       "source": "src/components/ui/alert-dialog.tsx",
@@ -2028,199 +2320,19 @@
       "target": "@/components/ui/button"
     },
     {
-      "source": "src/components/ui/dropdown-menu.tsx",
+      "source": "src/components/ui/accordion.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/dropdown-menu.tsx",
-      "target": "@radix-ui/react-dropdown-menu"
+      "source": "src/components/ui/accordion.tsx",
+      "target": "@radix-ui/react-accordion"
     },
     {
-      "source": "src/components/ui/dropdown-menu.tsx",
+      "source": "src/components/ui/accordion.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/components/ui/dropdown-menu.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/resizable.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/resizable.tsx",
-      "target": "react-resizable-panels"
-    },
-    {
-      "source": "src/components/ui/resizable.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/sheet.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/sheet.tsx",
-      "target": "@radix-ui/react-dialog"
-    },
-    {
-      "source": "src/components/ui/sheet.tsx",
-      "target": "class-variance-authority"
-    },
-    {
-      "source": "src/components/ui/sheet.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/sheet.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/slider.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/slider.tsx",
-      "target": "@radix-ui/react-slider"
-    },
-    {
-      "source": "src/components/ui/slider.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/form.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/form.tsx",
-      "target": "@radix-ui/react-label"
-    },
-    {
-      "source": "src/components/ui/form.tsx",
-      "target": "@radix-ui/react-slot"
-    },
-    {
-      "source": "src/components/ui/form.tsx",
-      "target": "react-hook-form"
-    },
-    {
-      "source": "src/components/ui/form.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/form.tsx",
-      "target": "@/components/ui/label"
-    },
-    {
-      "source": "src/components/ui/textarea.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/textarea.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/card.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/card.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/separator.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/separator.tsx",
-      "target": "@radix-ui/react-separator"
-    },
-    {
-      "source": "src/components/ui/separator.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/hover-card.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/hover-card.tsx",
-      "target": "@radix-ui/react-hover-card"
-    },
-    {
-      "source": "src/components/ui/hover-card.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/scroll-area.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/scroll-area.tsx",
-      "target": "@radix-ui/react-scroll-area"
-    },
-    {
-      "source": "src/components/ui/scroll-area.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/navigation-menu.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/navigation-menu.tsx",
-      "target": "@radix-ui/react-navigation-menu"
-    },
-    {
-      "source": "src/components/ui/navigation-menu.tsx",
-      "target": "class-variance-authority"
-    },
-    {
-      "source": "src/components/ui/navigation-menu.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/navigation-menu.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/collapsible.tsx",
-      "target": "@radix-ui/react-collapsible"
-    },
-    {
-      "source": "src/components/ui/menubar.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/menubar.tsx",
-      "target": "@radix-ui/react-menubar"
-    },
-    {
-      "source": "src/components/ui/menubar.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/menubar.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/switch.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/switch.tsx",
-      "target": "@radix-ui/react-switch"
-    },
-    {
-      "source": "src/components/ui/switch.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/input.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/input.tsx",
+      "source": "src/components/ui/accordion.tsx",
       "target": "@/lib/utils"
     },
     {
@@ -2236,168 +2348,84 @@
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/badge.tsx",
+      "source": "src/components/ui/tabs.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/badge.tsx",
-      "target": "class-variance-authority"
+      "source": "src/components/ui/tabs.tsx",
+      "target": "@radix-ui/react-tabs"
     },
     {
-      "source": "src/components/ui/badge.tsx",
+      "source": "src/components/ui/tabs.tsx",
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/carousel.tsx",
+      "source": "src/components/ui/scroll-area.tsx",
       "target": "react"
     },
     {
-      "source": "src/components/ui/carousel.tsx",
-      "target": "embla-carousel-react"
+      "source": "src/components/ui/scroll-area.tsx",
+      "target": "@radix-ui/react-scroll-area"
     },
     {
-      "source": "src/components/ui/carousel.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/carousel.tsx",
+      "source": "src/components/ui/scroll-area.tsx",
       "target": "@/lib/utils"
     },
     {
-      "source": "src/components/ui/carousel.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/components/ui/drawer.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/drawer.tsx",
-      "target": "vaul"
-    },
-    {
-      "source": "src/components/ui/drawer.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/select.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/select.tsx",
-      "target": "@radix-ui/react-select"
-    },
-    {
-      "source": "src/components/ui/select.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/components/ui/select.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/toggle.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/components/ui/toggle.tsx",
-      "target": "@radix-ui/react-toggle"
-    },
-    {
-      "source": "src/components/ui/toggle.tsx",
-      "target": "class-variance-authority"
-    },
-    {
-      "source": "src/components/ui/toggle.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/skeleton.tsx",
-      "target": "@/lib/utils"
-    },
-    {
-      "source": "src/components/ui/sonner.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/components/ui/aspect-ratio.tsx",
-      "target": "@radix-ui/react-aspect-ratio"
-    },
-    {
-      "source": "src/integrations/supabase/client.server.ts",
-      "target": "@supabase/supabase-js"
-    },
-    {
-      "source": "src/integrations/supabase/client.server.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/integrations/supabase/client.server.ts",
-      "target": "@/integrations/supabase/client.server"
-    },
-    {
-      "source": "src/integrations/supabase/auth-attacher.ts",
-      "target": "@tanstack/react-start"
-    },
-    {
-      "source": "src/integrations/supabase/auth-attacher.ts",
-      "target": "./client"
-    },
-    {
-      "source": "src/integrations/supabase/auth-middleware.ts",
-      "target": "@tanstack/react-start"
-    },
-    {
-      "source": "src/integrations/supabase/auth-middleware.ts",
-      "target": "@tanstack/react-start/server"
-    },
-    {
-      "source": "src/integrations/supabase/auth-middleware.ts",
-      "target": "@supabase/supabase-js"
-    },
-    {
-      "source": "src/integrations/supabase/auth-middleware.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/integrations/supabase/client.ts",
-      "target": "@supabase/supabase-js"
-    },
-    {
-      "source": "src/integrations/supabase/client.ts",
-      "target": "./types"
-    },
-    {
-      "source": "src/integrations/supabase/client.ts",
-      "target": "./previewAuthStorage"
-    },
-    {
-      "source": "src/integrations/supabase/client.ts",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/integrations/supabase/cron-auth.ts",
-      "target": "node:crypto"
-    },
-    {
-      "source": "src/routes/_authenticated/saida.tsx",
+      "source": "src/routes/_authenticated/recebimento.tsx",
       "target": "@tanstack/react-router"
     },
     {
-      "source": "src/routes/_authenticated/saida.tsx",
-      "target": "@/components/movement-form"
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "react"
     },
     {
-      "source": "src/routes/_authenticated/saida.tsx",
-      "target": "@/components/ui-kit"
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@tanstack/react-query"
     },
     {
-      "source": "src/routes/_authenticated/saida.tsx",
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
       "target": "@/integrations/supabase/client"
     },
     {
-      "source": "src/routes/_authenticated/saida.tsx",
-      "target": "@/hooks/useAuth"
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/hooks/useUnit"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/lib/pdf"
+    },
+    {
+      "source": "src/routes/_authenticated/recebimento.tsx",
+      "target": "@/components/ui/table"
     },
     {
       "source": "src/routes/_authenticated/estoque.tsx",
@@ -2442,6 +2470,106 @@
     {
       "source": "src/routes/_authenticated/estoque.tsx",
       "target": "@/components/ui/table"
+    },
+    {
+      "source": "src/routes/_authenticated/historico.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/saida.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/saida.tsx",
+      "target": "@/components/movement-form"
+    },
+    {
+      "source": "src/routes/_authenticated/saida.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/saida.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/_authenticated/saida.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/conferencias.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/hooks/useAuth"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/lib/pdf"
+    },
+    {
+      "source": "src/routes/_authenticated/recibos.tsx",
+      "target": "@/components/ui/table"
+    },
+    {
+      "source": "src/routes/_authenticated/envios-recibos.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/envios-recibos.tsx",
+      "target": "@/components/expediente-page"
+    },
+    {
+      "source": "src/routes/_authenticated/envios-recibos.tsx",
+      "target": "@/lib/expediente-access"
+    },
+    {
+      "source": "src/routes/_authenticated/envios-relatorios.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/envios-relatorios.tsx",
+      "target": "@/components/expediente-page"
+    },
+    {
+      "source": "src/routes/_authenticated/envios-relatorios.tsx",
+      "target": "@/lib/expediente-access"
     },
     {
       "source": "src/routes/_authenticated/expediente.tsx",
@@ -2516,99 +2644,123 @@
       "target": "@/components/ui/label"
     },
     {
-      "source": "src/routes/_authenticated/conferencia.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@tanstack/react-router"
     },
     {
-      "source": "src/routes/_authenticated/envios-relatorios.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/envios-relatorios.tsx",
-      "target": "@/components/expediente-page"
-    },
-    {
-      "source": "src/routes/_authenticated/envios-relatorios.tsx",
-      "target": "@/lib/expediente-access"
-    },
-    {
-      "source": "src/routes/_authenticated/historico.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/route.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/route.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/routes/_authenticated/route.tsx",
-      "target": "@/components/app-shell"
-    },
-    {
-      "source": "src/routes/_authenticated/conferencias.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/recebimento.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "react"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@tanstack/react-query"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "sonner"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/hooks/useAuth"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/integrations/supabase/client"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/lib/queries"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
-      "target": "@/lib/format"
+      "source": "src/routes/_authenticated/usuarios.tsx",
+      "target": "@/lib/admin.functions"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/components/ui-kit"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
       "target": "@/components/ui/button"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
-      "target": "@/lib/pdf"
+      "source": "src/routes/_authenticated/usuarios.tsx",
+      "target": "@/components/ui/input"
     },
     {
-      "source": "src/routes/_authenticated/recebimento.tsx",
-      "target": "@/components/ui/table"
+      "source": "src/routes/_authenticated/usuarios.tsx",
+      "target": "@/components/ui/badge"
     },
     {
-      "source": "src/routes/_authenticated/medias.tsx",
+      "source": "src/routes/_authenticated/usuarios.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/usuarios.tsx",
+      "target": "@/components/ui/dialog"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/lib/logo"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "target": "@/lib/brand"
+    },
+    {
+      "source": "src/routes/_authenticated/outros-materiais.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/outros-materiais.tsx",
+      "target": "@/components/expediente-page"
+    },
+    {
+      "source": "src/routes/_authenticated/outros-materiais.tsx",
+      "target": "@/lib/expediente-access"
+    },
+    {
+      "source": "src/routes/_authenticated/conferencia.tsx",
       "target": "@tanstack/react-router"
     },
     {
@@ -2684,104 +2836,20 @@
       "target": "@/components/ui/table"
     },
     {
-      "source": "src/routes/_authenticated/dashboard.tsx",
+      "source": "src/routes/_authenticated/route.tsx",
       "target": "@tanstack/react-router"
     },
     {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@tanstack/react-query"
+      "source": "src/routes/_authenticated/route.tsx",
+      "target": "@/integrations/supabase/client"
     },
     {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "lucide-react"
+      "source": "src/routes/_authenticated/route.tsx",
+      "target": "@/components/app-shell"
     },
     {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/hooks/useUnit"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/hooks/useAuth"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
+      "source": "src/routes/_authenticated/medias.tsx",
       "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/hooks/useAuth"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/lib/pdf"
-    },
-    {
-      "source": "src/routes/_authenticated/recibos.tsx",
-      "target": "@/components/ui/table"
-    },
-    {
-      "source": "src/routes/_authenticated/outros-materiais.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/outros-materiais.tsx",
-      "target": "@/components/expediente-page"
-    },
-    {
-      "source": "src/routes/_authenticated/outros-materiais.tsx",
-      "target": "@/lib/expediente-access"
     },
     {
       "source": "src/routes/_authenticated/painel-ceo.tsx",
@@ -2832,120 +2900,44 @@
       "target": "@/components/ui/table"
     },
     {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@tanstack/react-router"
     },
     {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
+      "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@tanstack/react-query"
     },
     {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "sonner"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "@/lib/logo"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/routes/_authenticated/configuracoes.tsx",
-      "target": "@/lib/brand"
-    },
-    {
-      "source": "src/routes/_authenticated/envios-recibos.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/envios-recibos.tsx",
-      "target": "@/components/expediente-page"
-    },
-    {
-      "source": "src/routes/_authenticated/envios-recibos.tsx",
-      "target": "@/lib/expediente-access"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@tanstack/react-router"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
+      "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "lucide-react"
     },
     {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "sonner"
+      "source": "src/routes/_authenticated/dashboard.tsx",
+      "target": "@/hooks/useUnit"
     },
     {
-      "source": "src/routes/_authenticated/usuarios.tsx",
+      "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/hooks/useAuth"
     },
     {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@/integrations/supabase/client"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
+      "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/lib/queries"
     },
     {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@/lib/admin.functions"
+      "source": "src/routes/_authenticated/dashboard.tsx",
+      "target": "@/lib/format"
     },
     {
-      "source": "src/routes/_authenticated/usuarios.tsx",
+      "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/components/ui-kit"
     },
     {
-      "source": "src/routes/_authenticated/usuarios.tsx",
+      "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "@/components/ui/button"
     },
     {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@/components/ui/badge"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/usuarios.tsx",
-      "target": "@/components/ui/dialog"
+      "source": "src/routes/_authenticated/dashboard.tsx",
+      "target": "sonner"
     },
     {
       "source": "src/routes/_authenticated/entrada-documento.tsx",
@@ -3026,6 +3018,14 @@
     {
       "source": "src/routes/_authenticated/produtos.tsx",
       "target": "@/components/ui/table"
+    },
+    {
+      "source": "drizzle/migrations/0005_recibo_numeracao_reaproveita.sql",
+      "target": "RECIBO_PRODUTOS:REC-[0-9]{4}-([0-9]+)"
+    },
+    {
+      "source": "drizzle/migrations/0005_recibo_numeracao_reaproveita.sql",
+      "target": "RECIBO_PRODUTOS:REC-[0-9]{4}-([0-9]+)"
     }
   ]
 }
