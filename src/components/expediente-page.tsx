@@ -51,6 +51,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
+  const [reportItems, setReportItems] = useState<string[]>([]);
   const { data: dispatcher = false } = useQuery({
     queryKey: ["expediente-dispatcher"],
     queryFn: async () => {
@@ -62,6 +63,19 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
   const canDispatch = isAdmin || dispatcher;
   const canConfirm = role === "responsavel" && !isAdmin && !dispatcher && Boolean(profile?.unit_id);
   const { data: units = [] } = useQuery(unitsOptions(false));
+  const { data: itemOptions = [] } = useQuery({
+    queryKey: ["expediente-report-items"],
+    queryFn: async () => {
+      const { data: products, error } = await supabase.from("products").select("nome").eq("ativo", true).order("nome");
+      if (error) throw error;
+      const { data: mats, error: matsError } = await (supabase as any)
+        .from("expediente_receipt_items").select("material_name");
+      if (matsError) throw matsError;
+      const names = new Set<string>(((products ?? []) as { nome: string }[]).map((p) => p.nome));
+      ((mats ?? []) as { material_name: string }[]).forEach((m) => { if (m.material_name) names.add(m.material_name); });
+      return Array.from(names).sort((a, b) => a.localeCompare(b, "pt-BR"));
+    },
+  });
   const { data: receipts = [], isPending, isError, error } = useQuery({
     queryKey: ["expediente-receipts", units.map((u) => u.id).join("|")],
     queryFn: async () => {
@@ -218,6 +232,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
     try {
       const ownUnit = profile?.unit_id ?? unitId;
       const unitOk = (id: string) => (canDispatch ? reportUnit === "all" || id === reportUnit : id === ownUnit);
+      const itemOk = (name: string) => reportItems.length === 0 || reportItems.includes(name);
       const dayOf = (value: string) => {
         const d = new Date(value);
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -230,11 +245,14 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       });
       type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; estoque: string | null };
       const lines: ReportLine[] = [];
-      confirmed.forEach((r) => r.items.forEach((item) => lines.push({
-        numero: r.receipt_number, unitId: r.destination_unit_id, unitName: r.unitName, item: item.material_name,
-        qty: `${formatQty(item.quantity)} ${item.unit_measure}`, sentAt: r.sent_at, confirmedAt: r.confirmed_at!,
-        estoque: "—",
-      })));
+      confirmed.forEach((r) => r.items.forEach((item) => {
+        if (!itemOk(item.material_name)) return;
+        lines.push({
+          numero: r.receipt_number, unitId: r.destination_unit_id, unitName: r.unitName, item: item.material_name,
+          qty: `${formatQty(item.quantity)} ${item.unit_measure}`, sentAt: r.sent_at, confirmedAt: r.confirmed_at!,
+          estoque: "—",
+        });
+      }));
       const stockPairs: Array<{ unitId: string; productId: string }> = [];
       {
         const { data: recs, error: recErr } = await (supabase as any)
@@ -254,9 +272,11 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
             if (!confirmedAt || !unitOk(m.unit_id)) return;
             const date = dayOf(confirmedAt);
             if (date < from || date > to) return;
+            const itemName = m.products?.nome ?? "Produto";
+            if (!itemOk(itemName)) return;
             lines.push({
               numero: receiptIdFromObservation(m.observacao) ?? "Avulso", unitId: m.unit_id, unitName: m.units?.nome ?? "Unidade",
-              item: m.products?.nome ?? "Produto", qty: `${formatQty(Number(m.quantidade))} ${m.products?.unidade_medida ?? ""}`.trim(),
+              item: itemName, qty: `${formatQty(Number(m.quantidade))} ${m.products?.unidade_medida ?? ""}`.trim(),
               sentAt: m.data, confirmedAt, estoque: null,
             });
             if (m.product_id) stockPairs.push({ unitId: m.unit_id, productId: m.product_id });
@@ -496,7 +516,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       </div>}
 
       {view === "relatorios" && <div id="expediente-relatorio" className="scroll-mt-20">
-      <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Se mantiver Todas as unidades, o PDF reunirá todas as entregas confirmadas no período: estoque, materiais de expediente e outros materiais.">
+      <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Marque os itens para um relatório só deles ou deixe todos desmarcados para incluir estoque, materiais de expediente e outros materiais.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2">
             {canDispatch && <Field label="Unidade do relatório" htmlFor="exp-report-unit">
@@ -510,6 +530,23 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
             </Field>
             <Field label="Data final do recebimento" htmlFor="exp-report-to" required>
               <Input id="exp-report-to" type="date" required min={from || undefined} value={to} onChange={(e) => setTo(e.target.value)} />
+            </Field>
+            <Field label="Itens do relatório" hint="Sem marcação, o relatório inclui todos os materiais." className="sm:col-span-2">
+              <div className="max-h-44 overflow-y-auto rounded-md border border-input bg-background p-2">
+                {itemOptions.length === 0 ? (
+                  <p className="px-1 py-1 text-sm text-muted-foreground">Nenhum item disponível.</p>
+                ) : itemOptions.map((name) => (
+                  <label key={name} className="flex cursor-pointer items-center gap-2 rounded px-1 py-1 text-sm hover:bg-accent">
+                    <input
+                      type="checkbox"
+                      className="size-4 accent-primary"
+                      checked={reportItems.includes(name)}
+                      onChange={() => setReportItems((old) => (old.includes(name) ? old.filter((n) => n !== name) : [...old, name]))}
+                    />
+                    {name}
+                  </label>
+                ))}
+              </div>
             </Field>
           </div>
           <Button onClick={generateReport} disabled={reportLoading || !from || !to}><FileDown className="size-4" />{reportLoading ? "Gerando PDF..." : "Gerar relatório PDF"}</Button>
