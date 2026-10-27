@@ -48,7 +48,6 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
   const [items, setItems] = useState<ExpedienteItem[]>([{ name: "", quantity: "1", unit: "unidade" }]);
   const [filterUnit, setFilterUnit] = useState("all");
   const [reportUnit, setReportUnit] = useState("all");
-  const [reportType, setReportType] = useState<"todos" | "estoque" | "expediente" | "outros">("todos");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
@@ -223,21 +222,21 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
         const d = new Date(value);
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
       };
-      const confirmed = reportType === "estoque" ? [] : receipts.filter((r) => {
+      const confirmed = receipts.filter((r) => {
         if (!unitOk(r.destination_unit_id)) return false;
-        if (reportType !== "todos" && r.material_type !== reportType) return false;
         if (r.status !== "confirmed" || !r.confirmed_at) return false;
         const date = dayOf(r.confirmed_at);
         return date >= from && date <= to;
       });
-      type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; tipo: string };
+      type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; estoque: string | null };
       const lines: ReportLine[] = [];
       confirmed.forEach((r) => r.items.forEach((item) => lines.push({
         numero: r.receipt_number, unitId: r.destination_unit_id, unitName: r.unitName, item: item.material_name,
         qty: `${formatQty(item.quantity)} ${item.unit_measure}`, sentAt: r.sent_at, confirmedAt: r.confirmed_at!,
-        tipo: r.material_type === "outros" ? "Outros materiais" : "Materiais de expediente",
+        estoque: "—",
       })));
-      if (reportType === "todos" || reportType === "estoque") {
+      const stockPairs: Array<{ unitId: string; productId: string }> = [];
+      {
         const { data: recs, error: recErr } = await (supabase as any)
           .from("stock_receipts").select("movement_id, confirmed_at")
           .gte("confirmed_at", `${from}T00:00:00`).lte("confirmed_at", `${to}T23:59:59.999`);
@@ -246,7 +245,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
         for (let k = 0; k < recRows.length; k += 200) {
           const chunk = recRows.slice(k, k + 200);
           const { data: movs, error: movErr } = await supabase
-            .from("stock_movements").select("id, unit_id, data, quantidade, observacao, products(nome, unidade_medida), units(nome)")
+            .from("stock_movements").select("id, unit_id, product_id, data, quantidade, observacao, products(nome, unidade_medida), units(nome)")
             .in("id", chunk.map((c) => c.movement_id));
           if (movErr) throw movErr;
           const confMap = new Map(chunk.map((c) => [c.movement_id, c.confirmed_at]));
@@ -258,12 +257,33 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
             lines.push({
               numero: receiptIdFromObservation(m.observacao) ?? "Avulso", unitId: m.unit_id, unitName: m.units?.nome ?? "Unidade",
               item: m.products?.nome ?? "Produto", qty: `${formatQty(Number(m.quantidade))} ${m.products?.unidade_medida ?? ""}`.trim(),
-              sentAt: m.data, confirmedAt, tipo: "Estoque",
+              sentAt: m.data, confirmedAt, estoque: null,
             });
+            if (m.product_id) stockPairs.push({ unitId: m.unit_id, productId: m.product_id });
           });
         }
       }
       if (!lines.length) throw new Error("Não há recebimentos confirmados nesse período para a unidade selecionada.");
+      if (stockPairs.length) {
+        const unitIds = [...new Set(stockPairs.map((p) => p.unitId))];
+        const productIds = [...new Set(stockPairs.map((p) => p.productId))];
+        const { data: stockRows, error: stockErr } = await supabase
+          .from("stock").select("unit_id, product_id, quantidade, products(unidade_medida)")
+          .in("unit_id", unitIds).in("product_id", productIds);
+        if (stockErr) throw stockErr;
+        const stockMap = new Map<string, string>();
+        ((stockRows ?? []) as any[]).forEach((s) => {
+          stockMap.set(`${s.unit_id}::${s.product_id}`, `${formatQty(Number(s.quantidade))} ${s.products?.unidade_medida ?? ""}`.trim());
+        });
+        // Preenche o estoque atual nas linhas de estoque, na ordem em que foram incluídas.
+        let cursor = 0;
+        lines.forEach((l) => {
+          if (l.estoque !== null) return;
+          const pair = stockPairs[cursor];
+          cursor += 1;
+          l.estoque = pair ? stockMap.get(`${pair.unitId}::${pair.productId}`) ?? "0" : "—";
+        });
+      }
       lines.sort((a, b) => a.confirmedAt.localeCompare(b.confirmedAt) || a.numero.localeCompare(b.numero));
       const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
       const brown: [number, number, number] = [125, 47, 25];
@@ -273,7 +293,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       const selectedUnitName = reportUnit === "all" ? "Todas as unidades" : (units.find((u) => u.id === reportUnit)?.nome ?? "Unidade selecionada");
       const lineCount = lines.length;
       const unitCount = new Set(lines.map((l) => l.unitId)).size;
-      const totalReceipts = new Set(lines.map((l) => `${l.tipo}::${l.numero}::${l.unitId}`)).size;
+      const totalReceipts = new Set(lines.map((l) => `${l.numero}::${l.unitId}`)).size;
       // Tenta inserir a logo oficial; se o arquivo não carregar, o relatório continua sendo gerado.
       let logoData: string | null = null;
       try {
@@ -329,17 +349,17 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       doc.text(String(unitCount), 235, 49);
 
       const body: Array<Array<string>> = [];
-      lines.forEach((l) => body.push([l.numero, l.unitName, l.item, l.qty, formatDate(l.sentAt), formatDate(l.confirmedAt), l.tipo]));
+      lines.forEach((l) => body.push([l.numero, l.unitName, l.item, l.qty, formatDate(l.sentAt), l.estoque ?? "—"]));
       autoTable(doc, {
         startY: 61,
-        head: [["Nº RECIBO", "UNIDADE DESTINO", "ITEM ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "DATA DO RECEBIMENTO", "TIPO DE ENVIO"]],
+        head: [["Nº RECIBO", "UNIDADE DESTINO", "ITEM ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "ESTOQUE ATUAL"]],
         body,
         theme: "grid",
         showHead: "everyPage",
         headStyles: { fillColor: brown, textColor: [255, 255, 255], fontStyle: "bold", fontSize: 8, cellPadding: 3 },
         styles: { font: "helvetica", fontSize: 8, cellPadding: 3, overflow: "linebreak", textColor: [45, 45, 45], lineColor: [225, 216, 210], lineWidth: 0.15, valign: "middle" },
         alternateRowStyles: { fillColor: [250, 248, 246] },
-        columnStyles: { 0: { cellWidth: 21 }, 1: { cellWidth: 42 }, 2: { cellWidth: 52 }, 3: { cellWidth: 28 }, 4: { cellWidth: 31 }, 5: { cellWidth: 38 }, 6: { cellWidth: "auto" } },
+        columnStyles: { 0: { cellWidth: 28 }, 1: { cellWidth: 46 }, 2: { cellWidth: 60 }, 3: { cellWidth: 30 }, 4: { cellWidth: 32 }, 5: { cellWidth: "auto" } },
         margin: { top: 12, left: 12, right: 12, bottom: 15 },
         didDrawPage: () => {
           if (doc.getCurrentPageInfo().pageNumber > 1) {
@@ -493,14 +513,6 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
                 {units.filter((u) => !/gabinete semads|centro de distribui/i.test(u.nome)).map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
               </select>
             </Field>}
-            <Field label="Tipo de envio" htmlFor="exp-report-type">
-              <select id="exp-report-type" value={reportType} onChange={(e) => setReportType(e.target.value as typeof reportType)} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
-                <option value="todos">Todos (estoque, expediente e outros)</option>
-                <option value="estoque">Estoque</option>
-                <option value="expediente">Materiais de expediente</option>
-                <option value="outros">Outros materiais</option>
-              </select>
-            </Field>
             <Field label="Data inicial do recebimento" htmlFor="exp-report-from" required>
               <Input id="exp-report-from" type="date" required value={from} onChange={(e) => setFrom(e.target.value)} />
             </Field>
