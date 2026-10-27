@@ -48,7 +48,6 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
   const [items, setItems] = useState<ExpedienteItem[]>([{ name: "", quantity: "1", unit: "unidade" }]);
   const [filterUnit, setFilterUnit] = useState("all");
   const [reportUnit, setReportUnit] = useState("all");
-  const [reportType, setReportType] = useState<"todos" | "estoque" | "expediente" | "outros">("todos");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
