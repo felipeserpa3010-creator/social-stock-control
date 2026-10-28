@@ -32,7 +32,7 @@ export function InventoryDispatch() {
     <form className="space-y-6" onSubmit={async (e) => {
       e.preventDefault(); setSaving(true); setReceipt("");
       try {
-        const { data, error } = await supabase.rpc("create_inventory_dispatch", { _destination_unit_id: destination, _sent_at: date, _items: prepareDispatchItems(items), _note: note || undefined });
+        const { data, error } = await supabase.rpc("create_inventory_dispatch", { _destination_unit_id: destination, _sent_at: date, _items: prepareDispatchItems(items), ...(note ? { _note: note } : {}) });
         if (error) throw error;
         setReceipt(String(data)); setItems([emptyDispatchItem()]); setNote("");
         toast.success(`Recibo ${data} criado. Aguardando confirmação da unidade.`);
