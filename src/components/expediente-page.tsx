@@ -245,23 +245,22 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
         const date = dayOf(r.confirmed_at);
         return date >= from && date <= to;
       });
-      type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; estoque: string | null };
+      type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; recebidoPor: string };
       const lines: ReportLine[] = [];
       confirmed.forEach((r) => r.items.forEach((item) => {
         if (!itemOk(item.material_name)) return;
         lines.push({
           numero: r.receipt_number, unitId: r.destination_unit_id, unitName: r.unitName, item: item.material_name,
           qty: `${formatQty(item.quantity)} ${item.unit_measure}`, sentAt: r.sent_at, confirmedAt: r.confirmed_at!,
-          estoque: "—",
+          recebidoPor: r.confirmed_by_name || "—",
         });
       }));
-      const stockPairs: Array<{ unitId: string; productId: string }> = [];
       {
         const { data: recs, error: recErr } = await (supabase as any)
-          .from("stock_receipts").select("movement_id, confirmed_at")
+          .from("stock_receipts").select("movement_id, confirmed_at, confirmed_by_name")
           .gte("confirmed_at", `${from}T00:00:00`).lte("confirmed_at", `${to}T23:59:59.999`);
         if (recErr) throw recErr;
-        const recRows = (recs ?? []) as Array<{ movement_id: string; confirmed_at: string }>;
+        const recRows = (recs ?? []) as Array<{ movement_id: string; confirmed_at: string; confirmed_by_name: string | null }>;
         for (let k = 0; k < recRows.length; k += 200) {
           const chunk = recRows.slice(k, k + 200);
           const { data: movs, error: movErr } = await supabase
@@ -269,6 +268,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
             .in("id", chunk.map((c) => c.movement_id));
           if (movErr) throw movErr;
           const confMap = new Map(chunk.map((c) => [c.movement_id, c.confirmed_at]));
+          const byMap = new Map(chunk.map((c) => [c.movement_id, c.confirmed_by_name]));
           ((movs ?? []) as any[]).forEach((m) => {
             const confirmedAt = confMap.get(m.id);
             if (!confirmedAt || !unitOk(m.unit_id)) return;
@@ -279,33 +279,12 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
             lines.push({
               numero: receiptIdFromObservation(m.observacao) ?? "Avulso", unitId: m.unit_id, unitName: m.units?.nome ?? "Unidade",
               item: itemName, qty: `${formatQty(Number(m.quantidade))} ${m.products?.unidade_medida ?? ""}`.trim(),
-              sentAt: m.data, confirmedAt, estoque: null,
+              sentAt: m.data, confirmedAt, recebidoPor: byMap.get(m.id) || "—",
             });
-            if (m.product_id) stockPairs.push({ unitId: m.unit_id, productId: m.product_id });
           });
         }
       }
       if (!lines.length) throw new Error("Não há recebimentos confirmados nesse período para a unidade selecionada.");
-      if (stockPairs.length) {
-        const unitIds = [...new Set(stockPairs.map((p) => p.unitId))];
-        const productIds = [...new Set(stockPairs.map((p) => p.productId))];
-        const { data: stockRows, error: stockErr } = await supabase
-          .from("stock").select("unit_id, product_id, quantidade, products(unidade_medida)")
-          .in("unit_id", unitIds).in("product_id", productIds);
-        if (stockErr) throw stockErr;
-        const stockMap = new Map<string, string>();
-        ((stockRows ?? []) as any[]).forEach((s) => {
-          stockMap.set(`${s.unit_id}::${s.product_id}`, `${formatQty(Number(s.quantidade))} ${s.products?.unidade_medida ?? ""}`.trim());
-        });
-        // Preenche o estoque atual nas linhas de estoque, na ordem em que foram incluídas.
-        let cursor = 0;
-        lines.forEach((l) => {
-          if (l.estoque !== null) return;
-          const pair = stockPairs[cursor];
-          cursor += 1;
-          l.estoque = pair ? stockMap.get(`${pair.unitId}::${pair.productId}`) ?? "0" : "—";
-        });
-      }
       lines.sort((a, b) => a.confirmedAt.localeCompare(b.confirmedAt) || a.numero.localeCompare(b.numero));
       const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
       const brown: [number, number, number] = [125, 47, 25];
@@ -362,11 +341,11 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       doc.text(doc.splitTextToSize(selectedUnitName, pageWidth - 40)[0] ?? selectedUnitName, 16, 46.8);
 
       const body: Array<Array<string>> = [];
-      lines.forEach((l) => body.push([l.numero, l.unitName, l.item, l.qty, formatDate(l.sentAt), l.estoque ?? "—"]));
+      lines.forEach((l) => body.push([l.numero, l.unitName, l.item, l.qty, formatDate(l.sentAt), l.recebidoPor]));
       autoTable(doc, {
         startY: 55,
 
-        head: [["Nº RECIBO", "UNIDADE DESTINO", "ITEM ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "ESTOQUE ATUAL"]],
+        head: [["Nº RECIBO", "UNIDADE DESTINO", "ITEM ENTREGUE", "QUANTIDADE", "DATA DO ENVIO", "RECEBIDO POR"]],
         body,
         theme: "grid",
         showHead: "everyPage",
