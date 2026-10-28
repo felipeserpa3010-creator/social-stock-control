@@ -54,6 +54,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
   const [to, setTo] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
   const [reportItems, setReportItems] = useState<string[]>([]);
+  const [reportScope, setReportScope] = useState<"all" | "sem-controle">("all");
   const { data: dispatcher = false } = useQuery({
     queryKey: ["expediente-dispatcher"],
     queryFn: async () => {
