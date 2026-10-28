@@ -207,64 +207,6 @@ function ReceiptsPage() {
         )}
       </Panel>
 
-      {groups.length > 0 && (
-        <Panel title="Detalhes dos recibos" description="Produtos, quantidades e unidade de medida de cada entrega.">
-          <div className="space-y-4">
-            {groups.map((group) => (
-              <div key={group.id} className="rounded-lg border p-4">
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="font-semibold">Recibo de Produtos nº {displayReceiptNumber(group.id)}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {group.unitName} · {formatDate(group.date)} · {group.confirmed ? "Recebido" : "Pendente"}
-                      {group.numeroOrdemFornecimento ? ` · OF: ${group.numeroOrdemFornecimento}` : ""}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group, false)}>
-                      <Eye /> Visualizar
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => imprimirRecibo(group)}>
-                      <FileText /> Imprimir
-                    </Button>
-                    {isAdmin && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-destructive hover:text-destructive"
-                        disabled={deleting}
-                        onClick={() => excluirRecibo(group)}
-                      >
-                        <Trash2 /> Excluir
-                      </Button>
-                    )}
-                  </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <Table className="min-w-[620px]">
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Produto</TableHead>
-                        <TableHead className="text-right">Quantidade</TableHead>
-                        <TableHead>Unidade</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {group.entries.map((entry) => (
-                        <TableRow key={entry.id}>
-                          <TableCell className="font-semibold">{entry.products?.nome ?? "Produto"}</TableCell>
-                          <TableCell className="text-right font-bold tabular-nums">{formatQty(entry.quantidade)}</TableCell>
-                          <TableCell>{entry.products?.unidade_medida ?? "—"}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Panel>
-      )}
     </>
   );
 }
