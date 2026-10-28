@@ -15,9 +15,10 @@ type AuthState = {
   session: Session | null;
   user: User | null;
   profile: Profile | null;
-  role: "admin" | "responsavel" | "visualizador" | null;
+  role: "admin" | "responsavel" | "visualizador" | "controlador_estoque" | null;
   isAdmin: boolean;
   isViewer: boolean;
+  isController: boolean;
   loading: boolean;
   refresh: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -28,7 +29,7 @@ const AuthContext = createContext<AuthState | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [role, setRole] = useState<"admin" | "responsavel" | "visualizador" | null>(null);
+  const [role, setRole] = useState<"admin" | "responsavel" | "visualizador" | "controlador_estoque" | null>(null);
   const [loading, setLoading] = useState(true);
 
   const loadMeta = async (uid: string | undefined) => {
@@ -42,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       supabase.from("user_roles").select("role").eq("user_id", uid).maybeSingle(),
     ]);
     setProfile((p as Profile) ?? null);
-    setRole((r?.role as "admin" | "responsavel" | "visualizador") ?? null);
+    setRole((r?.role as "admin" | "responsavel" | "visualizador" | "controlador_estoque") ?? null);
   };
 
   useEffect(() => {
@@ -80,6 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       role,
       isAdmin: role === "admin",
       isViewer: role === "visualizador",
+      isController: role === "controlador_estoque",
       loading,
       refresh: async () => loadMeta(session?.user.id),
       signOut: async () => {

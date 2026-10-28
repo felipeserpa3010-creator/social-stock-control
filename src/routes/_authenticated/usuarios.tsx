@@ -73,7 +73,7 @@ function UsersPage() {
         email: form.email,
         senha: form.senha,
         role: form.role,
-        unit_id: form.role === "responsavel"
+        unit_id: form.role !== "visualizador"
           ? form.unit_id || null
           : units.find((u) => u.nome.trim().toLowerCase() === "gabinete semads")?.id ?? null,
         viewer_unit_ids: form.viewer_unit_ids,
@@ -163,7 +163,7 @@ function UsersPage() {
                     <p className="font-medium break-words">{u.nome}{me && <span className="ml-1 text-xs text-muted-foreground">(você)</span>}</p>
                     <p className="text-sm text-muted-foreground break-all">{u.email}</p>
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="secondary">{u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : u.role === "responsavel" ? "Usuário de unidade" : "Perfil pendente"}</Badge>
+                      <Badge variant="secondary">{u.role === "admin" ? "Administrador" : u.role === "visualizador" ? "Visualizador" : u.role === "controlador_estoque" ? "Controlador de estoque" : u.role === "responsavel" ? "Usuário de unidade" : "Perfil pendente"}</Badge>
                       <Badge variant={u.ativo ? "secondary" : "outline"}>{u.ativo ? "Liberado" : "Aguardando liberação / bloqueado"}</Badge>
                     </div>
                   </div>
@@ -175,6 +175,7 @@ function UsersPage() {
                           className="h-9 w-full min-w-0 rounded-md border border-input bg-background px-2 text-sm disabled:opacity-50">
                           <option value="" disabled>Definir perfil...</option>
                           {u.role === "admin" && <option value="admin">Administrador Principal</option>}
+                          <option value="controlador_estoque">Controlador de estoque</option>
                           <option value="responsavel">Usuário de unidade</option>
                           <option value="visualizador">Visualizador (somente consulta)</option>
                         </select>
@@ -248,15 +249,16 @@ function UsersPage() {
                   }}
                   className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
                 >
-                  <option value="responsavel">Responsável de unidade</option>
+                  <option value="controlador_estoque">Controlador de estoque</option>
+                  <option value="responsavel">Usuário de unidade</option>
                   <option value="visualizador">Visualizador (somente consulta)</option>
                 </select>
               </Field>
               <Field
                 label="Unidade"
                 htmlFor="us-unit"
-                required={form.role === "responsavel"}
-                hint="Responsáveis só veem a própria unidade."
+                required={form.role !== "visualizador"}
+                hint={form.role === "controlador_estoque" ? "Controlador de estoque" : "Responsáveis só veem a própria unidade."}
               >
                 <select
                   id="us-unit"

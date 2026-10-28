@@ -6,6 +6,8 @@ import { semadsLogoUrl } from "@/lib/brand";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Controle de Estoque — Assistência Social" },
       {
         name: "description",

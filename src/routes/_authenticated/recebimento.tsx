@@ -21,6 +21,10 @@ export const Route = createFileRoute("/_authenticated/recebimento")({
     if (isResponsible !== true) throw redirect({ to: "/dashboard" });
   },
   head: () => ({ meta: [
+    { property: "og:title", content: "Confirmar recebimento — SEMADS" },
+    { property: "og:description", content: "Conferência e confirmação dos recibos destinados à sua unidade." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
     { title: "Confirmar recebimento — Controle de Estoque" },
     { name: "description", content: "Confirme o recebimento das mercadorias lançadas pelo CEO." },
   ]}),
@@ -204,6 +208,8 @@ function MaterialReceipts({ unitId, unitName }: { unitId: string | null; unitNam
       toast.success("Recebimento de materiais confirmado.");
       await qc.invalidateQueries({ queryKey: ["pending-material-receipts"] });
       await qc.invalidateQueries({ queryKey: ["expediente-receipts"] });
+      await qc.invalidateQueries({ queryKey: ["stock"] });
+      await qc.invalidateQueries({ queryKey: ["movements"] });
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : "Não foi possível confirmar."),
   });
@@ -216,6 +222,8 @@ function MaterialReceipts({ unitId, unitName }: { unitId: string | null; unitNam
       toast.success("Recibo de materiais marcado como não recebido.");
       await qc.invalidateQueries({ queryKey: ["pending-material-receipts"] });
       await qc.invalidateQueries({ queryKey: ["expediente-receipts"] });
+      await qc.invalidateQueries({ queryKey: ["stock"] });
+      await qc.invalidateQueries({ queryKey: ["movements"] });
     },
     onError: (err) => toast.error(err instanceof Error ? err.message : "Não foi possível registrar."),
   });
@@ -231,7 +239,7 @@ function MaterialReceipts({ unitId, unitName }: { unitId: string | null; unitNam
     window.open(doc.output("bloburl"), "_blank");
   };
   return (
-    <Panel title={data.length + " Recibo(s) de materiais pendente(s)"} description="Materiais de expediente e outros materiais. A confirmação não altera o estoque." bodyClassName="p-0">
+    <Panel title={data.length + " Recibo(s) de materiais pendente(s)"} description="Recibos de materiais enviados para sua unidade." bodyClassName="p-0">
       {data.length === 0 ? <div className="p-4"><EmptyState title="Nenhum recibo de materiais pendente" description="Quando o CEO registrar um envio de materiais para sua unidade, ele aparecerá aqui." /></div>
       : <div className="space-y-4 p-4">{data.map((r) => (
         <div key={r.id} className="rounded-lg border p-4">

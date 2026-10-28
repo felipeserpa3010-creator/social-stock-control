@@ -17,10 +17,13 @@ export const Route = createFileRoute("/_authenticated/relatorios")({
     if (!data.user) throw redirect({ to: "/auth" });
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "admin" });
     const { data: isResponsible } = await supabase.rpc("has_role", { _user_id: data.user.id, _role: "responsavel" });
-    if (isAdmin !== true && isResponsible !== true) throw redirect({ to: "/dashboard" });
+    const { data: readAll } = await supabase.rpc("can_access_unit", { _unit_id: "00000000-0000-0000-0000-000000000000" });
+    if (isAdmin !== true && isResponsible !== true && readAll !== true) throw redirect({ to: "/dashboard" });
   },
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Relatórios — Controle de Estoque" },
       { name: "description", content: "Gere relatórios PDF do estoque aproximado da unidade para impressão." },
       { property: "og:title", content: "Relatórios — Controle de Estoque" },

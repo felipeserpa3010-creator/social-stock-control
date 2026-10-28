@@ -8,7 +8,7 @@ type CreateUserInput = {
   email: string;
   senha: string;
   unit_id: string | null;
-  role: "admin" | "responsavel" | "visualizador";
+  role: "admin" | "responsavel" | "visualizador" | "controlador_estoque";
   viewer_unit_ids?: string[];
 };
 
@@ -167,7 +167,7 @@ export const adminCreateUser = createServerFn({ method: "POST" })
     if (!d?.nome?.trim()) throw new Error("Informe o nome.");
     if (!d?.email?.trim()) throw new Error("Informe o e-mail.");
     if (!d?.senha || d.senha.length < 8) throw new Error("A senha deve ter ao menos 8 caracteres.");
-    if (d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
+    if (d.role !== "responsavel" && d.role !== "visualizador" && d.role !== "controlador_estoque") throw new Error("Perfil inválido.");
     if (!d.unit_id) throw new Error("Selecione a unidade.");
     if (d.role === "visualizador" && !d.unit_id) throw new Error("O Centro de Distribuição deve ser vinculado ao Gabinete SEMADS.");
     return {
@@ -191,13 +191,7 @@ export const adminCreateUser = createServerFn({ method: "POST" })
         .eq("id", data.unit_id)
         .maybeSingle();
       if (unitError) throw new Error(unitError.message);
-      const isSemads = unit?.nome?.toLowerCase() === "gabinete semads";
-      if (isSemads && data.role !== "visualizador") {
-        throw new Error("Usuários do Gabinete SEMADS devem ser cadastrados no perfil do Centro de Distribuição.");
-      }
-      if (!isSemads && data.role === "visualizador") {
-        throw new Error("O perfil do Centro de Distribuição é exclusivo do Gabinete SEMADS.");
-      }
+
     }
 
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
@@ -261,9 +255,9 @@ export const adminCreateUser = createServerFn({ method: "POST" })
 /** Somente administrador: altera o perfil (papel) de um usuário. */
 export const adminSetRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { user_id: string; role: "admin" | "responsavel" | "visualizador" }) => {
+  .inputValidator((d: { user_id: string; role: "admin" | "responsavel" | "visualizador" | "controlador_estoque" }) => {
     if (!d?.user_id) throw new Error("Usuário inválido.");
-    if (d.role !== "admin" && d.role !== "responsavel" && d.role !== "visualizador") throw new Error("Perfil inválido.");
+    if (d.role !== "admin" && d.role !== "responsavel" && d.role !== "visualizador" && d.role !== "controlador_estoque") throw new Error("Perfil inválido.");
     return d;
   })
   .handler(async ({ data, context }) => {
@@ -276,25 +270,7 @@ export const adminSetRole = createServerFn({ method: "POST" })
       throw new Error("O sistema possui apenas um CEO/Administrador Principal.");
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    if (data.role === "visualizador") {
-      const { data: gabinete, error: gabineteError } = await supabaseAdmin
-        .from("units")
-        .select("id")
-        .ilike("nome", "Gabinete SEMADS")
-        .eq("ativo", true)
-        .maybeSingle();
-      if (gabineteError) throw new Error(gabineteError.message);
-      if (!gabinete?.id) throw new Error("A unidade Gabinete SEMADS não está cadastrada.");
-      const { error: profileError } = await supabaseAdmin
-        .from("profiles")
-        .update({ unit_id: gabinete.id })
-        .eq("user_id", data.user_id);
-      if (profileError) throw new Error(profileError.message);
-    }
-    await supabaseAdmin.from("user_roles").delete().eq("user_id", data.user_id);
-    const { error } = await supabaseAdmin
-      .from("user_roles")
-      .insert({ user_id: data.user_id, role: data.role });
+    const { error } = await context.supabase.rpc("assign_inventory_role", { _user_id: data.user_id, _role: data.role });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
