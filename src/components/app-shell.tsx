@@ -137,7 +137,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               {items.map((item) => {
                 const active = pathname === item.to;
                 const Icon = item.icon;
-                const label = item.label;
+                const label = isViewer && item.to === "/dashboard" ? "Painel inteligente" : item.label;
                 return (
                   <li key={item.to}>
                     <Link

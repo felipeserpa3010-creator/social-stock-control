@@ -109,7 +109,7 @@ function shipmentsOptions(since: string) {
   };
 }
 
-export function IntelligentPanel() {
+export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
   const [period, setPeriod] = useState<PeriodKey>("mes");
   const [custom, setCustom] = useState({ from: todayISO(), to: todayISO() });
   const [unitFilter, setUnitFilter] = useState<string>(ALL_UNITS);
@@ -190,7 +190,7 @@ export function IntelligentPanel() {
   return (
     <div className="space-y-5">
       <PageHeader
-        title="Painel Inteligente do CEO"
+        title={viewer ? "Painel inteligente" : "Painel Inteligente do CEO"}
         description="Visão geral de envios, recebimentos e estoque confirmado de todas as unidades. Materiais de expediente não entram nestes indicadores."
         actions={<Button variant="outline" size="sm" onClick={() => { void shipments.refetch(); void stock.refetch(); }}><RefreshCw className="size-4" />Atualizar</Button>}
       />
@@ -233,6 +233,7 @@ export function IntelligentPanel() {
         <Link to="/recibos"><StatCard label="Envios no período" value={loading ? "…" : inPeriod.length} hint="Recibos de envio registrados" icon={Send} /></Link>
       </div>
 
+      {!viewer && (
       <Panel title="Atenção necessária" description="Alertas gerados a partir dos registros atuais. Nenhum alerta altera o estoque.">
         {loading ? <TableSkeleton rows={3} cols={3} /> : (
           <ul className="divide-y divide-border text-sm">
@@ -249,6 +250,7 @@ export function IntelligentPanel() {
           </ul>
         )}
       </Panel>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Panel title="Movimentações mensais" description="Envios registrados x recebimentos confirmados (últimos 6 meses)">
