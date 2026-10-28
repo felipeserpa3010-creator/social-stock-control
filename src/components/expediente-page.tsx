@@ -548,6 +548,12 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
                 </PopoverContent>
               </Popover>
             </Field>
+            <Field label="Tipo de materiais" htmlFor="exp-report-scope">
+              <select id="exp-report-scope" value={reportScope} onChange={(e) => setReportScope(e.target.value === "sem-controle" ? "sem-controle" : "all")} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <option value="all">Todos os materiais</option>
+                <option value="sem-controle">Somente os sem controle de estoque</option>
+              </select>
+            </Field>
           </div>
           <Button onClick={generateReport} disabled={reportLoading || !from || !to}><FileDown className="size-4" />{reportLoading ? "Gerando PDF..." : "Gerar relatório PDF"}</Button>
         </div>
