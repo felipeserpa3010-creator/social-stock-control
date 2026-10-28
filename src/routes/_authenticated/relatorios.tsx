@@ -22,6 +22,8 @@ export const Route = createFileRoute("/_authenticated/relatorios")({
   },
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Relatórios — Controle de Estoque" },
       { name: "description", content: "Gere relatórios PDF do estoque aproximado da unidade para impressão." },
       { property: "og:title", content: "Relatórios — Controle de Estoque" },

@@ -258,7 +258,7 @@ function UsersPage() {
                 label="Unidade"
                 htmlFor="us-unit"
                 required={form.role !== "visualizador"}
-                hint="Responsáveis só veem a própria unidade."
+                hint={form.role === "controlador_estoque" ? "Controlador de estoque" : "Responsáveis só veem a própria unidade."}
               >
                 <select
                   id="us-unit"

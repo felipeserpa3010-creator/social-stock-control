@@ -21,6 +21,10 @@ export const Route = createFileRoute("/_authenticated/recebimento")({
     if (isResponsible !== true) throw redirect({ to: "/dashboard" });
   },
   head: () => ({ meta: [
+    { property: "og:title", content: "Confirmar recebimento — SEMADS" },
+    { property: "og:description", content: "Conferência e confirmação dos recibos destinados à sua unidade." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
     { title: "Confirmar recebimento — Controle de Estoque" },
     { name: "description", content: "Confirme o recebimento das mercadorias lançadas pelo CEO." },
   ]}),
