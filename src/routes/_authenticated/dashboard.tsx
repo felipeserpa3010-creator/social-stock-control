@@ -17,26 +17,35 @@ import { formatDate, formatQty, stockStatus } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, StatCard, StatusPill, TypeBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { IntelligentPanel } from "@/components/intelligent-panel";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Painel — Controle de Estoque" },
+      { title: "Painel de inventário — SEMADS" },
       {
         name: "description",
         content: "Situação do estoque, alertas e movimentos recentes da unidade selecionada.",
       },
-      { property: "og:title", content: "Painel — Controle de Estoque" },
+      { property: "og:title", content: "Painel de inventário — SEMADS" },
       {
         property: "og:description",
         content: "Situação do estoque, alertas e movimentos recentes da unidade.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: DashboardPage,
 });
 
 function DashboardPage() {
+  const { isViewer, loading } = useAuth();
+  if (loading) return null;
+  return isViewer ? <IntelligentPanel viewer /> : <UnitDashboardPage />;
+}
+
+function UnitDashboardPage() {
   const { unitId, unit } = useUnit();
   const { isViewer, isAdmin } = useAuth();
   const queryClient = useQueryClient();

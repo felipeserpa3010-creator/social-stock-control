@@ -14,3 +14,4 @@
 - Shipment functions use separate leaf routes with a shared view component and access guard so navigation displays only the selected workflow without duplicating business logic.
 - Account deletion runs through an authenticated server function with CEO and target-account checks; database-linked history must never be deleted to force account removal.
 - Inventory-controller dispatches reuse material receipt headers with per-item stock/source flags; database RPCs reserve pending central quantities and atomically apply transfers on destination confirmation, so mixed receipts remain idempotent and historical receipts default to untracked.
+- CEO and viewer dashboards reuse a read-only intelligent-panel component; route-level CEO authorization stays separate so sharing charts never shares administrative access.

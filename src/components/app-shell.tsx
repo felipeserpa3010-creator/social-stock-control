@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { VirtualAssistant } from "@/components/virtual-assistant";
 import { semadsLogoUrl } from "@/lib/brand";
+import { showViewerNavItem } from "@/lib/viewer-navigation";
 
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" |
@@ -103,14 +104,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
           if (isAdmin) return true;
           if (isController) return ["/dashboard", "/estoque", "/distribuir", "/recibos", "/expediente", "/outros-materiais", "/envios-recibos", "/envios-relatorios", "/relatorios"].includes(i.to);
           if (isViewer) {
-            return (
-              i.to === "/dashboard" ||
-              i.to === "/estoque" ||
-              i.to === "/recibos" ||
-              i.to === "/relatorios" ||
-              i.to === "/envios-recibos" ||
-              i.to === "/envios-relatorios"
-            );
+            return showViewerNavItem(i.to);
           }
           if (isCentralUser) {
             return (
@@ -143,12 +137,13 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               {items.map((item) => {
                 const active = pathname === item.to;
                 const Icon = item.icon;
+                const label = isViewer && item.to === "/dashboard" ? "Painel inteligente" : item.label;
                 return (
                   <li key={item.to}>
                     <Link
                       to={item.to}
                       onClick={onNavigate}
-                      title={item.label}
+                      title={label}
                       className={cn(
                         "group relative flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                         collapsed && "justify-center px-0",
@@ -159,7 +154,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
                     >
                       {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r bg-sidebar-primary" />}
                       <Icon className="size-[18px] shrink-0" />
-                      {!collapsed && <span className="truncate">{item.label}</span>}
+                      {!collapsed && <span className="truncate">{label}</span>}
                     </Link>
                   </li>
                 );
