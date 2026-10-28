@@ -17,7 +17,6 @@ import { formatDate, formatQty, stockStatus } from "@/lib/format";
 import { EmptyState, PageHeader, Panel, StatCard, StatusPill, TypeBadge } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { IntelligentPanel } from "@/components/intelligent-panel";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -40,9 +39,9 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function DashboardPage() {
-  const { isViewer, loading } = useAuth();
+  const { loading } = useAuth();
   if (loading) return null;
-  return isViewer ? <IntelligentPanel viewer /> : <UnitDashboardPage />;
+  return <UnitDashboardPage />;
 }
 
 function UnitDashboardPage() {
@@ -51,7 +50,7 @@ function UnitDashboardPage() {
   const queryClient = useQueryClient();
   const { data: products = [] } = useQuery(productsOptions(false));
   const { data: stock = [] } = useQuery(stockOptions(unitId));
-  const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 400 }));
+  const { data: movements = [] } = useQuery({ ...movementsOptions({ unitId, limit: 400 }), enabled: !isViewer });
   const { data: pendingReceipts = [] } = useQuery(pendingReceiptOptions(unitId, isAdmin));
   const { data: viewerReceipts = [] } = useQuery(receivedEntriesOptions(unitId, isViewer));
   const deletePending = useMutation({
@@ -233,7 +232,7 @@ function UnitDashboardPage() {
         />
       </div>
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
+      <div className={isViewer ? "mt-5" : "mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]"}>
         <Panel
           title="Alertas de reposição"
           description="Produtos zerados ou abaixo do estoque mínimo definido no cadastro."
@@ -267,7 +266,8 @@ function UnitDashboardPage() {
           )}
         </Panel>
 
-        <div className="space-y-5">
+        {!isViewer && (
+          <div className="space-y-5">
           <Panel title="Últimos lançamentos" bodyClassName="p-0">
             {movements.length === 0 ? (
               <div className="p-4">
@@ -330,7 +330,8 @@ function UnitDashboardPage() {
               </ul>
             )}
           </Panel>
-        </div>
+          </div>
+        )}
       </div>
     </>
   );
