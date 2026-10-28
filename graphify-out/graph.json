@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T21:54:48.390605+00:00",
+  "generated_at": "2026-10-28T22:06:38.261880+00:00",
   "files": [
     {
       "path": "roadmap.md",
@@ -343,11 +343,11 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 14395
+      "bytes": 14333
     },
     {
       "path": "src/components/intelligent-panel.tsx",
-      "bytes": 22965
+      "bytes": 21154
     },
     {
       "path": "src/lib/media.ts",
@@ -727,7 +727,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 16229
+      "bytes": 16199
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
@@ -2890,10 +2890,6 @@
     {
       "source": "src/routes/_authenticated/dashboard.tsx",
       "target": "sonner"
-    },
-    {
-      "source": "src/routes/_authenticated/dashboard.tsx",
-      "target": "@/components/intelligent-panel"
     },
     {
       "source": "src/routes/_authenticated/recibos.tsx",
