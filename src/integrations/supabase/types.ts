@@ -40,35 +40,58 @@ export type Database = {
       }
       expediente_receipt_items: {
         Row: {
+          controls_stock: boolean
           created_at: string
           id: string
           material_name: string
+          product_id: string | null
           quantity: number
           receipt_id: string
+          source_unit_id: string | null
           unit_measure: string
         }
         Insert: {
+          controls_stock?: boolean
           created_at?: string
           id?: string
           material_name: string
+          product_id?: string | null
           quantity: number
           receipt_id: string
+          source_unit_id?: string | null
           unit_measure?: string
         }
         Update: {
+          controls_stock?: boolean
           created_at?: string
           id?: string
           material_name?: string
+          product_id?: string | null
           quantity?: number
           receipt_id?: string
+          source_unit_id?: string | null
           unit_measure?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "expediente_receipt_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "expediente_receipt_items_receipt_id_fkey"
             columns: ["receipt_id"]
             isOneToOne: false
             referencedRelation: "expediente_receipts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expediente_receipt_items_source_unit_id_fkey"
+            columns: ["source_unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
             referencedColumns: ["id"]
           },
         ]
@@ -520,6 +543,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      assign_inventory_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
       can_access_unit: { Args: { _unit_id: string }; Returns: boolean }
       can_write_unit: { Args: { _unit_id: string }; Returns: boolean }
       confirm_expediente_receipt: {
@@ -546,6 +576,15 @@ export type Database = {
             }
             Returns: string
           }
+      create_inventory_dispatch: {
+        Args: {
+          _destination_unit_id: string
+          _items: Json
+          _note?: string
+          _sent_at: string
+        }
+        Returns: string
+      }
       delete_expediente_receipt: {
         Args: { _receipt_id: string }
         Returns: undefined
@@ -560,6 +599,7 @@ export type Database = {
       is_active_user: { Args: never; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       is_expediente_dispatcher: { Args: never; Returns: boolean }
+      is_inventory_controller: { Args: never; Returns: boolean }
       is_viewer: { Args: never; Returns: boolean }
       mark_expediente_receipt_not_received: {
         Args: { _receipt_id: string }
