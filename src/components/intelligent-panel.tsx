@@ -250,6 +250,7 @@ export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
           </ul>
         )}
       </Panel>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Panel title="Movimentações mensais" description="Envios registrados x recebimentos confirmados (últimos 6 meses)">
