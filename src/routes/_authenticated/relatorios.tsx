@@ -41,6 +41,12 @@ function ReportsPage() {
   );
   const { data: settings } = useQuery(settingsOptions());
   const [loading, setLoading] = useState(false);
+  const selectedMonths = useMemo(() => {
+    const start = from ? new Date(`${from}T12:00:00`) : null;
+    const end = to ? new Date(`${to}T12:00:00`) : null;
+    if (!start || !end) return 1;
+    return Math.max(1, (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth() + 1);
+  }, [from, to]);
 
   const generate = async () => {
     setLoading(true);
@@ -54,7 +60,6 @@ function ReportsPage() {
             produto: s.product.nome,
             medida: s.product.unidade_medida,
             estoque: s.quantity,
-            media: media.get(s.product.id)?.media ?? null,
           });
         }
       });
