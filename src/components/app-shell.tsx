@@ -32,7 +32,7 @@ import { semadsLogoUrl } from "@/lib/brand";
 type NavItem = {
   to: "/dashboard" | "/estoque" | "/entrada" | "/saida" |
     "/relatorios" | "/recibos" | "/unidades" | "/produtos" |
-    "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento" | "/expediente" | "/outros-materiais" | "/envios-recibos" | "/envios-relatorios" | "/painel-ceo";
+    "/distribuir" | "/usuarios" | "/configuracoes" | "/entrada-documento" | "/recebimento" | "/expediente" | "/outros-materiais" | "/envios-recibos" | "/envios-relatorios" | "/painel-ceo";
   label: string;
   icon: typeof Boxes;
   adminOnly?: boolean;
@@ -57,6 +57,7 @@ const NAV: { group: string; items: NavItem[] }[] = [
   {
     group: "Registro de Envios",
     items: [
+      { to: "/distribuir", label: "Distribuir materiais", icon: PackagePlus },
       { to: "/expediente", label: "Materiais de expediente", icon: NotebookText },
       { to: "/outros-materiais", label: "Outros materiais", icon: Boxes },
       { to: "/envios-recibos", label: "Registro de recibos", icon: FileDown },
@@ -89,7 +90,7 @@ function isCentroDistribuicao(unitName?: string | null) {
 }
 
 function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
-  const { isAdmin, isViewer } = useAuth();
+  const { isAdmin, isViewer, isController } = useAuth();
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
@@ -100,6 +101,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
       {NAV.map((section) => {
         const items = section.items.filter((i) => {
           if (isAdmin) return true;
+          if (isController) return ["/dashboard", "/estoque", "/distribuir", "/recibos", "/expediente", "/outros-materiais", "/envios-recibos", "/envios-relatorios", "/relatorios"].includes(i.to);
           if (isViewer) {
             return (
               i.to === "/dashboard" ||
@@ -107,8 +109,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
               i.to === "/recibos" ||
               i.to === "/relatorios" ||
               i.to === "/envios-recibos" ||
-              i.to === "/envios-relatorios" ||
-              (isCentralViewer && i.to === "/saida")
+              i.to === "/envios-relatorios"
             );
           }
           if (isCentralUser) {
@@ -127,6 +128,7 @@ function NavLinks({ collapsed, onNavigate }: { collapsed?: boolean; onNavigate?:
             !i.adminOnly &&
             i.to !== "/entrada" &&
             i.to !== "/entrada-documento" &&
+            i.to !== "/distribuir" &&
             i.to !== "/expediente" &&
             i.to !== "/outros-materiais"
           );
@@ -204,6 +206,8 @@ function UserFooter({ collapsed }: { collapsed?: boolean }) {
   const roleLabel =
     role === "admin"
       ? "Administrador Principal"
+      : role === "controlador_estoque"
+        ? "Controlador de estoque"
       : centralUser
         ? "Centro de Distribuição — Gabinete SEMADS"
         : role === "visualizador"
@@ -250,11 +254,11 @@ function UnitSwitcher() {
 function Shell({ children }: { children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const { isAdmin, isViewer } = useAuth();
+  const { isAdmin, isViewer, isController } = useAuth();
   const { unit } = useUnit();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isCentralViewer = isViewer && isCentroDistribuicao(unit?.nome);
-  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || pathname === "/relatorios" || pathname === "/envios-recibos" || pathname === "/envios-relatorios" || (isCentralViewer && (pathname === "/saida" || pathname === "/expediente" || pathname === "/outros-materiais"));
+  const viewerAllowed = pathname === "/dashboard" || pathname === "/estoque" || pathname === "/recibos" || pathname === "/relatorios" || pathname === "/envios-recibos" || pathname === "/envios-relatorios";
   const isCentralUser = !isAdmin && isCentroDistribuicao(unit?.nome);
 
   return (
@@ -289,7 +293,8 @@ function Shell({ children }: { children: ReactNode }) {
           <UnitSwitcher />
           {isAdmin && <Badge variant="outline" className="hidden gap-1 border-primary/40 text-primary sm:inline-flex"><ShieldCheck className="size-3" />Administrador</Badge>}
           {isViewer && !isCentralViewer && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Somente leitura</Badge>}
-          {isCentralUser && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Centro de Distribuição</Badge>}
+          {isController && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Controlador de estoque</Badge>}
+          {!isController && isCentralUser && <Badge variant="outline" className="hidden border-primary/40 text-primary sm:inline-flex">Centro de Distribuição</Badge>}
         </header>
         <main className="mx-auto w-full max-w-[1240px] flex-1 px-4 py-6 sm:px-6 lg:px-8">
           {isViewer && !viewerAllowed ? (

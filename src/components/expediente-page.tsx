@@ -33,13 +33,13 @@ type Receipt = {
   confirmed_at: string | null;
   created_at: string;
 };
-type ReceiptItem = { id: string; receipt_id: string; material_name: string; quantity: number; unit_measure: string };
+type ReceiptItem = { id: string; receipt_id: string; material_name: string; quantity: number; unit_measure: string; controls_stock: boolean };
 type ReceiptWithItems = Receipt & { items: ReceiptItem[]; unitName: string };
 
 export type ExpedienteView = "expediente" | "outros" | "recibos" | "relatorios";
 
 export function ExpedientePage({ view }: { view: ExpedienteView }) {
-  const { isAdmin, role, profile } = useAuth();
+  const { isAdmin, isViewer, role, profile } = useAuth();
   const { unit, unitId } = useUnit();
   const queryClient = useQueryClient();
   const [destinationId, setDestinationId] = useState("");
@@ -64,6 +64,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
     },
   });
   const canDispatch = isAdmin || dispatcher;
+  const canReadAll = canDispatch || isViewer;
   const canConfirm = role === "responsavel" && !isAdmin && !dispatcher && Boolean(profile?.unit_id);
   const { data: units = [] } = useQuery(unitsOptions(false));
   const { data: itemOptions = [] } = useQuery({
@@ -106,9 +107,9 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
   });
 
   const visibleReceipts = useMemo(() => receipts.filter((r) => {
-    if (canDispatch) return filterUnit === "all" || r.destination_unit_id === filterUnit;
+    if (canReadAll) return filterUnit === "all" || r.destination_unit_id === filterUnit;
     return r.destination_unit_id === (profile?.unit_id ?? unitId);
-  }), [receipts, canDispatch, filterUnit, profile?.unit_id, unitId]);
+  }), [receipts, canReadAll, filterUnit, profile?.unit_id, unitId]);
 
   const receiptsByMonth = useMemo(() => {
     const groups = new Map<string, ReceiptWithItems[]>();
@@ -234,7 +235,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
     setReportLoading(true);
     try {
       const ownUnit = profile?.unit_id ?? unitId;
-      const unitOk = (id: string) => (canDispatch ? reportUnit === "all" || id === reportUnit : id === ownUnit);
+      const unitOk = (id: string) => (canReadAll ? reportUnit === "all" || id === reportUnit : id === ownUnit);
       const itemOk = (name: string) => reportItems.length === 0 || reportItems.includes(name);
       const dayOf = (value: string) => {
         const d = new Date(value);
@@ -249,10 +250,10 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       type ReportLine = { numero: string; unitId: string; unitName: string; item: string; qty: string; sentAt: string; confirmedAt: string; recebidoPor: string };
       const lines: ReportLine[] = [];
       confirmed.forEach((r) => r.items.forEach((item) => {
-        if (!itemOk(item.material_name)) return;
+        if (!itemOk(item.material_name) || (reportScope === "sem-controle" && item.controls_stock)) return;
         lines.push({
           numero: r.receipt_number, unitId: r.destination_unit_id, unitName: r.unitName, item: item.material_name,
-          qty: `${formatQty(item.quantity)} ${item.unit_measure}`, sentAt: r.sent_at, confirmedAt: r.confirmed_at!,
+          qty: `${formatQty(item.quantity)} ${item.unit_measure}`, sentAt: r.sent_at, confirmedAt: r.confirmed_at ?? "",
           recebidoPor: r.confirmed_by_name || "—",
         });
       }));
@@ -272,7 +273,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
           const byMap = new Map(chunk.map((c) => [c.movement_id, c.confirmed_by_name]));
           ((movs ?? []) as any[]).forEach((m) => {
             const confirmedAt = confMap.get(m.id);
-            if (!confirmedAt || !unitOk(m.unit_id)) return;
+            if (!confirmedAt || !unitOk(m.unit_id) || String(m.observacao ?? "").includes("ENVIO_MATERIAIS:")) return;
             const date = dayOf(confirmedAt);
             if (date < from || date > to) return;
             const itemName = m.products?.nome ?? "Produto";
@@ -464,7 +465,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
 
       {view === "recibos" && <div id="expediente-recibos" className="scroll-mt-20">
       <Panel title="Consultar recibos de materiais" description="Os recibos ficam registrados após a confirmação para consulta futura." actions={
-        canDispatch ? (
+        canReadAll ? (
           <select aria-label="Filtrar por unidade" value={filterUnit} onChange={(e) => setFilterUnit(e.target.value)} className="h-9 max-w-[220px] rounded-md border border-input bg-background px-2 text-sm">
             <option value="all">Todas as unidades</option>
             {units.filter((u) => !/gabinete semads|centro de distribui/i.test(u.nome)).map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
@@ -501,7 +502,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Marque os itens para um relatório só deles, ou escolha ver apenas os materiais sem controle de estoque (materiais de expediente e outros materiais). Deixe tudo no padrão para incluir estoque, materiais de expediente e outros materiais.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2">
-            {canDispatch && <Field label="Unidade do relatório" htmlFor="exp-report-unit">
+            {canReadAll && <Field label="Unidade do relatório" htmlFor="exp-report-unit">
               <select id="exp-report-unit" value={reportUnit} onChange={(e) => setReportUnit(e.target.value)} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
                 <option value="all">Todas as unidades</option>
                 {units.filter((u) => !/gabinete semads|centro de distribui/i.test(u.nome)).map((u) => <option key={u.id} value={u.id}>{u.nome}</option>)}
