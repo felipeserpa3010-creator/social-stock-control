@@ -54,6 +54,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
   const [to, setTo] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
   const [reportItems, setReportItems] = useState<string[]>([]);
+  const [reportScope, setReportScope] = useState<"all" | "sem-controle">("all");
   const { data: dispatcher = false } = useQuery({
     queryKey: ["expediente-dispatcher"],
     queryFn: async () => {
@@ -255,7 +256,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
           recebidoPor: r.confirmed_by_name || "—",
         });
       }));
-      {
+      if (reportScope === "all") {
         const { data: recs, error: recErr } = await (supabase as any)
           .from("stock_receipts").select("movement_id, confirmed_at, confirmed_by_name")
           .gte("confirmed_at", `${from}T00:00:00`).lte("confirmed_at", `${to}T23:59:59.999`);
@@ -497,7 +498,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
       </div>}
 
       {view === "relatorios" && <div id="expediente-relatorio" className="scroll-mt-20">
-      <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Marque os itens para um relatório só deles ou deixe todos desmarcados para incluir estoque, materiais de expediente e outros materiais.">
+      <Panel title="Relatório de materiais entregues por período" description="Escolha o período e, se desejar, uma única unidade. Marque os itens para um relatório só deles, ou escolha ver apenas os materiais sem controle de estoque (materiais de expediente e outros materiais). Deixe tudo no padrão para incluir estoque, materiais de expediente e outros materiais.">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2">
             {canDispatch && <Field label="Unidade do relatório" htmlFor="exp-report-unit">
@@ -546,6 +547,12 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
                   </div>
                 </PopoverContent>
               </Popover>
+            </Field>
+            <Field label="Tipo de materiais" htmlFor="exp-report-scope">
+              <select id="exp-report-scope" value={reportScope} onChange={(e) => setReportScope(e.target.value === "sem-controle" ? "sem-controle" : "all")} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm">
+                <option value="all">Todos os materiais</option>
+                <option value="sem-controle">Somente os sem controle de estoque</option>
+              </select>
             </Field>
           </div>
           <Button onClick={generateReport} disabled={reportLoading || !from || !to}><FileDown className="size-4" />{reportLoading ? "Gerando PDF..." : "Gerar relatório PDF"}</Button>
