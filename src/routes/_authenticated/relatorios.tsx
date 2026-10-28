@@ -9,8 +9,6 @@ import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
 import { PageHeader, Panel } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/_authenticated/relatorios")({
   beforeLoad: async () => {
@@ -172,10 +170,7 @@ function ReportsPage() {
 
       <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} registros de estoque.`}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <Checkbox id="with-media" checked={withMedia} onCheckedChange={(v) => setWithMedia(v === true)} />
-            <Label htmlFor="with-media">Incluir média de consumo mensal</Label>
-          </div>
+          <p className="text-sm text-muted-foreground">Inclui a coluna "Estoque atual" em branco para conferência de caneta.</p>
           <Button onClick={generate} disabled={loading || !unitId}>
             <FileDown className="size-4" /> {loading ? "Gerando..." : "Gerar PDF"}
           </Button>
