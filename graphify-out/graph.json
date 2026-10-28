@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-28T21:02:43.950805+00:00",
+  "generated_at": "2026-10-28T21:18:20.755550+00:00",
   "files": [
     {
       "path": "roadmap.md",
-      "bytes": 734
+      "bytes": 1154
     },
     {
       "path": "tsconfig.json",
@@ -27,7 +27,7 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 1112
+      "bytes": 1402
     },
     {
       "path": "eslint.config.js",
@@ -63,11 +63,15 @@
     },
     {
       "path": "src/routeTree.gen.ts",
-      "bytes": 25901
+      "bytes": 26812
     },
     {
       "path": ".lovable/project.json",
       "bytes": 124
+    },
+    {
+      "path": "drizzle/migrations/0011_inventory_controller_dispatches.sql",
+      "bytes": 9929
     },
     {
       "path": "drizzle/migrations/0000_stock_receipts.sql",
@@ -98,6 +102,10 @@
       "bytes": 747
     },
     {
+      "path": "drizzle/migrations/0010_add_inventory_controller_role.sql",
+      "bytes": 73
+    },
+    {
       "path": "drizzle/migrations/0006_materiais_expediente_recibos_relatorios.sql",
       "bytes": 8320
     },
@@ -108,6 +116,10 @@
     {
       "path": "drizzle/migrations/0007_ceo_delete_expediente_receipts.sql",
       "bytes": 897
+    },
+    {
+      "path": "drizzle/migrations/meta/0011_snapshot.json",
+      "bytes": 336
     },
     {
       "path": "drizzle/migrations/meta/0004_snapshot.json",
@@ -131,10 +143,14 @@
     },
     {
       "path": "drizzle/migrations/meta/_journal.json",
-      "bytes": 1603
+      "bytes": 1921
     },
     {
       "path": "drizzle/migrations/meta/0002_snapshot.json",
+      "bytes": 336
+    },
+    {
+      "path": "drizzle/migrations/meta/0010_snapshot.json",
       "bytes": 336
     },
     {
@@ -287,7 +303,7 @@
     },
     {
       "path": "src/hooks/useAuth.tsx",
-      "bytes": 2864
+      "bytes": 3013
     },
     {
       "path": "src/hooks/useUnit.tsx",
@@ -307,7 +323,7 @@
     },
     {
       "path": "src/components/expediente-page.tsx",
-      "bytes": 34075
+      "bytes": 34274
     },
     {
       "path": "src/components/document-entry.tsx",
@@ -318,12 +334,16 @@
       "bytes": 24112
     },
     {
+      "path": "src/components/inventory-dispatch.tsx",
+      "bytes": 6786
+    },
+    {
       "path": "src/components/ui-kit.tsx",
       "bytes": 6629
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 14045
+      "bytes": 14473
     },
     {
       "path": "src/lib/media.ts",
@@ -339,7 +359,7 @@
     },
     {
       "path": "src/lib/admin.functions.ts",
-      "bytes": 20481
+      "bytes": 19457
     },
     {
       "path": "src/lib/error-capture.ts",
@@ -362,6 +382,10 @@
       "bytes": 169
     },
     {
+      "path": "src/lib/dispatch.test.ts",
+      "bytes": 1098
+    },
+    {
       "path": "src/lib/assistant-data.ts",
       "bytes": 20361
     },
@@ -372,6 +396,10 @@
     {
       "path": "src/lib/user-management.test.ts",
       "bytes": 716
+    },
+    {
+      "path": "src/lib/dispatch.ts",
+      "bytes": 1029
     },
     {
       "path": "src/lib/user-management.ts",
@@ -399,7 +427,7 @@
     },
     {
       "path": "src/routes/index.tsx",
-      "bytes": 1463
+      "bytes": 1566
     },
     {
       "path": "src/routes/recuperar-senha.tsx",
@@ -631,11 +659,11 @@
     },
     {
       "path": "src/integrations/supabase/types.ts",
-      "bytes": 20488
+      "bytes": 21810
     },
     {
       "path": "src/routes/_authenticated/saida.tsx",
-      "bytes": 2216
+      "bytes": 1950
     },
     {
       "path": "src/routes/_authenticated/estoque.tsx",
@@ -647,7 +675,7 @@
     },
     {
       "path": "src/routes/_authenticated/relatorios.tsx",
-      "bytes": 8675
+      "bytes": 8921
     },
     {
       "path": "src/routes/_authenticated/conferencia.tsx",
@@ -671,7 +699,7 @@
     },
     {
       "path": "src/routes/_authenticated/recebimento.tsx",
-      "bytes": 15354
+      "bytes": 15853
     },
     {
       "path": "src/routes/_authenticated/medias.tsx",
@@ -710,8 +738,12 @@
       "bytes": 850
     },
     {
+      "path": "src/routes/_authenticated/distribuir.tsx",
+      "bytes": 829
+    },
+    {
       "path": "src/routes/_authenticated/usuarios.tsx",
-      "bytes": 15340
+      "bytes": 15647
     },
     {
       "path": "src/routes/_authenticated/entrada-documento.tsx",
@@ -842,6 +874,10 @@
     {
       "source": "src/routeTree.gen.ts",
       "target": "./routes/_authenticated/dashboard"
+    },
+    {
+      "source": "src/routeTree.gen.ts",
+      "target": "./routes/_authenticated/distribuir"
     },
     {
       "source": "src/routeTree.gen.ts",
@@ -1204,6 +1240,54 @@
       "target": "@/integrations/supabase/client"
     },
     {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "sonner"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/lib/dispatch"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/components/inventory-dispatch.tsx",
+      "target": "@/components/ui/checkbox"
+    },
+    {
       "source": "src/components/ui-kit.tsx",
       "target": "react"
     },
@@ -1374,6 +1458,18 @@
     {
       "source": "src/lib/utils.ts",
       "target": "tailwind-merge"
+    },
+    {
+      "source": "src/lib/dispatch.test.ts",
+      "target": "node:test"
+    },
+    {
+      "source": "src/lib/dispatch.test.ts",
+      "target": "node:assert/strict"
+    },
+    {
+      "source": "src/lib/dispatch.test.ts",
+      "target": "./dispatch"
     },
     {
       "source": "src/lib/pdf.ts",
@@ -2881,6 +2977,18 @@
     },
     {
       "source": "src/routes/_authenticated/envios-recibos.tsx",
+      "target": "@/lib/expediente-access"
+    },
+    {
+      "source": "src/routes/_authenticated/distribuir.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/routes/_authenticated/distribuir.tsx",
+      "target": "@/components/inventory-dispatch"
+    },
+    {
+      "source": "src/routes/_authenticated/distribuir.tsx",
       "target": "@/lib/expediente-access"
     },
     {
