@@ -18,7 +18,7 @@ export type ReportOptions = {
   unidade: string;
   dataConferencia?: string | null;
   periodoSelecionado?: { from?: string; to?: string } | null;
-  incluirMedia?: boolean;
+  estoqueAtualEmBranco?: boolean;
   rows: InventoryRow[];
   assinatura?: boolean;
   modo?: "estoque" | "consumo";
@@ -209,16 +209,16 @@ export async function buildInventoryPdf(opts: ReportOptions) {
   }
 
   const head = ["Produto", opts.modo === "consumo" ? "Consumo no período" : "Estoque aproximado", "Unidade de medida"];
-  if (opts.incluirMedia) head.push("Média de consumo mensal");
+  if (opts.estoqueAtualEmBranco) head.push("Estoque atual");
   const body = opts.rows.map((r) => {
     const line = [r.produto, formatQty(r.estoque), r.medida];
-    if (opts.incluirMedia) line.push(r.media === null || r.media === undefined ? "Dados insuficientes" : formatQty(r.media));
+    if (opts.estoqueAtualEmBranco) line.push("");
     return line;
   });
 
   autoTable(doc, {
     head: [head],
-    body: body.length ? body : [["Nenhum produto encontrado", "—", "—", ...(opts.incluirMedia ? ["—"] : [])]],
+    body: body.length ? body : [["Nenhum produto encontrado", "—", "—", ...(opts.estoqueAtualEmBranco ? [""] : [])]],
     startY: opts.modo === "consumo" ? cursorY + 3 : cursorY,
     margin: { top: hasPeriod ? 58 : 47, left: margin, right: margin, bottom: 23 },
     styles: { fontSize: 8.5, cellPadding: 2.5, lineColor: [225, 225, 225], lineWidth: 0.1, textColor: dark, valign: "middle" },

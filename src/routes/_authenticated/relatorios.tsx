@@ -6,13 +6,10 @@ import { toast } from "sonner";
 import { useUnit } from "@/hooks/useUnit";
 import { supabase } from "@/integrations/supabase/client";
 import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
-import { computeMediaMap, lastMonths } from "@/lib/media";
 import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
 import { PageHeader, Panel } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/_authenticated/relatorios")({
   beforeLoad: async () => {
@@ -36,17 +33,13 @@ export const Route = createFileRoute("/_authenticated/relatorios")({
 function ReportsPage() {
   const { unitId, unit } = useUnit();
   const { data: stock = [] } = useQuery(stockOptions(unitId));
-  const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 5000 }));
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const { data: periodMovements = [] } = useQuery(
     movementsOptions({ unitId, limit: 5000, ...(from ? { from } : {}), ...(to ? { to } : {}) }),
   );
   const { data: settings } = useQuery(settingsOptions());
-  const [withMedia, setWithMedia] = useState(true);
   const [loading, setLoading] = useState(false);
-  const series = useMemo(() => lastMonths(12), []);
-  const media = useMemo(() => computeMediaMap(movements, series), [movements, series]);
   const selectedMonths = useMemo(() => {
     const start = from ? new Date(`${from}T12:00:00`) : null;
     const end = to ? new Date(`${to}T12:00:00`) : null;
@@ -66,7 +59,6 @@ function ReportsPage() {
             produto: s.product.nome,
             medida: s.product.unidade_medida,
             estoque: s.quantity,
-            media: media.get(s.product.id)?.media ?? null,
           });
         }
       });
@@ -81,7 +73,7 @@ function ReportsPage() {
         logoUrl: settings?.logo_url ?? null,
         unidade: unit?.nome ?? "Unidade",
         dataConferencia: today,
-        incluirMedia: withMedia,
+        estoqueAtualEmBranco: true,
         rows,
         assinatura: true,
       });
@@ -149,7 +141,6 @@ function ReportsPage() {
         unidade: unit?.nome ?? "Unidade",
         dataConferencia: today,
         periodoSelecionado: { ...(from ? { from } : {}), ...(to ? { to } : {}) },
-        incluirMedia: false,
         modo: "consumo",
         rows,
         categorySummary,
@@ -180,10 +171,7 @@ function ReportsPage() {
 
       <Panel title={`Estoque — ${unit?.nome ?? "Unidade"}`} description={`${stock.length} registros de estoque.`}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <Checkbox id="with-media" checked={withMedia} onCheckedChange={(v) => setWithMedia(v === true)} />
-            <Label htmlFor="with-media">Incluir média de consumo mensal</Label>
-          </div>
+          <p className="text-sm text-muted-foreground">Inclui a coluna "Estoque atual" em branco para conferência de caneta.</p>
           <Button onClick={generate} disabled={loading || !unitId}>
             <FileDown className="size-4" /> {loading ? "Gerando..." : "Gerar PDF"}
           </Button>
