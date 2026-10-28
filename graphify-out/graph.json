@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-28T21:18:20.755550+00:00",
+  "generated_at": "2026-10-28T21:54:48.390605+00:00",
   "files": [
     {
       "path": "roadmap.md",
-      "bytes": 1154
+      "bytes": 1402
     },
     {
       "path": "tsconfig.json",
@@ -27,7 +27,7 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 1402
+      "bytes": 1576
     },
     {
       "path": "eslint.config.js",
@@ -343,7 +343,11 @@
     },
     {
       "path": "src/components/app-shell.tsx",
-      "bytes": 14473
+      "bytes": 14395
+    },
+    {
+      "path": "src/components/intelligent-panel.tsx",
+      "bytes": 22965
     },
     {
       "path": "src/lib/media.ts",
@@ -352,6 +356,10 @@
     {
       "path": "src/lib/expediente-access.ts",
       "bytes": 1260
+    },
+    {
+      "path": "src/lib/viewer-navigation.ts",
+      "bytes": 219
     },
     {
       "path": "src/lib/lovable-error-reporting.ts",
@@ -384,6 +392,10 @@
     {
       "path": "src/lib/dispatch.test.ts",
       "bytes": 1098
+    },
+    {
+      "path": "src/lib/viewer-navigation.test.ts",
+      "bytes": 852
     },
     {
       "path": "src/lib/assistant-data.ts",
@@ -715,7 +727,7 @@
     },
     {
       "path": "src/routes/_authenticated/dashboard.tsx",
-      "bytes": 15877
+      "bytes": 16229
     },
     {
       "path": "src/routes/_authenticated/recibos.tsx",
@@ -727,7 +739,7 @@
     },
     {
       "path": "src/routes/_authenticated/painel-ceo.tsx",
-      "bytes": 22034
+      "bytes": 1129
     },
     {
       "path": "src/routes/_authenticated/configuracoes.tsx",
@@ -1376,6 +1388,58 @@
       "target": "@/lib/brand"
     },
     {
+      "source": "src/components/app-shell.tsx",
+      "target": "@/lib/viewer-navigation"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@tanstack/react-router"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "react"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@tanstack/react-query"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "lucide-react"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "recharts"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@/integrations/supabase/client"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@/lib/queries"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@/lib/format"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@/components/ui-kit"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@/components/ui/button"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@/components/ui/input"
+    },
+    {
+      "source": "src/components/intelligent-panel.tsx",
+      "target": "@/components/ui/table"
+    },
+    {
       "source": "src/lib/expediente-access.ts",
       "target": "@tanstack/react-router"
     },
@@ -1470,6 +1534,18 @@
     {
       "source": "src/lib/dispatch.test.ts",
       "target": "./dispatch"
+    },
+    {
+      "source": "src/lib/viewer-navigation.test.ts",
+      "target": "node:test"
+    },
+    {
+      "source": "src/lib/viewer-navigation.test.ts",
+      "target": "node:assert/strict"
+    },
+    {
+      "source": "src/lib/viewer-navigation.test.ts",
+      "target": "./viewer-navigation"
     },
     {
       "source": "src/lib/pdf.ts",
@@ -2816,6 +2892,10 @@
       "target": "sonner"
     },
     {
+      "source": "src/routes/_authenticated/dashboard.tsx",
+      "target": "@/components/intelligent-panel"
+    },
+    {
       "source": "src/routes/_authenticated/recibos.tsx",
       "target": "@tanstack/react-router"
     },
@@ -2881,47 +2961,11 @@
     },
     {
       "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "react"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "@tanstack/react-query"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "lucide-react"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "recharts"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
       "target": "@/integrations/supabase/client"
     },
     {
       "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "@/lib/queries"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "@/lib/format"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "@/components/ui-kit"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "@/components/ui/button"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "@/components/ui/input"
-    },
-    {
-      "source": "src/routes/_authenticated/painel-ceo.tsx",
-      "target": "@/components/ui/table"
+      "target": "@/components/intelligent-panel"
     },
     {
       "source": "src/routes/_authenticated/configuracoes.tsx",

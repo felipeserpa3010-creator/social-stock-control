@@ -1,6 +1,6 @@
 # Design system
 
-Generated: 2026-10-28T21:18:20.755550+00:00
+Generated: 2026-10-28T21:54:48.390605+00:00
 
 ## Tokens
 - --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif (src/styles.css)
@@ -177,6 +177,7 @@ Generated: 2026-10-28T21:18:20.755550+00:00
 - src/components/auth-layout.tsx
 - src/components/document-entry.tsx
 - src/components/expediente-page.tsx
+- src/components/intelligent-panel.tsx
 - src/components/inventory-dispatch.tsx
 - src/components/movement-form.tsx
 - src/components/pickers.tsx
