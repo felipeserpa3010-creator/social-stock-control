@@ -4,6 +4,7 @@
 
 # Painel
 - [x] Remover o gráfico "Saídas dos últimos 6 meses" e os contadores de entradas/saídas no mês.
+- [ ] Visualizador: ocultar as duas opções marcadas e apresentar Painel inteligente com gráficos e últimos lançamentos; validar consulta autenticada.
 
 # Usuários
 - [x] Acrescentar Controlador de estoque e permissões de consulta de todas as unidades.
