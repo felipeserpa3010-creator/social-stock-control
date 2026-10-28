@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { AlertTriangle, Building2, CheckCircle2, Clock3, MinusCircle, PackageSearch, RefreshCw, Send, XCircle } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
-import { ALL_UNITS, isExpedienteMaterialName, receiptIdFromObservation, stockOptions, unitsOptions, movementsOptions } from "@/lib/queries";
+import { ALL_UNITS, isExpedienteMaterialName, receiptIdFromObservation, stockOptions, unitsOptions } from "@/lib/queries";
 import { formatDate, formatQty, todayISO } from "@/lib/format";
-import { EmptyState, PageHeader, Panel, SearchInput, StatCard, TableSkeleton, TypeBadge } from "@/components/ui-kit";
+import { EmptyState, PageHeader, Panel, SearchInput, StatCard, TableSkeleton } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -109,7 +109,7 @@ function shipmentsOptions(since: string) {
   };
 }
 
-export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
+export function IntelligentPanel() {
   const [period, setPeriod] = useState<PeriodKey>("mes");
   const [custom, setCustom] = useState({ from: todayISO(), to: todayISO() });
   const [unitFilter, setUnitFilter] = useState<string>(ALL_UNITS);
@@ -128,7 +128,6 @@ export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
   const units = useQuery(unitsOptions());
   const shipments = useQuery(shipmentsOptions(since));
   const stock = useQuery(stockOptions(ALL_UNITS));
-  const recent = useQuery({ ...movementsOptions({ unitId: unitFilter, from: range.from, to: range.to, limit: 20 }), enabled: viewer });
 
   const all = shipments.data ?? [];
   const byUnit = (s: Shipment) => unitFilter === ALL_UNITS || s.unitId === unitFilter;
@@ -191,9 +190,9 @@ export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
   return (
     <div className="space-y-5">
       <PageHeader
-        title={viewer ? "Painel inteligente" : "Painel Inteligente do CEO"}
+        title="Painel Inteligente do CEO"
         description="Visão geral de envios, recebimentos e estoque confirmado de todas as unidades. Materiais de expediente não entram nestes indicadores."
-        actions={<Button variant="outline" size="sm" onClick={() => { void shipments.refetch(); void stock.refetch(); if (viewer) void recent.refetch(); }}><RefreshCw className="size-4" />Atualizar</Button>}
+        actions={<Button variant="outline" size="sm" onClick={() => { void shipments.refetch(); void stock.refetch(); }}><RefreshCw className="size-4" />Atualizar</Button>}
       />
 
       <Panel bodyClassName="flex flex-wrap items-end gap-3">
@@ -278,31 +277,6 @@ export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
         </Panel>
       </div>
 
-      {viewer && (
-        <Panel title="Últimos lançamentos" bodyClassName="p-0">
-          {recent.isPending ? <TableSkeleton /> : recent.error ? (
-            <p className="p-4 text-sm text-destructive">Não foi possível carregar os lançamentos: {recent.error.message}</p>
-          ) : !recent.data?.length ? (
-            <EmptyState title="Nenhum lançamento encontrado" />
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader><TableRow><TableHead>Data</TableHead><TableHead>Unidade</TableHead><TableHead>Produto</TableHead><TableHead>Movimentação</TableHead><TableHead className="text-right">Quantidade</TableHead><TableHead>Responsável</TableHead></TableRow></TableHeader>
-                <TableBody>{recent.data.map((entry) => (
-                  <TableRow key={entry.id}>
-                    <TableCell className="whitespace-nowrap">{formatDate(entry.data)}</TableCell>
-                    <TableCell>{entry.units?.nome ?? "—"}</TableCell>
-                    <TableCell>{entry.products?.nome ?? "—"}</TableCell>
-                    <TableCell><TypeBadge tipo={entry.tipo} /></TableCell>
-                    <TableCell className="text-right whitespace-nowrap">{formatQty(entry.quantidade)} {entry.products?.unidade_medida ?? ""}</TableCell>
-                    <TableCell>{entry.responsavel || "—"}</TableCell>
-                  </TableRow>
-                ))}</TableBody>
-              </Table>
-            </div>
-          )}
-        </Panel>
-      )}
 
       <Panel
         title="Últimos envios realizados"
