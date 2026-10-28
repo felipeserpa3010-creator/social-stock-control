@@ -6,8 +6,6 @@ import { toast } from "sonner";
 import { useUnit } from "@/hooks/useUnit";
 import { supabase } from "@/integrations/supabase/client";
 import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
-import { computeMediaMap, lastMonths } from "@/lib/media";
-import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
 import { PageHeader, Panel } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,23 +34,13 @@ export const Route = createFileRoute("/_authenticated/relatorios")({
 function ReportsPage() {
   const { unitId, unit } = useUnit();
   const { data: stock = [] } = useQuery(stockOptions(unitId));
-  const { data: movements = [] } = useQuery(movementsOptions({ unitId, limit: 5000 }));
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const { data: periodMovements = [] } = useQuery(
     movementsOptions({ unitId, limit: 5000, ...(from ? { from } : {}), ...(to ? { to } : {}) }),
   );
   const { data: settings } = useQuery(settingsOptions());
-  const [withMedia, setWithMedia] = useState(true);
   const [loading, setLoading] = useState(false);
-  const series = useMemo(() => lastMonths(12), []);
-  const media = useMemo(() => computeMediaMap(movements, series), [movements, series]);
-  const selectedMonths = useMemo(() => {
-    const start = from ? new Date(`${from}T12:00:00`) : null;
-    const end = to ? new Date(`${to}T12:00:00`) : null;
-    if (!start || !end) return 1;
-    return Math.max(1, (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth() + 1);
-  }, [from, to]);
 
   const generate = async () => {
     setLoading(true);
