@@ -74,7 +74,7 @@ function ReportsPage() {
         logoUrl: settings?.logo_url ?? null,
         unidade: unit?.nome ?? "Unidade",
         dataConferencia: today,
-        incluirMedia: withMedia,
+        estoqueAtualEmBranco: true,
         rows,
         assinatura: true,
       });
@@ -142,7 +142,6 @@ function ReportsPage() {
         unidade: unit?.nome ?? "Unidade",
         dataConferencia: today,
         periodoSelecionado: { ...(from ? { from } : {}), ...(to ? { to } : {}) },
-        incluirMedia: false,
         modo: "consumo",
         rows,
         categorySummary,
