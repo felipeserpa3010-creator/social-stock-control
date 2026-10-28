@@ -75,7 +75,6 @@ function StockPage() {
       dataConferencia: todayISO(),
       rows: rows.map((r) => ({ produto: r.product.nome, estoque: r.quantity, medida: r.product.unidade_medida })),
       modo: "estoque",
-      incluirMedia: false,
       assinatura: false,
     });
     doc.save("estoque_" + (unit?.sigla ?? "unidade") + "_" + todayISO() + ".pdf");
