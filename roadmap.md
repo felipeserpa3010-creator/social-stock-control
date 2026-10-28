@@ -5,6 +5,7 @@
 # Painel
 - [x] Remover o gráfico "Saídas dos últimos 6 meses" e os contadores de entradas/saídas no mês.
 - [x] Visualizador: ocultar as duas opções marcadas e apresentar Painel inteligente com gráficos e últimos lançamentos; conta temporária validou dados reais, bloqueio do painel CEO e telas desktop/mobile, sem alterar lançamentos existentes.
+- [ ] Visualizador: manter o Painel inteligente e retirar dele apenas "Atenção necessária" e "Últimos lançamentos"; conferir no preview com conta visualizador.
 
 # Usuários
 - [x] Acrescentar Controlador de estoque e permissões de consulta de todas as unidades.
