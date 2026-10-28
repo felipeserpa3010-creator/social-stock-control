@@ -21,6 +21,7 @@ import { Route as AuthenticatedConferenciaRouteImport } from './routes/_authenti
 import { Route as AuthenticatedConferenciasRouteImport } from './routes/_authenticated/conferencias'
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDistribuirRouteImport } from './routes/_authenticated/distribuir'
 import { Route as AuthenticatedEntradaRouteImport } from './routes/_authenticated/entrada'
 import { Route as AuthenticatedEntradaDocumentoRouteImport } from './routes/_authenticated/entrada-documento'
 import { Route as AuthenticatedEnviosRecibosRouteImport } from './routes/_authenticated/envios-recibos'
@@ -99,6 +100,11 @@ const AuthenticatedConfiguracoesRoute =
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDistribuirRoute = AuthenticatedDistribuirRouteImport.update({
+  id: '/distribuir',
+  path: '/distribuir',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedEntradaRoute = AuthenticatedEntradaRouteImport.update({
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/conferencias': typeof AuthenticatedConferenciasRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/distribuir': typeof AuthenticatedDistribuirRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/envios-recibos': typeof AuthenticatedEnviosRecibosRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByTo {
   '/conferencias': typeof AuthenticatedConferenciasRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/distribuir': typeof AuthenticatedDistribuirRoute
   '/entrada': typeof AuthenticatedEntradaRoute
   '/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/envios-recibos': typeof AuthenticatedEnviosRecibosRoute
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/_authenticated/conferencias': typeof AuthenticatedConferenciasRoute
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/distribuir': typeof AuthenticatedDistribuirRoute
   '/_authenticated/entrada': typeof AuthenticatedEntradaRoute
   '/_authenticated/entrada-documento': typeof AuthenticatedEntradaDocumentoRoute
   '/_authenticated/envios-recibos': typeof AuthenticatedEnviosRecibosRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/conferencias'
     | '/configuracoes'
     | '/dashboard'
+    | '/distribuir'
     | '/entrada'
     | '/entrada-documento'
     | '/envios-recibos'
@@ -328,6 +338,7 @@ export interface FileRouteTypes {
     | '/conferencias'
     | '/configuracoes'
     | '/dashboard'
+    | '/distribuir'
     | '/entrada'
     | '/entrada-documento'
     | '/envios-recibos'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/_authenticated/conferencias'
     | '/_authenticated/configuracoes'
     | '/_authenticated/dashboard'
+    | '/_authenticated/distribuir'
     | '/_authenticated/entrada'
     | '/_authenticated/entrada-documento'
     | '/_authenticated/envios-recibos'
@@ -473,6 +485,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/distribuir': {
+      id: '/_authenticated/distribuir'
+      path: '/distribuir'
+      fullPath: '/distribuir'
+      preLoaderRoute: typeof AuthenticatedDistribuirRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/entrada': {
@@ -602,6 +621,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedConferenciasRoute: typeof AuthenticatedConferenciasRoute
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDistribuirRoute: typeof AuthenticatedDistribuirRoute
   AuthenticatedEntradaRoute: typeof AuthenticatedEntradaRoute
   AuthenticatedEntradaDocumentoRoute: typeof AuthenticatedEntradaDocumentoRoute
   AuthenticatedEnviosRecibosRoute: typeof AuthenticatedEnviosRecibosRoute
@@ -626,6 +646,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedConferenciasRoute: AuthenticatedConferenciasRoute,
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDistribuirRoute: AuthenticatedDistribuirRoute,
   AuthenticatedEntradaRoute: AuthenticatedEntradaRoute,
   AuthenticatedEntradaDocumentoRoute: AuthenticatedEntradaDocumentoRoute,
   AuthenticatedEnviosRecibosRoute: AuthenticatedEnviosRecibosRoute,
