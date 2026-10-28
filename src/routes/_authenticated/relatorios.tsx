@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useUnit } from "@/hooks/useUnit";
 import { supabase } from "@/integrations/supabase/client";
 import { movementsOptions, settingsOptions, stockOptions } from "@/lib/queries";
+import { buildInventoryPdf, reportFileName, type InventoryRow } from "@/lib/pdf";
 import { PageHeader, Panel } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
