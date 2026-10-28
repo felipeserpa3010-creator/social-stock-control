@@ -256,7 +256,7 @@ export function ExpedientePage({ view }: { view: ExpedienteView }) {
           recebidoPor: r.confirmed_by_name || "—",
         });
       }));
-      {
+      if (reportScope === "all") {
         const { data: recs, error: recErr } = await (supabase as any)
           .from("stock_receipts").select("movement_id, confirmed_at, confirmed_by_name")
           .gte("confirmed_at", `${from}T00:00:00`).lte("confirmed_at", `${to}T23:59:59.999`);
