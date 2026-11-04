@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-10-28T22:09:15.982391+00:00",
+  "generated_at": "2026-11-04T14:03:26.326235+00:00",
   "files": [
     {
       "path": "roadmap.md",
-      "bytes": 1607
+      "bytes": 1872
     },
     {
       "path": "tsconfig.json",
@@ -27,7 +27,7 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 1639
+      "bytes": 1666
     },
     {
       "path": "eslint.config.js",
@@ -347,7 +347,7 @@
     },
     {
       "path": "src/components/intelligent-panel.tsx",
-      "bytes": 21257
+      "bytes": 21287
     },
     {
       "path": "src/lib/media.ts",
