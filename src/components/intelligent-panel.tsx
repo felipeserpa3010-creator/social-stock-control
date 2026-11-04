@@ -224,6 +224,7 @@ export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
         </div>
       )}
 
+      {!viewer && (
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
         <Link to="/recibos"><StatCard label="Envios pendentes" value={loading ? "…" : pendingAll.length} hint="Aguardando confirmação da unidade" tone="warning" icon={Clock3} /></Link>
         <Link to="/recibos"><StatCard label="Recebimentos confirmados" value={loading ? "…" : confirmedInPeriod.length} hint="Confirmados no período" tone="success" icon={CheckCircle2} /></Link>
@@ -232,6 +233,8 @@ export function IntelligentPanel({ viewer = false }: { viewer?: boolean }) {
         <Link to="/estoque"><StatCard label="Itens zerados" value={loading ? "…" : zeroed.length} hint="Estoque confirmado igual a zero" tone="danger" icon={MinusCircle} /></Link>
         <Link to="/recibos"><StatCard label="Envios no período" value={loading ? "…" : inPeriod.length} hint="Recibos de envio registrados" icon={Send} /></Link>
       </div>
+      )}
+
 
       {!viewer && (
       <Panel title="Atenção necessária" description="Alertas gerados a partir dos registros atuais. Nenhum alerta altera o estoque.">
