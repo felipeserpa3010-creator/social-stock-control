@@ -1,5 +1,5 @@
 # Registro de Envios
-- [ ] Aplicar timbrado oficial em todos os PDFs de estoque e verificar impressão multipágina seguindo a amostra.
+- [x] Aplicar timbrado oficial em todos os PDFs de estoque; exportações autenticadas de Estoque e Relatórios verificadas visualmente, incluindo teste de seis páginas, sem cortes ou sobreposição e sem alterar lançamentos.
 - [x] Separar materiais de expediente, outros materiais, recibos e relatórios em telas próprias.
 - [x] Verificar navegação autenticada, conteúdo exclusivo e destaque individual das quatro opções; prévia sem erros.
 
