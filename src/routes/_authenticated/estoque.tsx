@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FileText } from "lucide-react";
+import { toast } from "sonner";
 import { useUnit } from "@/hooks/useUnit";
 import { ALL_UNITS, stockOptions } from "@/lib/queries";
 import { formatDate, formatQty, stockStatus, todayISO } from "@/lib/format";
@@ -20,6 +21,8 @@ import {
 export const Route = createFileRoute("/_authenticated/estoque")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Estoque — Controle de Estoque" },
       {
         name: "description",
@@ -67,7 +70,8 @@ function StockPage() {
 
   const exportPdf = async () => {
     if (!rows.length) return;
-    const doc = await buildInventoryPdf({
+    try {
+      const doc = await buildInventoryPdf({
       titulo: "Relatório de Estoque",
       instituicao: "SEMADS",
       secretaria: "Depósito SEMADS",
@@ -77,7 +81,10 @@ function StockPage() {
       modo: "estoque",
       assinatura: false,
     });
-    doc.save("estoque_" + (unit?.sigla ?? "unidade") + "_" + todayISO() + ".pdf");
+      doc.save("estoque_" + (unit?.sigla ?? "unidade") + "_" + todayISO() + ".pdf");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível gerar o relatório.");
+    }
   };
 
   return (

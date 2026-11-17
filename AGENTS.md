@@ -11,6 +11,7 @@
 
 - Return typed failure results for expected authentication rejections so forms can show feedback without triggering the global runtime error screen.
 - Use the shared SEMADS brand asset exported by `src/lib/brand.ts` for screens and generated reports so branding stays consistent.
+- Stock PDFs delegate to the shared stock-report renderer with CDN-backed official letterhead and reserved multipage margins; other report types retain the shared SEMADS logo to keep this print customization isolated.
 - Shipment functions use separate leaf routes with a shared view component and access guard so navigation displays only the selected workflow without duplicating business logic.
 - Account deletion runs through an authenticated server function with CEO and target-account checks; database-linked history must never be deleted to force account removal.
 - Inventory-controller dispatches reuse material receipt headers with per-item stock/source flags; database RPCs reserve pending central quantities and atomically apply transfers on destination confirmation, so mixed receipts remain idempotent and historical receipts default to untracked.
