@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatDate, formatQty, slugify } from "./format";
 import { semadsLogoUrl } from "./brand";
+import { buildStockReport } from "./stock-report";
 
 export type InventoryRow = {
   produto: string;
@@ -49,6 +50,7 @@ async function loadLogo(url: string): Promise<{ data: string; w: number; h: numb
 }
 
 export async function buildInventoryPdf(opts: ReportOptions) {
+  if (opts.modo !== "consumo") return buildStockReport(opts);
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
